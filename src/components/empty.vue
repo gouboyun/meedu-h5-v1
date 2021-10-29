@@ -1,0 +1,25 @@
+<template>
+  <div class="empty-box">
+    <div class="image-empty-item">
+      <img src="../assets/img/img-placeholder.png" />
+    </div>
+  </div>
+</template>
+
+<style>
+.empty-box {
+  width: 100%;
+  height: auto;
+  float: left;
+  text-align: center;
+  padding-top: 50px;
+  padding-bottom: 50px;
+}
+.empty-box > .image-empty-item {
+  display: inline-block;
+}
+.empty-box > .image-empty-item > img {
+  width: 120px;
+  height: 120px;
+}
+</style>
