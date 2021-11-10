@@ -413,6 +413,7 @@ export default {
         this.playTimeUpdate(parseInt(window.player.video.currentTime));
       });
       window.player.on("ended", () => {
+        this.playTimeUpdate(parseInt(window.player.video.currentTime));
         this.playendedStatus = true;
         window.player.destroy();
       });
