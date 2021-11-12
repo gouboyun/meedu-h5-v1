@@ -23,7 +23,6 @@ export default {
   },
 
   mounted() {
-    this.$setgoindex();
     this.autoLogin();
     this.getConfig();
   },
