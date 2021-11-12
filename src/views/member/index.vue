@@ -260,6 +260,10 @@ export default {
       this.$router.push({ name: "Login" });
     },
     goRole() {
+      if (!this.isLogin) {
+        this.goLogin();
+        return;
+      }
       this.$router.push({ name: "Role" });
     },
   },
@@ -369,7 +373,7 @@ export default {
     .grid-box {
       display: grid;
       gap: 20px;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       box-sizing: border-box;
       padding-left: 15px;
       padding-right: 15px;
