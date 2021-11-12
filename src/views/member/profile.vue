@@ -226,7 +226,7 @@
     <div class="navheader borderbox">
       <img
         class="back"
-        @click="$router.back()"
+        @click="goBack()"
         src="../../assets/img/icon-back.png"
       />
       <div class="title">个人资料</div>

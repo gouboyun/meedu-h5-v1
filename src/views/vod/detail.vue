@@ -1,7 +1,11 @@
 <template>
   <div class="box">
     <div class="navheader borderbox">
-      <img class="back" @click="back" src="../../assets/img/icon-back.png" />
+      <img
+        class="back"
+        @click="goBack()"
+        src="../../assets/img/icon-back.png"
+      />
       <div class="title">课程详情</div>
     </div>
     <template v-if="course">
