@@ -437,8 +437,7 @@ export default {
       });
     },
     goVideo(video) {
-      console.log(111);
-      this.$router.push({
+      this.$router.replace({
         name: "VodVideo",
         query: {
           id: video.id,
@@ -446,7 +445,7 @@ export default {
       });
     },
     goNextVideo(id) {
-      this.$router.push({
+      this.$router.replace({
         name: "VodVideo",
         query: {
           id: id,

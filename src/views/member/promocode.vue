@@ -46,7 +46,7 @@
           <div class="value" v-if="invite.code">{{ invite.code }}</div>
           <div class="value" v-else>暂无</div>
           <div class="tit">我的邀请码</div>
-          <div class="btn-copy" v-if="invite.code">复制</div>
+          <div class="btn-copy" @click="copy()" v-if="invite.code">复制</div>
         </div>
         <div class="item-right">
           <div class="value">￥{{ invite.balance }}</div>
@@ -223,6 +223,15 @@ export default {
           this.loading = false;
           this.$message.error(e.message);
         });
+    },
+    copy() {
+      var input = document.createElement("input");
+      input.value = this.invite.code;
+      document.body.appendChild(input);
+      input.select();
+      document.execCommand("Copy");
+      document.body.removeChild(input);
+      this.$message.success("复制成功");
     },
     resetData() {
       this.list = [];
