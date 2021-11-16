@@ -3,7 +3,7 @@
     <div class="navheader borderbox">
       <img
         class="back"
-        @click="goBack()"
+        @click="goGoods()"
         src="../../assets/img/icon-back.png"
       />
       <div class="title">手动打款支付</div>
@@ -60,26 +60,8 @@ export default {
           this.$router.push({ name: "index" });
         });
     },
-    goBack() {
-      if (this.goods_type === "role") {
-        this.$router.push({
-          name: "Role",
-        });
-      } else if (this.goods_type === "vod") {
-        this.$router.push({
-          name: "VodDetail",
-          query: {
-            id: this.id,
-          },
-        });
-      } else if (this.goods_type === "video") {
-        this.$router.push({
-          name: "VodVideo",
-          query: {
-            id: this.id,
-          },
-        });
-      }
+    goGoods() {
+      this.$router.go(-2);
     },
     confirm() {
       this.$router.push({
