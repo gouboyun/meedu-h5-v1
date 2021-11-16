@@ -107,6 +107,7 @@ export default {
   },
   data() {
     return {
+      url: this.$route.query.url || null,
       captcha: {
         key: null,
         img: null,
@@ -125,7 +126,6 @@ export default {
         userInfo: null,
         step: 1,
       },
-      redirectUrl: null,
       agreeProtocol: false,
     };
   },
@@ -221,9 +221,7 @@ export default {
         .catch((e) => {
           if (e.code === 401) {
             window.localStorage.removeItem("token");
-            this.$router.replace({
-              name: "Index",
-            });
+            window.location.href = this.url;
           } else {
             this.$message.error(e.message);
           }
@@ -233,7 +231,7 @@ export default {
       this.$router.push({
         name: "LoginPassword",
         query: {
-          redirect: this.redirectUrl,
+          url: this.url,
         },
       });
     },
@@ -242,7 +240,7 @@ export default {
         this.$message.error("请先同意协议");
         return;
       }
-      let host = window.location.protocol + "//" + window.location.host;
+      let host = this.url;
       let redirecUrl = encodeURIComponent(host);
       window.location.href =
         this.config.url +
@@ -258,7 +256,7 @@ export default {
         this.$message.error("请先同意协议");
         return;
       }
-      let host = window.location.protocol + "//" + window.location.host;
+      let host = this.url;
       let redirecUrl = encodeURIComponent(host);
       window.location.href =
         this.config.url +

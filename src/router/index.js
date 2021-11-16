@@ -21,7 +21,7 @@ const routes = [
     path: '/login',
     name: 'Login',
     meta: {
-      title: '快捷登录/注册'
+      title: '快捷登录/注册',
     },
     component: () => import('../views/auth/login.vue'),
 
@@ -47,6 +47,9 @@ const routes = [
   {
     path: '/vod',
     name: 'Vod',
+    meta: {
+      title: '录播课程'
+    },
     component: () => import('../views/vod/index.vue'),
 
   },
@@ -54,7 +57,8 @@ const routes = [
     path: '/role',
     name: 'Role',
     meta: {
-      title: 'VIP会员'
+      title: 'VIP会员',
+      auth: true,
     },
     component: () => import('../views/role/index.vue'),
 
@@ -63,7 +67,8 @@ const routes = [
     path: '/order',
     name: 'Order',
     meta: {
-      title: '收银台'
+      title: '收银台',
+      auth: true,
     },
     component: () => import('../views/order/index.vue'),
 
@@ -72,7 +77,8 @@ const routes = [
     path: '/order/pay',
     name: 'OrderPay',
     meta: {
-      title: "支付中"
+      title: "支付中",
+      auth: true,
     },
     component: () => import('../views/order/pay.vue'),
 
@@ -81,7 +87,8 @@ const routes = [
     path: '/order/success',
     name: 'OrderSuccess',
     meta: {
-      title: "支付成功"
+      title: "支付成功",
+      auth: true,
     },
     component: () => import('../views/order/success.vue'),
 
@@ -90,7 +97,8 @@ const routes = [
     path: '/messages',
     name: 'Messages',
     meta: {
-      title: '我的消息'
+      title: '我的消息',
+      auth: true,
     },
     component: () => import('../views/messages/index.vue'),
 
@@ -107,12 +115,20 @@ const routes = [
   {
     path: '/vod/video',
     name: 'VodVideo',
+    meta: {
+      title: '视频播放',
+      auth: true,
+    },
     component: () => import('../views/vod/play.vue'),
 
   },
   {
     path: '/study',
     name: 'Study',
+    meta: {
+      title: '我的课程',
+      auth: true,
+    },
     component: () => import('../views/study/index.vue'),
 
   },
@@ -120,7 +136,8 @@ const routes = [
     path: '/member',
     name: 'Me',
     meta: {
-      title: '会员中心'
+      title: '会员中心',
+      auth: true,
     },
     component: () => import('../views/member/index.vue'),
 
@@ -129,7 +146,8 @@ const routes = [
     path: '/member/order',
     name: 'MemberOrder',
     meta: {
-      title: '我的订单'
+      title: '我的订单',
+      auth: true,
     },
     component: () => import('../views/member/order.vue'),
 
@@ -147,7 +165,8 @@ const routes = [
     path: '/member/profile',
     name: 'MemberProfile',
     meta: {
-      title: '个人资料'
+      title: '个人资料',
+      auth: true,
     },
     component: () => import('../views/member/profile.vue'),
 
@@ -156,7 +175,8 @@ const routes = [
     path: '/member/promocode',
     name: 'MemberPromoCode',
     meta: {
-      title: '我的邀请码'
+      title: '我的邀请码',
+      auth: true,
     },
     component: () => import('../views/member/promocode.vue'),
 

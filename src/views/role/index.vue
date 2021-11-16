@@ -73,16 +73,7 @@ export default {
         this.list = res.data;
       });
     },
-    goLogin() {
-      this.$router.push({
-        name: "Login",
-      });
-    },
     goOrder() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       if (this.roleId === 0) {
         this.$message.error("请选择需要购买的会员");
         return;

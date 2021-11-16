@@ -1,7 +1,7 @@
 <template>
   <div id="content" class="container">
     <!-- 用户信息 -->
-    <div class="user-info-box" v-if="isLogin">
+    <div class="user-info-box">
       <div class="user-avatar-box">
         <img :src="user.avatar" />
       </div>
@@ -10,14 +10,6 @@
         <div class="role-name">
           {{ user.role ? user.role.name : "免费会员" }}
         </div>
-      </div>
-    </div>
-    <div class="user-info-box" @click="goLogin" v-else>
-      <div class="user-avatar-box">
-        <img src="../../assets/img/default_avatar.png" />
-      </div>
-      <div class="user-body">
-        <div class="login-button">请登录</div>
       </div>
     </div>
 
@@ -29,19 +21,7 @@
       <div class="banner-title">我的账号</div>
       <div class="banner-body">
         <div class="grid-box">
-          <div
-            class="grid-item"
-            v-if="isLogin"
-            @click="$router.push({ name: 'MemberOrder' })"
-          >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-list@2x.png" />
-              </div>
-            </div>
-            <div class="name">我的订单</div>
-          </div>
-          <div class="grid-item" v-else @click="goLogin">
+          <div class="grid-item" @click="$router.push({ name: 'MemberOrder' })">
             <div class="icon">
               <div class="icon-img">
                 <img src="../../assets/img/icon-list@2x.png" />
@@ -66,16 +46,8 @@
           <div
             class="grid-item"
             @click="$router.push({ name: 'MemberPromoCode' })"
-            v-if="isLogin && func.promoCode"
+            v-if="func.promoCode"
           >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-money@2x.png" />
-              </div>
-            </div>
-            <div class="name">我的邀请</div>
-          </div>
-          <div class="grid-item" @click="goLogin" v-else>
             <div class="icon">
               <div class="icon-img">
                 <img src="../../assets/img/icon-money@2x.png" />
@@ -84,19 +56,7 @@
             <div class="name">我的邀请</div>
           </div>
 
-          <div
-            class="grid-item"
-            v-if="isLogin"
-            @click="$router.push({ name: 'Messages' })"
-          >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-message@2x.png" />
-              </div>
-            </div>
-            <div class="name">我的消息</div>
-          </div>
-          <div class="grid-item" v-else @click="goLogin">
+          <div class="grid-item" @click="$router.push({ name: 'Messages' })">
             <div class="icon">
               <div class="icon-img">
                 <img src="../../assets/img/icon-message@2x.png" />
@@ -107,17 +67,8 @@
 
           <div
             class="grid-item"
-            v-if="isLogin"
             @click="$router.push({ name: 'MemberProfile' })"
           >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-info@2x.png" />
-              </div>
-            </div>
-            <div class="name">个人资料</div>
-          </div>
-          <div class="grid-item" v-else @click="goLogin">
             <div class="icon">
               <div class="icon-img">
                 <img src="../../assets/img/icon-info@2x.png" />
@@ -256,14 +207,7 @@ export default {
     },
   },
   methods: {
-    goLogin() {
-      this.$router.push({ name: "Login" });
-    },
     goRole() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$router.push({ name: "Role" });
     },
   },

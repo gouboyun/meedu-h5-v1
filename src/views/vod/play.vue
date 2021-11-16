@@ -440,10 +440,6 @@ export default {
       });
     },
     goNextVideo(id) {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$router.push({
         name: "VodVideo",
         query: {
@@ -451,21 +447,13 @@ export default {
         },
       });
     },
-    goLogin() {
-      this.$router.push({
-        name: "Login",
-      });
-    },
+
     goRole() {
       this.$router.push({
         name: "Role",
       });
     },
     submitComment() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       if (!this.comment.content.trim()) {
         return;
       }
@@ -496,10 +484,6 @@ export default {
       }
     },
     buyCourse() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$router.push({
         name: "Order",
         query: {
@@ -513,10 +497,6 @@ export default {
       });
     },
     buyVideo() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$router.push({
         name: "Order",
         query: {

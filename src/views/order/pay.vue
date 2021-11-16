@@ -50,9 +50,6 @@ export default {
     this.initData();
   },
   methods: {
-    goLogin() {
-      this.$router.push({ name: "Login" });
-    },
     initData() {
       this.$api.Order.HandPay()
         .then((res) => {
@@ -85,10 +82,6 @@ export default {
       }
     },
     confirm() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$router.push({
         name: "Index",
       });

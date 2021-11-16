@@ -274,14 +274,6 @@ export default {
     this.getCourseComments();
   },
   methods: {
-    back() {
-      if (window.history.length <= 1) {
-        this.$router.push({ name: "Index" });
-        return false;
-      } else {
-        this.$router.go(-1);
-      }
-    },
     //展开目录文章详情
     showArticle(index) {
       this.$set(this.configkey, index, !this.configkey[index]);
@@ -325,10 +317,6 @@ export default {
       });
     },
     collectCourse() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$api.Course.Collect(this.id)
         .then(() => {
           this.isCollect = !this.isCollect;
@@ -338,10 +326,6 @@ export default {
         });
     },
     startLearn() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       let video = null;
       if (this.chapters.length === 0) {
         video = this.videos[0][0];
@@ -356,10 +340,6 @@ export default {
       });
     },
     goVideo(video) {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$router.push({
         name: "VodVideo",
         query: {
@@ -367,21 +347,13 @@ export default {
         },
       });
     },
-    goLogin() {
-      this.$router.push({
-        name: "Login",
-      });
-    },
+
     goRole() {
       this.$router.push({
         name: "Role",
       });
     },
     submitComment() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       if (!this.comment.content) {
         return;
       }
@@ -398,10 +370,6 @@ export default {
         });
     },
     buyCourse() {
-      if (!this.isLogin) {
-        this.goLogin();
-        return;
-      }
       this.$router.push({
         name: "Order",
         query: {

@@ -23,6 +23,16 @@ router.beforeEach((to, from, next) => {
   if (to.meta.title) {
     document.title = to.meta.title
   }
+  if (to.meta.auth === true) {
+    let token = window.localStorage.getItem("token");
+    if (!token) {
+      router.replace({
+        name: "login",
+        url: window.location.href
+      });
+      return
+    }
+  }
   next()
 })
 Vue.use(highlight, {

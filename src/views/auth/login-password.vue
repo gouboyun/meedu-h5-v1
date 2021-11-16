@@ -49,6 +49,7 @@ export default {
   },
   data() {
     return {
+      url: this.$route.query.url || null,
       passwordForm: {
         mobile: "",
         password: "",
@@ -78,13 +79,16 @@ export default {
           this.$api.User.Detail()
             .then((res) => {
               this.submitLogin(res.data);
-              this.$router.push({ name: "Index" });
+              window.location.href = this.url;
             })
             .catch((e) => {
               if (e.code === 401) {
                 window.localStorage.removeItem("token");
                 this.$router.replace({
-                  name: "Index",
+                  name: "Login",
+                  query: {
+                    url: this.url,
+                  },
                 });
               } else {
                 this.$message.error(e.message);
