@@ -293,6 +293,11 @@ export default {
     // 播放器销毁
     window.player && window.player.destroy();
   },
+  watch: {
+    $route(to, from) {
+      this.$router.go(0);
+    },
+  },
   methods: {
     tabChange(index) {
       this.currentTab = index;
@@ -432,6 +437,7 @@ export default {
       });
     },
     goVideo(video) {
+      console.log(111);
       this.$router.push({
         name: "VodVideo",
         query: {

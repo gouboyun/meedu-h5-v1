@@ -560,10 +560,12 @@ export default {
   }
 }
 .drop {
+  display: inline-block;
   width: 100%;
   text-align: center;
   color: #cccccc;
   font-size: 14px;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 </style>

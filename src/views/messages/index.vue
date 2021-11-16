@@ -99,10 +99,12 @@ export default {
   background: #f6f6f6;
 }
 .drop {
+  display: inline-block;
   width: 100%;
   text-align: center;
   color: #cccccc;
   font-size: 14px;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 .message-item {

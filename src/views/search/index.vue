@@ -52,7 +52,7 @@
         </div>
         <div class="drop">
           <img v-show="loading && !over" src="../../assets/img/Spinload.gif" />
-          <span v-if="over">已经到底了</span>
+          <span v-if="over">{{ placeholder }}</span>
         </div>
       </template>
 
@@ -72,6 +72,7 @@ export default {
   },
   data() {
     return {
+      placeholder: null,
       list: [],
       loading: false,
       over: false,
@@ -139,6 +140,7 @@ export default {
     },
     resetData() {
       this.pagination.page = 1;
+      this.placeholder = null;
       this.list = [];
     },
     setType(key) {
@@ -170,6 +172,7 @@ export default {
           this.loading = false;
           if (list.length < this.pagination.size) {
             this.over = true;
+            this.placeholder = "已经到底了";
           }
         }, 200);
       });
@@ -283,11 +286,12 @@ export default {
   }
 }
 .drop {
+  display: inline-block;
   width: 100%;
   text-align: center;
   color: #cccccc;
   font-size: 14px;
-  margin-top: 10px;
+  margin-top: 30px;
   margin-bottom: 30px;
 }
 </style>
