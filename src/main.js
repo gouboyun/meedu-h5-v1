@@ -51,10 +51,10 @@ Vue.filter('changeTime', function (dateStr) {
 Vue.mixin({
   methods: {
     goBack() {
-      if (window.history.length <= 1) {
+      if (window.history.length <= 2) {
         this.$router.push({ name: "Index" })
       } else {
-        this.$router.back(-1)
+        this.$router.go(-1)
       }
     },
   }
