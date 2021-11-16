@@ -43,7 +43,16 @@
         </div>
 
         <div class="coursr-desc" v-show="currentTab === 0">
-          <div v-html="course.render_desc" style="font-size: 14px"></div>
+          <div
+            class="desc"
+            v-html="
+              course.render_desc.replace(
+                /<img/g,
+                '<img style=&quot;width:100%;height:auto;&quot;'
+              )
+            "
+            style="font-size: 14px"
+          ></div>
         </div>
 
         <div class="course-chapter-box" v-show="currentTab === 1">
@@ -300,6 +309,7 @@ export default {
           sel.push(true);
         }
         this.configkey = sel;
+
         // 分享
         // this.wechatH5Share(
         //   this.course.title,
@@ -540,7 +550,11 @@ export default {
   box-sizing: border-box;
   padding: 20px 15px 15px 15px;
 }
-
+.coursr-desc {
+  .desc {
+    width: 100%;
+  }
+}
 .course-chapter-box {
   padding: 10px 15px 15px 15px;
 
