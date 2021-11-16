@@ -76,24 +76,10 @@ export default {
           // 写入token
           window.localStorage.setItem("token", res.data.token);
 
-          this.$api.User.Detail()
-            .then((res) => {
-              this.submitLogin(res.data);
-              window.location.href = this.url;
-            })
-            .catch((e) => {
-              if (e.code === 401) {
-                window.localStorage.removeItem("token");
-                this.$router.replace({
-                  name: "Login",
-                  query: {
-                    url: this.url,
-                  },
-                });
-              } else {
-                this.$message.error(e.message);
-              }
-            });
+          this.$api.User.Detail().then((res) => {
+            this.submitLogin(res.data);
+            this.$router.go(-2);
+          });
         })
         .catch((e) => {
           this.$message.error(e.message);

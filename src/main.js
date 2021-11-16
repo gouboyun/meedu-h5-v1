@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import utils from './js/utils'
 import api from './js/request/request';
 import Message from 'vue-m-message'
 import VueConfirmDialog from 'vue-confirm-dialog'
@@ -16,6 +17,7 @@ Vue.config.productionTip = false;
 Vue.prototype.$api = api;
 Vue.prototype.$Request = Request;
 Vue.prototype.$message = Message;
+Vue.prototype.$utils = utils;
 import { format } from 'timeago.js';
 
 router.beforeEach((to, from, next) => {
@@ -24,11 +26,13 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title
   }
   if (to.meta.auth === true) {
-    let token = window.localStorage.getItem("token");
+    let token = utils.getToken();
     if (!token) {
-      router.replace({
-        name: "login",
-        url: window.location.href
+      next({
+        name: "Login",
+        query: {
+          url: window.location.href,
+        },
       });
       return
     }

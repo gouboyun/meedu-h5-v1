@@ -127,7 +127,6 @@ const routes = [
     name: 'Study',
     meta: {
       title: '我的课程',
-      auth: true,
     },
     component: () => import('../views/study/index.vue'),
 
@@ -137,7 +136,6 @@ const routes = [
     name: 'Me',
     meta: {
       title: '会员中心',
-      auth: true,
     },
     component: () => import('../views/member/index.vue'),
 

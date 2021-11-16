@@ -96,7 +96,17 @@
       <empty-comp></empty-comp>
 
       <div class="btn-login-box">
-        <div class="btn-login" @click="$router.push({ name: 'Login' })">
+        <div
+          class="btn-login"
+          @click="
+            $router.push({
+              name: 'Login',
+              query: {
+                url: url,
+              },
+            })
+          "
+        >
           登录查看
         </div>
       </div>
@@ -117,6 +127,7 @@ export default {
   },
   data() {
     return {
+      url: window.location.href,
       navs: [
         {
           name: "订阅课程",
@@ -163,11 +174,17 @@ export default {
     "form.nav"() {
       this.getData();
     },
+    isLogin(val) {
+      if (val) {
+        this.getData();
+      }
+    },
   },
   mounted() {
     window.addEventListener("scroll", this.ScrollToBottomEvt, true);
-    document.title = "我的课程";
-    this.getData();
+    if (this.isLogin) {
+      this.getData();
+    }
   },
   beforeDestroy() {
     // 记得销毁event
