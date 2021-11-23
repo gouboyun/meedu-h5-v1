@@ -21,7 +21,6 @@ export default {
       }
     },
   },
-
   mounted() {
     this.autoLogin();
     this.getConfig();
@@ -64,6 +63,9 @@ export default {
     getConfig() {
       this.$api.Other.Config().then((res) => {
         this.setConfig(res.data);
+         if (!this.$utils.isMobile()) {
+            window.location.href=res.data.pc_url;
+         }
       });
     },
   },
