@@ -58,8 +58,9 @@ Vue.mixin({
       }
     },
   }
-})
+});
 
+utils.copyright();
 
 new Vue({
   router,
