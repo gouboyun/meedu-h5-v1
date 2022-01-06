@@ -161,6 +161,22 @@ const routes = [
     component: () => import("../views/member/password.vue"),
   },
   {
+    path: "/member/mobile",
+    name: "ChangeMobile",
+    meta: {
+      title: "绑定手机号",
+    },
+    component: () => import("../views/member/mobile.vue"),
+  },
+  {
+    path: "/member/mobileVerify",
+    name: "MobileVerify",
+    meta: {
+      title: "验证原手机号",
+    },
+    component: () => import("../views/member/mobileVerify.vue"),
+  },
+  {
     path: "/member/promocode",
     name: "MemberPromoCode",
     meta: {

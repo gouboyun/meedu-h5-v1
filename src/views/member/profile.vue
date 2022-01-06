@@ -15,150 +15,6 @@
         </div>
         <div class="confirm" @click="submitHandle()">确认</div>
       </div>
-      <div class="mobile-box borderbox" v-if="changeMo">
-        <div class="cancel" @click="cancel()">
-          <img src="../../assets/img/close.png" />
-        </div>
-        <div class="mobile">
-          <span
-            >原手机号码验证：<strong>{{ user.mobile }}</strong></span
-          >
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            class="input-short"
-            required=""
-            autocomplete="off"
-            v-model="messageForm.captcha"
-            placeholder="请输入图形验证码"
-          />
-          <div class="captcha">
-            <img
-              class="captcha-img"
-              :src="captcha.img"
-              mode="widthFix"
-              @click="getCaptcha"
-            />
-          </div>
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            placeholder="请输入手机验证码"
-            autocomplete="off"
-            v-model="messageForm.sms"
-            class="input-short"
-            required=""
-          />
-          <div class="buttons">
-            <span class="send-sms-button" @click="sendSms(user.mobile)">
-              <template v-if="sms.loading"> {{ sms.current }}s </template>
-              <template v-else>获取验证码</template>
-            </span>
-          </div>
-        </div>
-        <div class="confirm" @click="mobileValidate()">确认</div>
-      </div>
-
-      <div class="mobile-box borderbox" v-if="verMobile">
-        <div class="cancel" @click="cancel()">
-          <img src="../../assets/img/close.png" />
-        </div>
-        <div class="input-box">
-          <input
-            class="input-item"
-            autocomplete="off"
-            v-model="messageForm.mobile"
-            required=""
-            placeholder="请输入新手机号码"
-          />
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            class="input-short"
-            required=""
-            autocomplete="off"
-            v-model="messageForm.captcha"
-            placeholder="请输入图形验证码"
-          />
-          <div class="captcha">
-            <img
-              class="captcha-img"
-              :src="captcha.img"
-              mode="widthFix"
-              @click="getCaptcha"
-            />
-          </div>
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            placeholder="请输入手机验证码"
-            autocomplete="off"
-            v-model="messageForm.sms"
-            class="input-short"
-            required=""
-          />
-          <div class="buttons">
-            <span class="send-sms-button" @click="sendSms()">
-              <template v-if="sms.loading"> {{ sms.current }}s </template>
-              <template v-else>获取验证码</template>
-            </span>
-          </div>
-        </div>
-        <div class="confirm" @click="changeMobileValidate()">立即绑定</div>
-      </div>
-      <div class="mobile-box borderbox" v-if="newMobile">
-        <div class="cancel" @click="cancel()">
-          <img src="../../assets/img/close.png" />
-        </div>
-        <div class="input-box">
-          <input
-            class="input-item"
-            autocomplete="off"
-            v-model="messageForm.mobile"
-            required=""
-            placeholder="请输入新手机号码"
-          />
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            class="input-short"
-            required=""
-            autocomplete="off"
-            v-model="messageForm.captcha"
-            placeholder="请输入图形验证码"
-          />
-          <div class="captcha">
-            <img
-              class="captcha-img"
-              :src="captcha.img"
-              mode="widthFix"
-              @click="getCaptcha"
-            />
-          </div>
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            placeholder="请输入手机验证码"
-            autocomplete="off"
-            v-model="messageForm.sms"
-            class="input-short"
-            required=""
-          />
-          <div class="buttons">
-            <span class="send-sms-button" @click="sendSms()">
-              <template v-if="sms.loading"> {{ sms.current }}s </template>
-              <template v-else>获取验证码</template>
-            </span>
-          </div>
-        </div>
-        <div class="confirm" @click="NewMobileValidate()">立即绑定</div>
-      </div>
     </div>
     <div class="navheader borderbox">
       <img
@@ -256,9 +112,6 @@ export default {
       list: [],
       openmask: false,
       changeNick: false,
-      changeMo: false,
-      newMobile: false,
-      verMobile: false,
       error: this.$route.query.error,
       loading: false,
       profile: [],
@@ -266,26 +119,6 @@ export default {
       form: {
         nick_name: null,
         content: null,
-      },
-      passwordForm: {
-        mobile: null,
-        password: null,
-      },
-      captcha: {
-        key: null,
-        img: null,
-      },
-      messageForm: {
-        mobile: null,
-        sms: null,
-        captcha: null,
-        password: null,
-        agree_protocol: null,
-      },
-      sms: {
-        loading: false,
-        max: 120,
-        current: 0,
       },
     };
   },
@@ -301,47 +134,6 @@ export default {
           this.$message.error(this.error);
         }
       });
-    },
-    sendSms(val) {
-      if (val) {
-        this.messageForm.mobile = val;
-      }
-      if (this.sms.loading) {
-        // 冷却中
-        return;
-      }
-      if (!this.messageForm.mobile) {
-        this.$message.error("请输入手机号");
-        return;
-      }
-      if (!this.messageForm.captcha) {
-        this.$message.error("请输入图形验证码");
-        return;
-      }
-      this.$api.Other.SendSms({
-        mobile: this.messageForm.mobile,
-        image_key: this.captcha.key,
-        image_captcha: this.messageForm.captcha,
-        scene: this.scene,
-      })
-        .then(() => {
-          // 发送成功
-          this.$message.success("发送成功");
-          this.sms.loading = this;
-          this.sms.current = this.sms.max;
-          let interval = setInterval(() => {
-            if (this.sms.current <= 1) {
-              this.sms.loading = false;
-              clearInterval(interval);
-            } else {
-              this.sms.current--;
-            }
-          }, 1000);
-        })
-        .catch((e) => {
-          this.getCaptcha();
-          this.$message.error(e.message);
-        });
     },
     getData() {
       this.$api.User.Detail()
@@ -389,18 +181,8 @@ export default {
       this.openmask = true;
     },
     cancel() {
-      this.verMobile = false;
-      this.changeMo = false;
       this.changeNick = false;
-      this.newMobile = false;
       this.openmask = false;
-      this.messageForm.mobile = null;
-      this.messageForm.sms = null;
-      this.messageForm.captcha = null;
-      this.messageForm.password = null;
-      this.messageForm.agree_protocol = null;
-      this.passwordForm.mobile = null;
-      this.passwordForm.password = null;
     },
     bindWechat() {
       let host = window.location.href;
@@ -427,110 +209,15 @@ export default {
         this.captcha = res.data;
       });
     },
-
     changeMobile() {
-      this.scene = "mobile_bind";
-      this.getCaptcha();
-      this.changeMo = true;
-      this.openmask = true;
-    },
-    mobileValidate() {
-      if (this.loading) {
-        return;
-      }
-      if (!this.messageForm.sms) {
-        this.$message.error("请输入手机验证码");
-        return;
-      }
-      this.loading = true;
-      this.$api.Member.MobileVerify({
-        mobile: this.messageForm.mobile,
-        mobile_code: this.messageForm.sms,
-      })
-        .then((res) => {
-          this.loading = false;
-          this.$message.success("验证成功");
-          this.cancel();
-          this.getCaptcha();
-          this.sms.loading = false;
-          this.sms.current = 0;
-          this.messageForm.sign = res.data.sign;
-          setTimeout(() => {
-            this.openmask = true;
-            this.verMobile = true;
-          }, 500);
-        })
-        .catch((e) => {
-          this.loading = false;
-          this.$message.error(e.message);
-        });
-    },
-    changeMobileValidate() {
-      if (this.loading) {
-        return;
-      }
-      if (!this.messageForm.sms) {
-        this.$message.error("请输入手机验证码");
-        return;
-      }
-      if (!this.messageForm.mobile) {
-        this.$message.error("请填写新的绑定手机号码");
-        return;
-      }
-      this.loading = true;
-      this.$api.Member.MobileChange({
-        mobile: this.messageForm.mobile,
-        mobile_code: this.messageForm.sms,
-        sign: this.messageForm.sign,
-      })
-        .then((res) => {
-          this.loading = false;
-          this.$message.success("绑定成功");
-          this.cancel();
-          setTimeout(() => {
-            this.getData();
-          }, 500);
-        })
-        .catch((e) => {
-          this.loading = false;
-          this.$message.error(e.message);
-        });
-    },
-    NewMobileValidate() {
-      if (this.loading) {
-        return;
-      }
-      if (!this.messageForm.sms) {
-        this.$message.error("请输入手机验证码");
-        return;
-      }
-      if (!this.messageForm.mobile) {
-        this.$message.error("请填写新的绑定手机号码");
-        return;
-      }
-      this.loading = true;
-      this.$api.Member.NewMobile({
-        mobile: this.messageForm.mobile,
-        mobile_code: this.messageForm.sms,
-      })
-        .then((res) => {
-          this.loading = false;
-          this.$message.success("绑定成功");
-          this.cancel();
-          setTimeout(() => {
-            this.getData();
-          }, 500);
-        })
-        .catch((e) => {
-          this.loading = false;
-          this.$message.error(e.message);
-        });
+      this.$router.push({
+        name: "MobileVerify",
+      });
     },
     bindMobile() {
-      this.scene = "mobile_bind";
-      this.getCaptcha();
-      this.newMobile = true;
-      this.openmask = true;
+      this.$router.push({
+        name: "ChangeMobile",
+      });
     },
     changePassword() {
       this.$router.push({

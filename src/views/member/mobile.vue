@@ -15,15 +15,14 @@
     </div>
     <template v-if="!confirmDialog">
       <div class="group-form-box">
-        <div class="group-title">重置密码</div>
-        <div class="group-item">
+        <div class="group-title">绑定手机号</div>
+        <div class="item">
           <div class="name">手机号</div>
           <div class="value">
             <input
-              class="input-text"
               type="number"
               v-model="form.mobile"
-              placeholder="请输入手机号码"
+              placeholder="请输入您的手机号"
             />
             <img
               v-show="form.mobile"
@@ -33,29 +32,12 @@
             />
           </div>
         </div>
-        <div class="group-item">
-          <div class="name">新密码</div>
-          <div class="value">
-            <input
-              class="input-text"
-              type="password"
-              v-model="form.password"
-              placeholder="请输入新密码"
-            />
-            <img
-              v-show="form.password"
-              src="../../assets/img/new/close.png"
-              style="width:16px;height:16px;"
-              @click="clearPassword()"
-            />
-          </div>
-        </div>
       </div>
 
       <div class="box pl-60 pr-60">
         <div
           class="btn-confirm"
-          :class="{ active: form.mobile && form.password }"
+          :class="{ active: form.mobile }"
           @click="openDialog"
         >
           获取短信验证码
@@ -64,8 +46,8 @@
     </template>
     <template v-else>
       <confirm-login
-        text="确定"
-        scene="password_reset"
+        text="绑定"
+        scene="mobile_bind"
         :status="confirmDialog"
         :mobile="form.mobile"
         @change="submit"
@@ -78,7 +60,6 @@
 <script>
 import ConfirmLogin from "../auth/components/confirm-login";
 import CaptchaDialog from "../../components/captcha-dialog";
-
 export default {
   components: {
     ConfirmLogin,
@@ -86,7 +67,6 @@ export default {
   },
   data() {
     return {
-      confirmDialog: false,
       captcha: {
         img: null,
         key: null,
@@ -95,13 +75,13 @@ export default {
         mobile: "",
         sms: "",
         captcha: "",
-        password: "",
       },
       sms: {
         max: 120,
         current: 0,
         loading: false,
       },
+      confirmDialog: false,
       openmask: false,
       reCaptcha: false,
     };
@@ -110,9 +90,6 @@ export default {
   methods: {
     clearMobile() {
       this.form.mobile = null;
-    },
-    clearPassword() {
-      this.form.password = null;
     },
     openDialog() {
       if (this.sms.loading) {
@@ -135,7 +112,7 @@ export default {
         mobile: this.form.mobile,
         image_key: this.captcha.key,
         image_captcha: this.form.captcha,
-        scene: "password_reset",
+        scene: "mobile_bind",
       })
         .then((res) => {
           // 发送成功
@@ -153,18 +130,9 @@ export default {
     },
     submit(val) {
       this.form.sms = val;
-      if (!this.form.mobile) {
-        this.$message.error("请输入手机号");
-        return;
-      }
-      if (!this.form.password) {
-        this.$message.error("请输入密码");
-        return;
-      }
-      this.$api.Member.PasswordChange({
+      this.$api.Member.MobileChange({
         mobile: this.form.mobile,
         mobile_code: this.form.sms,
-        password: this.form.password,
       })
         .then((res) => {
           this.$message.success("成功");

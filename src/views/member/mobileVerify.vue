@@ -13,89 +13,59 @@
         src="../../assets/img/icon-back.png"
       />
     </div>
-    <template v-if="!confirmDialog">
-      <div class="group-form-box">
-        <div class="group-title">重置密码</div>
-        <div class="group-item">
-          <div class="name">手机号</div>
-          <div class="value">
-            <input
-              class="input-text"
-              type="number"
-              v-model="form.mobile"
-              placeholder="请输入手机号码"
-            />
-            <img
-              v-show="form.mobile"
-              src="../../assets/img/new/close.png"
-              style="width:16px;height:16px;"
-              @click="clearMobile()"
-            />
-          </div>
-        </div>
-        <div class="group-item">
-          <div class="name">新密码</div>
-          <div class="value">
-            <input
-              class="input-text"
-              type="password"
-              v-model="form.password"
-              placeholder="请输入新密码"
-            />
-            <img
-              v-show="form.password"
-              src="../../assets/img/new/close.png"
-              style="width:16px;height:16px;"
-              @click="clearPassword()"
-            />
+    <template v-if="!verify && !confirmDialog">
+      <div class="group-form-box" v-if="user">
+        <div class="group-title">验证原手机号</div>
+        <div class="item">
+          <div class="mobile">
+            <span class="tit">原手机号</span>{{ user.mobile }}
           </div>
         </div>
       </div>
 
       <div class="box pl-60 pr-60">
-        <div
-          class="btn-confirm"
-          :class="{ active: form.mobile && form.password }"
-          @click="openDialog"
-        >
-          获取短信验证码
-        </div>
+        <div class="btn-confirm active" @click="openDialog">获取短信验证码</div>
       </div>
     </template>
-    <template v-else>
+    <template v-else-if="!verify && confirmDialog">
       <confirm-login
-        text="确定"
-        scene="password_reset"
+        text="绑定"
+        scene="mobile_bind"
         :status="confirmDialog"
-        :mobile="form.mobile"
+        :mobile="user.mobile"
         @change="submit"
         @cancel="cancel"
       ></confirm-login>
+    </template>
+    <template v-else>
+      <newmobile :sign="sign"></newmobile>
     </template>
   </div>
 </template>
 
 <script>
+import { mapState } from "vuex";
 import ConfirmLogin from "../auth/components/confirm-login";
 import CaptchaDialog from "../../components/captcha-dialog";
-
+import Newmobile from "./components/newmobile";
 export default {
   components: {
     ConfirmLogin,
+    Newmobile,
     CaptchaDialog,
   },
   data() {
     return {
+      verify: false,
       confirmDialog: false,
+      sign: null,
       captcha: {
         img: null,
         key: null,
       },
       form: {
-        mobile: "",
         sms: "",
         captcha: "",
-        password: "",
       },
       sms: {
         max: 120,
@@ -106,20 +76,14 @@ export default {
       reCaptcha: false,
     };
   },
+  computed: {
+    ...mapState(["user"]),
+  },
   mounted() {},
   methods: {
-    clearMobile() {
-      this.form.mobile = null;
-    },
-    clearPassword() {
-      this.form.password = null;
-    },
     openDialog() {
       if (this.sms.loading) {
         // 冷却中
-        return;
-      }
-      if (!this.form.mobile) {
         return;
       }
       this.form.captcha = null;
@@ -132,14 +96,13 @@ export default {
       this.form.captcha = val;
       this.captcha = cap;
       this.$api.Other.SendSms({
-        mobile: this.form.mobile,
+        mobile: this.user.mobile,
         image_key: this.captcha.key,
         image_captcha: this.form.captcha,
-        scene: "password_reset",
+        scene: "mobile_bind",
       })
         .then((res) => {
           // 发送成功
-
           this.openmask = false;
           this.confirmDialog = true;
         })
@@ -153,23 +116,15 @@ export default {
     },
     submit(val) {
       this.form.sms = val;
-      if (!this.form.mobile) {
-        this.$message.error("请输入手机号");
-        return;
-      }
-      if (!this.form.password) {
-        this.$message.error("请输入密码");
-        return;
-      }
-      this.$api.Member.PasswordChange({
-        mobile: this.form.mobile,
+      this.$api.Member.MobileVerify({
+        mobile: this.user.mobile,
         mobile_code: this.form.sms,
-        password: this.form.password,
       })
         .then((res) => {
+          this.sign = res.data.sign;
           this.$message.success("成功");
           setTimeout(() => {
-            this.$router.back();
+            this.verify = true;
           }, 500);
         })
         .catch((e) => {
@@ -224,7 +179,7 @@ export default {
       box-sizing: border-box;
       margin-bottom: 30px;
     }
-    .group-item {
+    .item {
       width: 100%;
       height: auto;
       float: left;
@@ -242,7 +197,16 @@ export default {
         line-height: 36px;
         margin-right: 25px;
       }
-
+      .mobile {
+        height: 36px;
+        font-size: 16px;
+        font-weight: 400;
+        color: #333333;
+        line-height: 36px;
+        .tit {
+          margin-right: 14px;
+        }
+      }
       .value {
         flex: 1;
         display: flex;
@@ -258,7 +222,6 @@ export default {
           outline: none;
           color: #333333;
           font-size: 16px;
-          border: none;
         }
       }
     }
