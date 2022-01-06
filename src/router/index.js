@@ -1,189 +1,178 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-const originalPush = VueRouter.prototype.push
+import Vue from "vue";
+import VueRouter from "vue-router";
+const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
-}
+  return originalPush.call(this, location).catch((err) => err);
+};
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
-    path: '/',
-    name: 'Index',
+    path: "/",
+    name: "Index",
     meta: {
-      title: '首页'
+      title: "首页",
     },
-    component: () => import('../views/index/index.vue'),
-
+    component: () => import("../views/index/index.vue"),
   },
   {
-    path: '/login',
-    name: 'Login',
+    path: "/login",
+    name: "Login",
     meta: {
-      title: '快捷登录/注册',
+      title: "快捷登录/注册",
     },
-    component: () => import('../views/auth/login.vue'),
-
+    component: () => import("../views/auth/login.vue"),
   },
   {
-    path: '/login-password',
-    name: 'LoginPassword',
+    path: "/login-password",
+    name: "LoginPassword",
     meta: {
-      title: '密码登录'
+      title: "密码登录",
     },
-    component: () => import('../views/auth/login-password.vue'),
-
+    component: () => import("../views/auth/login-password.vue"),
   },
   {
-    path: '/search',
-    name: 'Search',
+    path: "/search",
+    name: "Search",
     meta: {
-      title: '搜索'
+      title: "搜索",
     },
-    component: () => import('../views/search/index.vue'),
-
+    component: () => import("../views/search/index.vue"),
   },
   {
-    path: '/vod',
-    name: 'Vod',
+    path: "/vod",
+    name: "Vod",
     meta: {
-      title: '录播课程'
+      title: "录播课程",
     },
-    component: () => import('../views/vod/index.vue'),
-
+    component: () => import("../views/vod/index.vue"),
   },
   {
-    path: '/role',
-    name: 'Role',
+    path: "/role",
+    name: "Role",
     meta: {
-      title: 'VIP会员',
+      title: "VIP会员",
       auth: true,
     },
-    component: () => import('../views/role/index.vue'),
-
+    component: () => import("../views/role/index.vue"),
   },
   {
-    path: '/order',
-    name: 'Order',
+    path: "/order",
+    name: "Order",
     meta: {
-      title: '收银台',
+      title: "收银台",
       auth: true,
     },
-    component: () => import('../views/order/index.vue'),
-
+    component: () => import("../views/order/index.vue"),
   },
   {
-    path: '/order/pay',
-    name: 'OrderPay',
+    path: "/order/pay",
+    name: "OrderPay",
     meta: {
       title: "支付中",
       auth: true,
     },
-    component: () => import('../views/order/pay.vue'),
-
+    component: () => import("../views/order/pay.vue"),
   },
   {
-    path: '/order/success',
-    name: 'OrderSuccess',
+    path: "/order/success",
+    name: "OrderSuccess",
     meta: {
       title: "支付成功",
       auth: true,
     },
-    component: () => import('../views/order/success.vue'),
-
+    component: () => import("../views/order/success.vue"),
   },
   {
-    path: '/messages',
-    name: 'Messages',
+    path: "/messages",
+    name: "Messages",
     meta: {
-      title: '我的消息',
+      title: "我的消息",
       auth: true,
     },
-    component: () => import('../views/messages/index.vue'),
-
+    component: () => import("../views/messages/index.vue"),
   },
   {
-    path: '/vod/detail',
-    name: 'VodDetail',
+    path: "/vod/detail",
+    name: "VodDetail",
     meta: {
-      title: '课程详情'
+      title: "课程详情",
     },
-    component: () => import('../views/vod/detail.vue'),
-
+    component: () => import("../views/vod/detail.vue"),
   },
   {
-    path: '/vod/video',
-    name: 'VodVideo',
+    path: "/vod/video",
+    name: "VodVideo",
     meta: {
-      title: '视频播放',
+      title: "视频播放",
       auth: true,
     },
-    component: () => import('../views/vod/play.vue'),
-
+    component: () => import("../views/vod/play.vue"),
   },
   {
-    path: '/study',
-    name: 'Study',
+    path: "/study",
+    name: "Study",
     meta: {
-      title: '我的课程',
+      title: "我的课程",
     },
-    component: () => import('../views/study/index.vue'),
-
+    component: () => import("../views/study/index.vue"),
   },
   {
-    path: '/member',
-    name: 'Me',
+    path: "/member",
+    name: "Me",
     meta: {
-      title: '会员中心',
+      title: "会员中心",
     },
-    component: () => import('../views/member/index.vue'),
-
+    component: () => import("../views/member/index.vue"),
   },
   {
-    path: '/member/order',
-    name: 'MemberOrder',
+    path: "/member/order",
+    name: "MemberOrder",
     meta: {
-      title: '我的订单',
+      title: "我的订单",
       auth: true,
     },
-    component: () => import('../views/member/order.vue'),
-
+    component: () => import("../views/member/order.vue"),
   },
   {
-    path: '/member/setting',
-    name: 'MemberSetting',
+    path: "/member/setting",
+    name: "MemberSetting",
     meta: {
-      title: '设置'
+      title: "设置",
     },
-    component: () => import('../views/member/setting.vue'),
-
+    component: () => import("../views/member/setting.vue"),
   },
   {
-    path: '/member/profile',
-    name: 'MemberProfile',
+    path: "/member/profile",
+    name: "MemberProfile",
     meta: {
-      title: '个人资料',
+      title: "个人资料",
       auth: true,
     },
-    component: () => import('../views/member/profile.vue'),
-
+    component: () => import("../views/member/profile.vue"),
   },
   {
-    path: '/member/promocode',
-    name: 'MemberPromoCode',
+    path: "/member/password",
+    name: "ChangePassword",
     meta: {
-      title: '我的邀请码',
+      title: "重置密码",
+    },
+    component: () => import("../views/member/password.vue"),
+  },
+  {
+    path: "/member/promocode",
+    name: "MemberPromoCode",
+    meta: {
+      title: "我的邀请码",
       auth: true,
     },
-    component: () => import('../views/member/promocode.vue'),
-
+    component: () => import("../views/member/promocode.vue"),
   },
-
-]
+];
 
 const router = new VueRouter({
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

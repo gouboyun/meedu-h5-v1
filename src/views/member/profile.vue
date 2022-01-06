@@ -159,69 +159,6 @@
         </div>
         <div class="confirm" @click="NewMobileValidate()">立即绑定</div>
       </div>
-      <div
-        style="height: 380px"
-        class="mobile-box borderbox"
-        v-if="forgetPassword"
-      >
-        <div class="cancel" @click="cancel()">
-          <img src="../../assets/img/close.png" />
-        </div>
-        <div class="input-box">
-          <input
-            class="input-item"
-            autocomplete="off"
-            v-model="messageForm.mobile"
-            required=""
-            placeholder="请输入手机号"
-          />
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            class="input-short"
-            required=""
-            autocomplete="off"
-            v-model="messageForm.captcha"
-            placeholder="请输入图形验证码"
-          />
-          <div class="captcha">
-            <img
-              class="captcha-img"
-              :src="captcha.img"
-              mode="widthFix"
-              @click="getCaptcha"
-            />
-          </div>
-        </div>
-        <div class="input-box">
-          <input
-            type="text"
-            placeholder="请输入手机验证码"
-            autocomplete="off"
-            v-model="messageForm.sms"
-            class="input-short"
-            required=""
-          />
-          <div class="buttons">
-            <span class="send-sms-button" @click="sendSms()">
-              <template v-if="sms.loading"> {{ sms.current }}s </template>
-              <template v-else>获取验证码</template>
-            </span>
-          </div>
-        </div>
-        <div class="input-box">
-          <input
-            type="password"
-            placeholder="请设置账号密码"
-            autocomplete="off"
-            v-model="messageForm.password"
-            class="input-item"
-            required=""
-          />
-        </div>
-        <div class="confirm" @click="editValidate()">重置密码</div>
-      </div>
     </div>
     <div class="navheader borderbox">
       <img
@@ -229,19 +166,11 @@
         @click="goBack()"
         src="../../assets/img/icon-back.png"
       />
-      <div class="title">个人资料</div>
+      <div class="title">个人中心</div>
     </div>
-    <div class="group-box">
-      <div class="group-item">
-        <div class="name">头像</div>
-        <div class="value">
-          <img
-            :src="user.avatar"
-            border-radius="50%"
-            width="36px"
-            height="36px"
-          />
-        </div>
+    <div class="user-avatar">
+      <div class="value">
+        <img :src="user.avatar" />
         <input
           class="input-avatar"
           type="file"
@@ -249,26 +178,31 @@
           @change="uploadAvatar"
         />
       </div>
+      <div class="name">点击更换头像</div>
+    </div>
+    <div class="form-box">
+      <div class="tit">账户信息</div>
       <div class="group-item" @click="changeNickname">
         <div class="name">昵称</div>
         <div class="value">
           <span>{{ user.nick_name }}</span>
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
-    </div>
-    <div class="group-box">
       <div class="group-item">
         <div class="name">绑定微信</div>
         <div class="value">
           <span v-if="user.is_bind_wechat === 1">已绑定</span>
-          <span v-else @click="bindWechat">点击绑定</span>
+          <span class="un" v-else @click="bindWechat">点击绑定</span>
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
       <div class="group-item">
         <div class="name">绑定QQ</div>
         <div class="value">
           <span v-if="user.is_bind_qq === 1">已绑定</span>
-          <span v-else @click="bindQQ">点击绑定</span>
+          <span class="un" v-else @click="bindQQ">点击绑定</span>
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
       <div class="group-item">
@@ -277,13 +211,16 @@
           <span v-if="user.is_bind_mobile === 1" @click="changeMobile">{{
             user.mobile.substr(0, 3) + "****" + user.mobile.substr(7)
           }}</span>
-          <span v-else @click="bindMobile">点击绑定</span>
+          <span class="un" v-else @click="bindMobile">点击绑定</span>
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
-      <div class="group-item">
+      <div class="group-item" @click="changePassword">
         <div class="name">修改密码</div>
         <div class="value">
-          <span @click="changePassword">点击修改</span>
+          <span v-if="user.is_password_set === 1">已设置</span>
+          <span class="un" v-else>设置密码</span>
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
     </div>
@@ -322,7 +259,6 @@ export default {
       changeMo: false,
       newMobile: false,
       verMobile: false,
-      forgetPassword: false,
       error: this.$route.query.error,
       loading: false,
       profile: [],
@@ -457,7 +393,6 @@ export default {
       this.changeMo = false;
       this.changeNick = false;
       this.newMobile = false;
-      this.forgetPassword = false;
       this.openmask = false;
       this.messageForm.mobile = null;
       this.messageForm.sms = null;
@@ -492,41 +427,7 @@ export default {
         this.captcha = res.data;
       });
     },
-    editValidate() {
-      if (this.loading) {
-        return;
-      }
-      if (!this.messageForm.mobile) {
-        this.$message.error("请输入手机号");
-        return;
-      }
-      if (!this.messageForm.sms) {
-        this.$message.error("请输入手机验证码");
-        return;
-      }
-      if (!this.messageForm.password) {
-        this.$message.error("请设置账号密码");
-        return;
-      }
-      this.loading = true;
-      this.$api.Member.PasswordChange({
-        mobile: this.messageForm.mobile,
-        mobile_code: this.messageForm.sms,
-        password: this.messageForm.password,
-      })
-        .then((resp) => {
-          this.loading = false;
-          this.$message.success("设置成功");
-          this.cancel();
-          setTimeout(() => {
-            this.getData();
-          }, 500);
-        })
-        .catch((e) => {
-          this.loading = false;
-          this.$message.error(e.message);
-        });
-    },
+
     changeMobile() {
       this.scene = "mobile_bind";
       this.getCaptcha();
@@ -632,10 +533,9 @@ export default {
       this.openmask = true;
     },
     changePassword() {
-      this.scene = "password_reset";
-      this.getCaptcha();
-      this.forgetPassword = true;
-      this.openmask = true;
+      this.$router.push({
+        name: "ChangePassword",
+      });
     },
     submitHandle() {
       if (!this.form.content) {
@@ -663,7 +563,7 @@ export default {
 .container {
   box-sizing: border-box;
   padding-top: 50px;
-  background: #f6f6f6;
+  background: #fff;
 }
 .mask {
   width: 100%;
@@ -824,57 +724,156 @@ export default {
     }
   }
 }
-.group-box {
+.user-avatar {
   width: 100%;
   height: auto;
   float: left;
-  background: #fff;
-  margin-top: 10px;
-  .group-item {
-    width: 100%;
-    box-sizing: border-box;
-    background: #ffffff;
-    padding: 7px 15px;
-    height: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 30px;
+  margin-bottom: 50px;
+  .value {
+    width: 64px;
+    height: 64px;
     float: left;
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: flex;
-    border-bottom: 1px solid #f6f6f6;
     position: relative;
+    img {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+    }
     .input-avatar {
       position: absolute;
-      top: 7px;
+      top: 0;
       left: 0;
       opacity: 0;
-      width: 100%;
-      height: 37px;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
     }
+  }
+
+  .name {
+    width: auto;
+    height: 13px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #666666;
+    line-height: 13px;
+    margin-top: 15px;
+  }
+}
+.form-box {
+  width: 100%;
+  height: auto;
+  float: left;
+  margin-bottom: 50px;
+  background-color: white;
+  .tit {
+    width: 100%;
+    height: auto;
+    float: left;
+    box-sizing: border-box;
+    padding-left: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333333;
+    line-height: 16px;
+    margin-bottom: 10px;
+  }
+
+  .group-item {
+    width: 100%;
+    height: 56px;
+    float: left;
+    display: flex;
+    box-sizing: border-box;
+    padding: 8px 20px;
+    border-bottom: 1px solid #f3f6f9;
+
     .name {
       width: 150px;
-      height: 37px;
+      height: 40px;
       float: left;
-      line-height: 37px;
-      font-size: 15px;
+      line-height: 40px;
+      font-size: 16px;
       color: #333333;
     }
+
     .value {
-      -webkit-box-flex: 1;
-      -webkit-flex: 1;
       flex: 1;
-      height: 37px;
+      height: 40px;
       text-align: right;
-      line-height: 37px;
       font-size: 14px;
-      color: #999999;
-      img {
-        width: 37px;
-        height: 37px;
-        border-radius: 50%;
-        overflow: visible;
-        opacity: 1;
-        transition: opacity 0.5s ease-in-out 0s;
-        background-color: transparent;
+      color: #666666;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      .un {
+        color: #c1c4cb;
+      }
+      .arrow {
+        display: inline-block;
+        width: 12px;
+        height: 12px;
+        margin-left: 15px;
+      }
+      .u-image,
+      u-image {
+        display: inline-block;
+      }
+
+      input {
+        display: inline-block;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        border: 0;
+        text-align: right;
+        outline: none;
+        font-size: 14px;
+
+        &::placeholder {
+          color: #c1c4cb;
+        }
+      }
+    }
+
+    .captcha {
+      width: auto;
+      height: auto;
+      line-height: 40px;
+      margin-left: 30px;
+
+      .u-image {
+        display: inline-block;
+      }
+    }
+
+    .buttons {
+      width: auto;
+      height: auto;
+      line-height: 40px;
+      margin-left: 30px;
+
+      .send-sms-button,
+      .promo-code-check-button {
+        width: 100px;
+        height: 30px;
+        line-height: 30px;
+        margin-top: 3px;
+        text-align: center;
+        color: white;
+        background-color: #3ca7fa;
+        font-size: 14px;
+        border-radius: 3px;
+        float: left;
+      }
+
+      .promo-code-check-button {
+        width: 50px;
       }
     }
   }
