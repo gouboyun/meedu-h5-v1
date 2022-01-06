@@ -244,9 +244,7 @@ export default {
   },
   methods: {
     initData() {
-      if (this.isLogin) {
-        this.getUnread();
-      }
+      this.getUnread();
     },
     goLogin() {
       this.$router.push({
@@ -260,8 +258,8 @@ export default {
       this.$router.push({ name: "Role" });
     },
     getUnread() {
-      this.$api.Member.UnReadNum().then((data) => {
-        let num = data;
+      this.$api.Member.UnReadNum().then((res) => {
+        let num = res.data;
         if (num === 0) {
           this.newStatus = false;
         } else {
@@ -293,8 +291,8 @@ export default {
     height: 26px;
     .count {
       position: absolute;
-      width: 6rpx;
-      height: 6rpx;
+      width: 3px;
+      height: 3px;
       border-radius: 50%;
       background: #ff5068;
       top: 0;
