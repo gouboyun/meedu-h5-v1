@@ -291,8 +291,8 @@ export default {
     height: 26px;
     .count {
       position: absolute;
-      width: 3px;
-      height: 3px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
       background: #ff5068;
       top: 0;
