@@ -1,7 +1,31 @@
 <template>
   <div id="content" class="container">
     <!-- 用户信息 -->
-    <div class="user-info-box" v-if="isLogin">
+    <div class="user-icon">
+      <div class="left-icon" @click="$router.push({ name: 'Messages' })">
+        <i class="count" v-if="newStatus"></i>
+        <img
+          src="../../assets/img/icon-message@2x.png"
+          style="width:26px; height: 26px"
+        />
+      </div>
+      <div class="right-icon">
+        <div
+          class="user-setting"
+          @click="$router.push({ name: 'MemberSetting' })"
+        >
+          <img
+            src="../../assets/img/icon-setting@2x.png"
+            style="width: 26px; height: 26px"
+          />
+        </div>
+      </div>
+    </div>
+    <div
+      class="user-info-box"
+      @click="$router.push({ name: 'MemberProfile' })"
+      v-if="isLogin"
+    >
       <div class="user-avatar-box">
         <img :src="user.avatar" />
       </div>
@@ -11,6 +35,12 @@
           {{ user.role ? user.role.name : "免费会员" }}
         </div>
       </div>
+      <div class="user-back">
+        <img
+          src="../../assets/img/new/back.png"
+          style="width: 12px; height: 12px"
+        />
+      </div>
     </div>
     <div class="user-info-box" @click="goLogin" v-else>
       <div class="user-avatar-box">
@@ -18,6 +48,12 @@
       </div>
       <div class="user-body">
         <div class="login-button">请登录</div>
+      </div>
+      <div class="user-back">
+        <img
+          src="../../assets/img/new/back.png"
+          style="width: 12px; height: 12px"
+        />
       </div>
     </div>
 
@@ -82,60 +118,6 @@
               </div>
             </div>
             <div class="name">我的邀请</div>
-          </div>
-
-          <div
-            class="grid-item"
-            v-if="isLogin"
-            @click="$router.push({ name: 'Messages' })"
-          >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-message@2x.png" />
-              </div>
-            </div>
-            <div class="name">我的消息</div>
-          </div>
-          <div class="grid-item" v-else @click="goLogin">
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-message@2x.png" />
-              </div>
-            </div>
-            <div class="name">我的消息</div>
-          </div>
-
-          <div
-            class="grid-item"
-            v-if="isLogin"
-            @click="$router.push({ name: 'MemberProfile' })"
-          >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-info@2x.png" />
-              </div>
-            </div>
-            <div class="name">个人资料</div>
-          </div>
-          <div class="grid-item" v-else @click="goLogin">
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-info@2x.png" />
-              </div>
-            </div>
-            <div class="name">个人资料</div>
-          </div>
-
-          <div
-            class="grid-item"
-            @click="$router.push({ name: 'MemberSetting' })"
-          >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-setting@2x.png" />
-              </div>
-            </div>
-            <div class="name">设置</div>
           </div>
         </div>
       </div>
@@ -237,7 +219,9 @@ export default {
     NavFooter,
   },
   data() {
-    return {};
+    return {
+      newStatus: false,
+    };
   },
   computed: {
     ...mapState(["isLogin", "user", "func"]),
@@ -255,7 +239,15 @@ export default {
       return a;
     },
   },
+  mounted() {
+    this.initData();
+  },
   methods: {
+    initData() {
+      if (this.isLogin) {
+        this.getUnread();
+      }
+    },
     goLogin() {
       this.$router.push({
         name: "Login",
@@ -267,6 +259,16 @@ export default {
     goRole() {
       this.$router.push({ name: "Role" });
     },
+    getUnread() {
+      this.$api.Member.UnReadNum().then((data) => {
+        let num = data;
+        if (num === 0) {
+          this.newStatus = false;
+        } else {
+          this.newStatus = true;
+        }
+      });
+    },
   },
 };
 </script>
@@ -276,18 +278,59 @@ export default {
   margin-bottom: 53px;
   background: #f3f6f9;
 }
+.user-icon {
+  width: 100%;
+  background: #ffffff;
+  height: auto;
+  float: left;
+  box-sizing: border-box;
+  padding: 20px 15px 0 15px;
+  display: flex;
+  justify-content: space-between;
+  .left-icon {
+    position: relative;
+    width: 26px;
+    height: 26px;
+    .count {
+      position: absolute;
+      width: 6rpx;
+      height: 6rpx;
+      border-radius: 50%;
+      background: #ff5068;
+      top: 0;
+      right: 0;
+    }
+  }
+  .right-icon {
+    flex: 1;
+    display: flex;
+    flex-direction: row-reverse;
+    .user-setting {
+      position: relative;
+      width: 26px;
+      height: 26px;
+    }
+  }
+}
 
 /* 用户信息 */
 .user-info-box {
   width: 100%;
+  background: #ffffff;
   height: auto;
   float: left;
   box-sizing: border-box;
-  padding: 20px 15px;
+  padding: 25px 15px 30px 15px;
+  display: -webkit-box;
+  display: -webkit-flex;
   display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
 
   .user-avatar-box {
     width: auto;
+    height: 64px;
     box-sizing: border-box;
     padding-right: 15px;
     img {
@@ -299,7 +342,7 @@ export default {
 
   .user-body {
     flex: 1;
-
+    height: 64px;
     .user-nickname {
       width: 100%;
       height: auto;
@@ -338,8 +381,9 @@ export default {
 /* vip-banner */
 .vip-banner-box {
   width: 100%;
-  height: auto;
+  height: 60px;
   float: left;
+  background: #ffffff;
   text-align: center;
   img {
     height: 60px;
