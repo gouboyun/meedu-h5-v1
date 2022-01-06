@@ -56,6 +56,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       verify: false,
       confirmDialog: false,
       sign: null,
@@ -93,6 +94,10 @@ export default {
       this.openmask = false;
     },
     sendSms(val, cap) {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       this.form.captcha = val;
       this.captcha = cap;
       this.$api.Other.SendSms({
@@ -103,10 +108,12 @@ export default {
       })
         .then((res) => {
           // 发送成功
+          this.loading = false;
           this.openmask = false;
           this.confirmDialog = true;
         })
         .catch((e) => {
+          this.loading = false;
           this.reCaptcha = !this.reCaptcha;
           this.$message.error(e.message);
         });
@@ -115,12 +122,17 @@ export default {
       this.confirmDialog = false;
     },
     submit(val) {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       this.form.sms = val;
       this.$api.Member.MobileVerify({
         mobile: this.user.mobile,
         mobile_code: this.form.sms,
       })
         .then((res) => {
+          this.loading = false;
           this.sign = res.data.sign;
           this.$message.success("成功");
           setTimeout(() => {
@@ -128,6 +140,7 @@ export default {
           }, 500);
         })
         .catch((e) => {
+          this.loading = false;
           this.$message.error(e.message);
         });
     },

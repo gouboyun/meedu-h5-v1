@@ -86,6 +86,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       confirmDialog: false,
       captcha: {
         img: null,
@@ -129,6 +130,10 @@ export default {
       this.openmask = false;
     },
     sendSms(val, cap) {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       this.form.captcha = val;
       this.captcha = cap;
       this.$api.Other.SendSms({
@@ -139,11 +144,12 @@ export default {
       })
         .then((res) => {
           // 发送成功
-
+          this.loading = false;
           this.openmask = false;
           this.confirmDialog = true;
         })
         .catch((e) => {
+          this.loading = false;
           this.reCaptcha = !this.reCaptcha;
           this.$message.error(e.message);
         });
@@ -152,6 +158,10 @@ export default {
       this.confirmDialog = false;
     },
     submit(val) {
+      if (this.loading) {
+        return;
+      }
+      this.loading = true;
       this.form.sms = val;
       if (!this.form.mobile) {
         this.$message.error("请输入手机号");
@@ -167,12 +177,14 @@ export default {
         password: this.form.password,
       })
         .then((res) => {
+          this.loading = false;
           this.$message.success("成功");
           setTimeout(() => {
             this.$router.back();
           }, 500);
         })
         .catch((e) => {
+          this.loading = false;
           this.$message.error(e.message);
         });
     },

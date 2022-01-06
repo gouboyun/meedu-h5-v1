@@ -104,6 +104,7 @@ export default {
   },
   data() {
     return {
+      loading: false,
       url: this.$route.query.url || null,
       captcha: {
         key: null,
@@ -193,28 +194,21 @@ export default {
         });
     },
     loginHandler(val) {
+      if (this.loading) {
+        return;
+      }
       this.form.sms = val;
-      if (!this.form.mobile) {
-        this.$message.error("请输入手机号");
-        return;
-      }
-      if (!this.form.sms) {
-        this.$message.error("请输入短信验证码");
-        return;
-      }
-      if (!this.agreeProtocol) {
-        this.$message.error("请同意协议");
-        return;
-      }
       this.$api.Auth.SmsLogin({
         mobile: this.form.mobile,
         mobile_code: this.form.sms,
         msv: "",
       })
         .then((res) => {
+          this.loading = false;
           this.handler(res.data.token);
         })
         .catch((e) => {
+          this.loading = false;
           this.$message.error(e.message);
         });
     },
@@ -223,10 +217,12 @@ export default {
       window.localStorage.setItem("token", token);
 
       this.$api.User.Detail()
-        .then((data) => {
-          this.submitLogin(data);
+        .then((res) => {
+          this.submitLogin(res.data);
           // 跳转到之前的页面
-          this.$router.back();
+          setTimeout(() => {
+            this.$router.back();
+          }, 500);
         })
         .catch((e) => {
           if (e.code === 401) {
