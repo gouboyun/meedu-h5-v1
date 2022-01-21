@@ -47,6 +47,15 @@ export default {
     );
     return flag;
   },
+  isWechatMini() {
+    let ua = navigator.userAgent.toLowerCase();
+    let isWeixin = ua.indexOf("micromessenger") != -1;
+    if (isWeixin) {
+      return true;
+    } else {
+      return false;
+    }
+  },
   getHMS(time) {
     const hour =
       parseInt(time / 3600) < 10

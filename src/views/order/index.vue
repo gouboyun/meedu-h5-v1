@@ -64,7 +64,7 @@
         <img
           class="icon"
           src="../../assets/img/paywechat.png"
-          v-if="item.sign === 'wechat-jsapi'"
+          v-if="item.sign === 'wechat_h5' || item.sign === 'wechat-jsapi'"
         />
         <img
           class="icon"
@@ -109,22 +109,9 @@ export default {
       configTip: false,
       openmask: false,
       discount: 0,
-      payments: [
-        {
-          name: "支付宝支付",
-          sign: "alipay",
-        },
-        {
-          name: "微信支付",
-          sign: "wechat-jsapi",
-        },
-        {
-          name: "手动支付",
-          sign: "handPay",
-        },
-      ],
+      payments: [],
       isUsed: false,
-      payment: "alipay",
+      payment: "",
       total: parseInt(this.$route.query.goods_charge),
       promoCode: null,
       promoCodeBoxStatus: false,
@@ -146,8 +133,23 @@ export default {
       return val;
     },
   },
-  mounted() {},
+  mounted() {
+    if (this.$utils.isWechatMini()) {
+      this.paymentScene = "wechat";
+    } else {
+      this.paymentScene = "h5";
+    }
+    this.params();
+  },
   methods: {
+    params() {
+      this.$api.Order.Payments({
+        scene: this.paymentScene,
+      }).then((res) => {
+        this.payments = res.data;
+        this.payment = this.payments[0].sign;
+      });
+    },
     setPayment(sign) {
       this.payment = sign;
     },
@@ -249,12 +251,11 @@ export default {
           this.$router.back();
         }, 1000);
       } else {
-        if (this.payment === "alipay" || this.payment === "wechat-jsapi") {
-          if (this.payment === "wechat-jsapi") {
-            this.paymentScene = "wechat";
-          } else {
-            this.paymentScene === "h5";
-          }
+        if (
+          this.payment === "alipay" ||
+          this.payment === "wechat_h5" ||
+          this.payment === "wechat-jsapi"
+        ) {
           let host = window.location.host;
           let redirect = encodeURIComponent(host + "/order/success");
           let indexUrl = encodeURIComponent(host);
@@ -468,12 +469,11 @@ export default {
 .credit2-box {
   width: 100%;
   float: left;
-  height: 210px;
+  height: auto;
   background: #ffffff;
   margin-top: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
   padding: 30px 15px;
   .payment-item {
@@ -483,6 +483,10 @@ export default {
     flex-direction: row;
     align-items: center;
     position: relative;
+    margin-bottom: 30px;
+    &:last-child {
+      margin-bottom: 0px;
+    }
     .icon {
       width: 30px;
       height: 30px;
