@@ -223,6 +223,13 @@ export default {
       newStatus: false,
     };
   },
+  watch: {
+    isLogin(val) {
+      if (val) {
+        this.getUnread();
+      }
+    },
+  },
   computed: {
     ...mapState(["isLogin", "user", "func"]),
     otherFunc() {
@@ -244,7 +251,9 @@ export default {
   },
   methods: {
     initData() {
-      this.getUnread();
+      if (this.isLogin) {
+        this.getUnread();
+      }
     },
     goLogin() {
       this.$router.push({
