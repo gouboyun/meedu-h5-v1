@@ -7,6 +7,7 @@
         <div class="value">
           <input
             type="number"
+            class="input-text"
             v-model="form.mobile"
             placeholder="请输入新的手机号码"
           />
@@ -23,6 +24,7 @@
         <div class="value">
           <input
             type="text"
+            class="input-text"
             v-model="form.captcha"
             placeholder="请输入图形验证码"
           />
@@ -39,6 +41,7 @@
         <div class="name">验证码</div>
         <div class="value">
           <input
+            class="input-text"
             type="number"
             v-model="form.sms"
             placeholder="请输入短信验证码"
@@ -169,9 +172,9 @@ export default {
 <style lang="less" scoped>
 .btn-confirm {
   width: 100%;
-  height: 96rpx;
+  height: 48px;
   background-color: rgba(#3ca7fa, 0.6);
-  border-radius: 8rpx;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -189,56 +192,59 @@ export default {
   height: 100%;
   float: left;
   background: white;
+  box-sizing: border-box;
   .nav-top {
     width: 100%;
-    height: 100rpx;
+    height: 50px;
     box-sizing: border-box;
-    padding: 60rpx 0 0 30rpx;
+    padding: 30px 0 0 15px;
   }
   .group-form-box {
+    display: block;
     width: 100%;
     height: auto;
     float: left;
     margin-top: 0px;
     background-color: white;
     box-sizing: border-box;
-    padding: 60rpx 60rpx 0 60rpx;
+    padding: 30px 30px 0 30px;
     .group-title {
+      display: block;
       width: 100%;
-      height: 48rpx;
-      font-size: 48rpx;
+      height: 24px;
+      font-size: 24px;
       font-weight: 500;
       color: #171923;
-      line-height: 48rpx;
+      line-height: 24px;
       box-sizing: border-box;
-      margin-bottom: 60rpx;
+      margin-bottom: 30px;
     }
     .item {
       width: 100%;
       height: auto;
       float: left;
       box-sizing: border-box;
-      padding: 12rpx 0;
+      padding: 6px 0;
       display: flex;
-      border-bottom: 2rpx solid #f4faff;
-      margin-bottom: 100rpx;
+      border-bottom: 1px solid #f4faff;
+      margin-bottom: 50px;
       .name {
         width: auto;
         height: auto;
-        font-size: 32rpx;
+        font-size: 16px;
         font-weight: 400;
         color: #333333;
-        line-height: 72rpx;
-        margin-right: 50rpx;
+        line-height: 36px;
+        margin-right: 25px;
       }
       .mobile {
-        height: 72rpx;
-        font-size: 32rpx;
+        height: 36px;
+        font-size: 16px;
         font-weight: 400;
         color: #333333;
-        line-height: 72rpx;
+        line-height: 36px;
         .tit {
-          margin-right: 28rpx;
+          margin-right: 14px;
         }
       }
       .value {
@@ -248,14 +254,16 @@ export default {
         justify-content: space-between;
         box-sizing: border-box;
         align-items: center;
+        height: 36px;
         .input-text {
-          max-width: 200px;
+          max-width: 133px;
           height: 36px;
           float: left;
           box-sizing: border-box;
           outline: none;
           color: #333333;
           font-size: 16px;
+          border: none;
         }
       }
       .captcha {
