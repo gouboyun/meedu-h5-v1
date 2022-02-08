@@ -150,7 +150,7 @@ export default {
         return;
       }
 
-      this.$api.Member.NewMobile({
+      this.$api.Member.MobileChange({
         mobile: this.form.mobile,
         mobile_code: this.form.sms,
         sign: this.sign,

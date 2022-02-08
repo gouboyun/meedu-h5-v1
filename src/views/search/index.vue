@@ -270,7 +270,7 @@ export default {
     .item-content {
       margin-top: 20px;
       width: 100%;
-      height: 40px;
+      max-height: 40px;
       font-size: 14px;
       font-weight: 400;
       color: #666666;
