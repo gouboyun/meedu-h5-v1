@@ -16,10 +16,11 @@
     <template v-if="!confirmDialog">
       <div class="group-form-box">
         <div class="group-title">绑定手机号</div>
-        <div class="item">
+        <div class="group-item">
           <div class="name">手机号</div>
           <div class="value">
             <input
+              class="input-text"
               type="number"
               v-model="form.mobile"
               placeholder="请输入您的手机号"
