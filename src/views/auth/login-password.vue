@@ -1,22 +1,28 @@
 <template>
   <div class="container">
-    <div class="navheader borderbox">
+    <div class="navheader borderbox" style="border-bottom:none;">
       <img
         class="back"
         @click="goBack()"
         src="../../assets/img/icon-back.png"
       />
-      <div class="title">密码登录</div>
     </div>
     <div class="password-login-form">
+      <div class="password-login-title">登录</div>
       <div class="item">
         <div class="name">手机号</div>
         <div class="input">
           <input
             type="text"
             class="input-text"
-            placeholder="手机号"
+            placeholder="请输入手机号码"
             v-model="passwordForm.mobile"
+          />
+          <img
+            v-show="passwordForm.mobile"
+            src="../../assets/img/new/close.png"
+            style="width:16px;height:16px;"
+            @click="clearMobile()"
           />
         </div>
       </div>
@@ -26,27 +32,35 @@
           <input
             type="password"
             class="input-text"
-            placeholder="密码"
+            placeholder="请输入密码"
             v-model="passwordForm.password"
+          />
+          <img
+            v-show="passwordForm.password"
+            src="../../assets/img/new/close.png"
+            style="width:16px;height:16px;"
+            @click="clearPassword()"
           />
         </div>
       </div>
     </div>
 
-    <div class="box border-box mt-15 pl-30 pr-30">
-      <btn-block @taptap="passwordLoginHandler" text="登录"></btn-block>
+    <div class="box border-box mt-15 pl-60 pr-60">
+      <div
+        class="btn-confirm"
+        :class="{ active: passwordForm.mobile && passwordForm.password }"
+        @click="passwordLoginHandler"
+      >
+        登录
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import { mapMutations } from "vuex";
-import BtnBlock from "../../components/btn-block";
 
 export default {
-  components: {
-    BtnBlock,
-  },
   data() {
     return {
       url: this.$route.query.url || null,
@@ -59,13 +73,17 @@ export default {
   computed: {},
   methods: {
     ...mapMutations(["submitLogin"]),
+    clearMobile() {
+      this.passwordForm.mobile = null;
+    },
+    clearPassword() {
+      this.passwordForm.password = null;
+    },
     passwordLoginHandler() {
       if (!this.passwordForm.mobile) {
-        this.$message.error("请输入手机号");
         return;
       }
       if (!this.passwordForm.password) {
-        this.$message.error("请输入密码");
         return;
       }
       this.$api.Auth.PasswordLogin({
@@ -93,7 +111,7 @@ export default {
 .container {
   box-sizing: border-box;
   padding-top: 50px;
-  background: #f6f6f6;
+  background: #fff;
 }
 .box {
   width: 100%;
@@ -101,48 +119,91 @@ export default {
   float: left;
   box-sizing: border-box;
 }
+.btn-confirm {
+  width: 100%;
+  height: 48px;
+  background-color: rgba(#3ca7fa, 0.6);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+  &.active {
+    background: #3ca7fa;
+  }
+}
 
 .password-login-form {
   width: 100%;
   height: auto;
   float: left;
-  margin-top: 15px;
+  margin-top: 0px;
   background-color: white;
+  box-sizing: border-box;
+  padding: 30px 30px 0 30px;
+  .password-login-title {
+    width: 100%;
+    height: 24px;
+    font-size: 24px;
+    font-weight: 500;
+    color: #171923;
+    line-height: 24px;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+  }
 
   .item {
     width: 100%;
     height: auto;
     float: left;
     box-sizing: border-box;
-    padding: 8px 15px;
+    padding: 6px 0;
     display: flex;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #f4faff;
+    margin-bottom: 50px;
 
     .name {
-      width: 100px;
+      width: 48px;
       height: auto;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 400;
-      color: #333;
-      line-height: 40px;
+      color: #333333;
+      line-height: 36px;
+      margin-right: 25px;
     }
 
     .input {
       flex: 1;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
       box-sizing: border-box;
+      align-items: center;
 
       .input-text {
-        width: 100%;
-        height: 40px;
-        font-size: 14px;
+        max-width: 200px;
+        height: 36px;
         float: left;
         box-sizing: border-box;
         outline: none;
-        color: #333;
+        color: #333333;
+        font-size: 16px;
         border: none;
-        padding: 0;
-        margin: 0;
-        text-decoration: inherit;
+      }
+    }
+    .captcha {
+      width: 90px;
+      height: 36px;
+      padding-top: 0px;
+      margin-left: 19px;
+      img {
+        width: 90px;
+        display: inline-block;
+        overflow: hidden;
+        position: relative;
       }
     }
   }

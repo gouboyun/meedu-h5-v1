@@ -1,10 +1,15 @@
 <template>
-  <div class="protocol" @click="agreeHandle">
-    <div class="checkbox-circle">
-      <div class="checkbox-dot" v-if="agree"></div>
+  <div
+    class="protocol"
+    :class="{ active: type === 'wechat' }"
+    @click="agreeHandle"
+  >
+    <div class="checkbox-dot" v-if="agree">
+      <img src="../assets/img/new/agree.png" style="width:20px;height:20px;" />
     </div>
+    <div class="checkbox-circle" v-else></div>
     <div class="protocol-text">
-      我同意
+      勾选同意
       <span class="href" @click="openPage(config.user_protocol)"
         >《用户协议》</span
       >
@@ -19,7 +24,7 @@
 <script>
 import { mapState } from "vuex";
 export default {
-  props: ["action"],
+  props: ["action", "type"],
   data() {
     return {
       agree: false,
@@ -48,35 +53,33 @@ export default {
 .protocol {
   display: flex;
   align-items: center;
-  justify-content: center;
   width: 100%;
   height: auto;
   float: left;
   box-sizing: border-box;
-  padding: 15px;
+  padding: 15px 30px;
   color: rgba(0, 0, 0, 0.4);
+  &.active {
+    padding: 15px 0;
+  }
 
   .checkbox-circle {
-    width: 12px;
-    height: 12px;
+    width: 20px;
+    height: 20px;
     box-sizing: border-box;
-    border-radius: 50%;
-    border: 1px solid #3ca7fa;
-    padding: 3px;
-
-    .checkbox-dot {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      background-color: #3ca7fa;
-    }
+    border: 1px solid #e5e5e5;
+  }
+  .checkbox-dot {
+    width: 20px;
+    height: 20px;
+    box-sizing: border-box;
   }
 
   .protocol-text {
     font-size: 12px;
     line-height: 12px;
     display: inline-block;
-    padding-left: 5px;
+    padding-left: 10px;
 
     .href {
       color: #3ca7fa;

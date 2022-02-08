@@ -33,6 +33,8 @@ export default {
         if (key) {
           token = key;
           window.localStorage.setItem("token", token);
+          let newUrl = this.$utils.removeTokenParams(window.location.href);
+          window.location.href = newUrl;
         } else {
           token = window.localStorage.getItem("token");
         }
@@ -63,9 +65,11 @@ export default {
     getConfig() {
       this.$api.Other.Config().then((res) => {
         this.setConfig(res.data);
-         if (!this.$utils.isMobile()) {
-            window.location.href=res.data.pc_url;
-         }
+        if (!this.$utils.isMobile()) {
+          if (res.data.pc_url !== "") {
+            window.location.href = res.data.pc_url;
+          }
+        }
       });
     },
   },

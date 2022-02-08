@@ -1,112 +1,110 @@
 <template>
   <div class="container">
-    <div class="navheader borderbox">
+    <captcha-dialog
+      :status="openmask"
+      :reStatus="reCaptcha"
+      @change="sendSms"
+      @cancel="qx"
+    ></captcha-dialog>
+    <div class="navheader borderbox" style="border-bottom:none;">
       <img
         class="back"
         @click="goBack()"
         src="../../assets/img/icon-back.png"
       />
-      <div class="title">快捷登录/注册</div>
     </div>
-    <div class="sms-login-form">
-      <div class="item">
-        <div class="name">手机号</div>
-        <div class="input">
-          <input
-            type="text"
-            class="input-text"
-            placeholder="手机号"
-            v-model="form.mobile"
-          />
+    <template v-if="!confirmDialog">
+      <div class="sms-login-form">
+        <div class="sms-login-title">登录/注册</div>
+        <div class="item">
+          <div class="name">手机号</div>
+          <div class="input">
+            <input
+              type="number"
+              class="input-text"
+              placeholder="请输入手机号码"
+              v-model="form.mobile"
+            />
+            <img
+              v-show="form.mobile"
+              src="../../assets/img/new/close.png"
+              style="width:16px;height:16px;"
+              @click="clearMobile()"
+            />
+          </div>
         </div>
       </div>
-      <div class="item">
-        <div class="name">图形验证码</div>
-        <div class="input">
-          <input
-            type="text"
-            class="input-text"
-            placeholder="图形验证码"
-            v-model="form.captcha"
-          />
-        </div>
-        <div class="captcha">
-          <img
-            :src="captcha.img"
-            mode="widthFix"
-            @click="getCaptcha"
-            width="100px"
-          />
-        </div>
-      </div>
-      <div class="item">
-        <div class="name">短信验证码</div>
-        <div class="input">
-          <input
-            type="text"
-            class="input-text"
-            placeholder="短信验证码"
-            v-model="form.sms"
-          />
-        </div>
-        <div class="buttons">
-          <span class="send-sms-button" @click="sendSms()">
-            <template v-if="sms.loading"> {{ sms.current }}s </template>
-            <template v-else>发送验证码</template>
-          </span>
-        </div>
-      </div>
-    </div>
 
-    <div class="btn-box border-box mt-15 pl-30 pr-30">
-      <btn-block @taptap="loginHandler" text="立即登录"></btn-block>
-    </div>
+      <div class="box border-box mt-15 pl-60 pr-60">
+        <div
+          class="btn-confirm"
+          :class="{ active: form.mobile }"
+          @click="openDialog"
+        >
+          获取短信验证码
+        </div>
+      </div>
 
-    <div class="login-button-box">
-      <span class="login-password-way" @click="goLoginPasswordPage"
-        >密码登录</span
+      <div class="login-button-box">
+        <span class="login-password-way" @click="goLoginPasswordPage"
+          >使用密码登录</span
+        >
+      </div>
+
+      <protocol @agree="protocolAgree"></protocol>
+
+      <!-- H5社交登录 -->
+      <div class="login-other-way" v-if="config">
+        <div class="socialite-box">
+          <div
+            class="socialite-login-item"
+            v-if="config.socialites.qq === 1"
+            @click="socialiteLogin('qq')"
+          >
+            <img src="../../assets/img/icon-qq.png" />
+          </div>
+
+          <div
+            class="socialite-login-item"
+            v-if="config.socialites.wechat_oauth === 1"
+            @click="h5WorkWeixinLogin()"
+          >
+            <img src="../../assets/img/wechat.png" />
+          </div>
+        </div>
+      </div>
+      <!-- #endif -->
+    </template>
+    <template v-if="confirmDialog">
+      <confirm-login
+        text="登录/注册"
+        scene="login"
+        :status="confirmDialog"
+        :mobile="form.mobile"
+        @change="loginHandler"
+        @cancel="loginCancel"
       >
-    </div>
-
-    <protocol @agree="protocolAgree"></protocol>
-
-    <!-- H5社交登录 -->
-    <div class="login-other-way" v-if="config">
-      <div class="socialite-box">
-        <div
-          class="socialite-login-item"
-          v-if="config.socialites.qq === 1"
-          @click="socialiteLogin('qq')"
-        >
-          <img src="../../assets/img/qq.png" />
-        </div>
-
-        <div
-          class="socialite-login-item"
-          v-if="config.socialites.wechat_oauth === 1"
-          @click="h5WorkWeixinLogin()"
-        >
-          <img src="../../assets/img/wechat.png" />
-        </div>
-      </div>
-    </div>
-    <!-- #endif -->
+      </confirm-login>
+    </template>
   </div>
 </template>
 
 <script>
 import Protocol from "../../components/protocol";
-import BtnBlock from "../../components/btn-block";
+import ConfirmLogin from "./components/confirm-login";
+import CaptchaDialog from "../../components/captcha-dialog";
 
 import { mapState, mapMutations } from "vuex";
 
 export default {
   components: {
     Protocol,
-    BtnBlock,
+    ConfirmLogin,
+    CaptchaDialog,
   },
   data() {
     return {
+      loading: false,
       url: this.$route.query.url || null,
       captcha: {
         key: null,
@@ -127,6 +125,9 @@ export default {
         step: 1,
       },
       agreeProtocol: false,
+      confirmDialog: false,
+      openmask: false,
+      reCaptcha: false,
     };
   },
   computed: {
@@ -140,22 +141,39 @@ export default {
     protocolAgree(bool) {
       this.agreeProtocol = bool;
     },
+    loginCancel() {
+      this.confirmDialog = false;
+    },
+    clearMobile() {
+      this.form.mobile = null;
+    },
+    openDialog() {
+      if (this.sms.loading) {
+        // 冷却中
+        return;
+      }
+      if (this.form.mobile.trim() === "") {
+        return;
+      }
+      if (this.agreeProtocol === false) {
+        this.$message.error("请同意协议");
+        return;
+      }
+      this.form.captcha = null;
+      this.openmask = true;
+    },
+    qx() {
+      this.openmask = false;
+    },
     getCaptcha() {
       this.$api.Other.Captcha().then((res) => {
         this.captcha = res.data;
       });
     },
-    sendSms() {
-      if (this.sms.loading) {
-        // 冷却中
-        return;
-      }
+    sendSms(val, cap) {
+      this.form.captcha = val;
+      this.captcha = cap;
       if (!this.form.mobile) {
-        this.$message.error("请输入手机号");
-        return;
-      }
-      if (!this.form.captcha) {
-        this.$message.error("请输入图形验证码");
         return;
       }
 
@@ -167,44 +185,30 @@ export default {
       })
         .then(() => {
           // 发送成功
-          this.sms.loading = this;
-          this.sms.current = this.sms.max;
-          let interval = setInterval(() => {
-            if (this.sms.current <= 1) {
-              this.sms.loading = false;
-              clearInterval(interval);
-            } else {
-              this.sms.current--;
-            }
-          }, 1000);
+          this.openmask = false;
+          this.confirmDialog = true;
         })
         .catch((e) => {
-          this.getCaptcha();
-          this.handler(e.message);
+          this.reCaptcha = !this.reCaptcha;
+          this.$message.error(e.message);
         });
     },
-    loginHandler() {
-      if (!this.form.mobile) {
-        this.$message.error("请输入手机号");
+    loginHandler(val) {
+      if (this.loading) {
         return;
       }
-      if (!this.form.sms) {
-        this.$message.error("请输入短信验证码");
-        return;
-      }
-      if (!this.agreeProtocol) {
-        this.$message.error("请同意协议");
-        return;
-      }
+      this.form.sms = val;
       this.$api.Auth.SmsLogin({
         mobile: this.form.mobile,
         mobile_code: this.form.sms,
         msv: "",
       })
         .then((res) => {
+          this.loading = false;
           this.handler(res.data.token);
         })
         .catch((e) => {
+          this.loading = false;
           this.$message.error(e.message);
         });
     },
@@ -213,10 +217,12 @@ export default {
       window.localStorage.setItem("token", token);
 
       this.$api.User.Detail()
-        .then((data) => {
-          this.submitLogin(data);
+        .then((res) => {
+          this.submitLogin(res.data);
           // 跳转到之前的页面
-          this.$router.back();
+          setTimeout(() => {
+            this.$router.back();
+          }, 500);
         })
         .catch((e) => {
           if (e.code === 401) {
@@ -273,7 +279,7 @@ export default {
 .container {
   box-sizing: border-box;
   padding-top: 50px;
-  background: #f6f6f6;
+  background: #fff;
 }
 .btn-box {
   width: 100%;
@@ -281,55 +287,91 @@ export default {
   float: left;
   box-sizing: border-box;
 }
+.btn-confirm {
+  width: 100%;
+  height: 48px;
+  background-color: rgba(#3ca7fa, 0.6);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  color: #ffffff;
+  cursor: pointer;
+  &.active {
+    background: #3ca7fa;
+  }
+}
 .sms-login-form {
   width: 100%;
   height: auto;
   float: left;
-  margin-top: 15px;
+  margin-top: 0px;
   background-color: white;
+  box-sizing: border-box;
+  padding: 30px 30px 0 30px;
+  .sms-login-title {
+    width: 100%;
+    height: 24px;
+    font-size: 24px;
+    font-weight: 500;
+    color: #171923;
+    line-height: 24px;
+    box-sizing: border-box;
+    margin-bottom: 30px;
+  }
 
   .item {
     width: 100%;
     height: auto;
     float: left;
     box-sizing: border-box;
-    padding: 8px 15px;
+    padding: 6px 0;
     display: flex;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    border-bottom: 1px solid #f4faff;
+    margin-bottom: 50px;
 
     .name {
-      width: 100px;
+      width: auto;
       height: auto;
-      font-size: 14px;
+      font-size: 16px;
       font-weight: 400;
       color: #333333;
-      line-height: 40px;
+      line-height: 36px;
+      margin-right: 25px;
     }
 
     .input {
       flex: 1;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
       box-sizing: border-box;
-
+      align-items: center;
       .input-text {
-        width: 100%;
-        height: 40px;
+        max-width: 200px;
+        height: 36px;
         float: left;
         box-sizing: border-box;
         outline: none;
         color: #333333;
-        font-size: 14px;
+        font-size: 16px;
         border: none;
-        padding: 0;
-        margin: 0;
-        text-decoration: inherit;
       }
     }
 
     .captcha {
-      width: 100px;
-      height: 35px;
-      padding-top: 5px;
-      margin-left: 15px;
+      width: 90px;
+      height: 36px;
+      padding-top: 0px;
+      margin-left: 19px;
+      img {
+        width: 90px;
+        display: inline-block;
+        overflow: hidden;
+        position: relative;
+      }
     }
 
     .buttons {
@@ -366,10 +408,12 @@ export default {
     display: block;
     width: 100%;
     height: auto;
-    padding-top: 15px;
+    margin-top: 30px;
+    margin-bottom: 35px;
     text-align: center;
     font-size: 14px;
-    color: rgba(0, 0, 0, 0.5);
+    font-weight: 400;
+    color: #3ca7fa;
   }
 }
 
@@ -416,12 +460,14 @@ export default {
 
 .login-other-way {
   width: 100%;
-  height: auto;
+  height: 48px;
   float: left;
   box-sizing: border-box;
-  padding-left: 15px;
-  padding-right: 15px;
-  margin-top: 30px;
+  padding-left: 30px;
+  padding-right: 30px;
+  position: fixed;
+  bottom: 50px;
+  left: 0;
 
   .auth-login-divider {
     background-color: #f8f8f8 !important;
@@ -432,22 +478,21 @@ export default {
     align-items: center;
     justify-content: space-evenly;
     width: 100%;
-    height: auto;
+    height: 48px;
     float: left;
     text-align: center;
-    margin-top: 30px;
 
     .socialite-login-item {
       display: inline-block;
-      width: 40px;
-      height: 40px;
-      border-radius: 20px;
-      line-height: 40px;
+      width: 48px;
+      height: 48px;
+      border-radius: 24px;
+      line-height: 48px;
       text-align: center;
       color: white;
       img {
-        width: 40px;
-        height: 40px;
+        width: 48px;
+        height: 48px;
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="copyright">
-    <div class="item">Copyright 2020-2021.</div>
+    <div class="item">Copyright {{ localYear }}.</div>
     <div class="item" v-if="config">{{ config.webname }} 版权所有</div>
   </div>
 </template>
@@ -11,6 +11,11 @@ import { mapState } from "vuex";
 export default {
   computed: {
     ...mapState(["config"]),
+    localYear() {
+      let myDate = new Date();
+      let tYear = myDate.getFullYear();
+      return tYear;
+    },
   },
   data() {
     return {};
