@@ -247,9 +247,6 @@ export default {
       display: flex;
       flex-direction: row;
       align-items: center;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
       .item-type {
         background: #04c877;
         border-radius: 2px;
@@ -260,11 +257,15 @@ export default {
         margin-right: 10px;
       }
       .item-tit {
+        flex: 1;
         height: 22px;
         font-size: 16px;
         font-weight: 500;
         color: #333333;
         line-height: 22px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
     .item-content {
