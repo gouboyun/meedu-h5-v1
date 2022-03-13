@@ -103,7 +103,7 @@
                     class="free"
                     v-if="
                       course.is_free !== 1 &&
-                      (videoItem.charge === 0 || videoItem.free_seconds > 0)
+                        (videoItem.charge === 0 || videoItem.free_seconds > 0)
                     "
                     >试看</span
                   >
@@ -137,7 +137,7 @@
                 class="free"
                 v-if="
                   course.is_free !== 1 &&
-                  (videoItem.charge === 0 || videoItem.free_seconds > 0)
+                    (videoItem.charge === 0 || videoItem.free_seconds > 0)
                 "
                 >试看</span
               >
@@ -296,6 +296,10 @@ export default {
   watch: {
     $route(to, from) {
       this.$router.go(0);
+    },
+    id() {
+      this.getVideo();
+      this.getVideoComments();
     },
   },
   methods: {
@@ -598,7 +602,8 @@ export default {
   justify-content: space-between;
   padding: 20px 100px;
   .item-tab {
-    width: 30px;
+    display: inline-block;
+    width: auto;
     height: 15px;
     font-size: 15px;
     font-weight: 400;
