@@ -298,6 +298,8 @@ export default {
       this.$router.go(0);
     },
     "$route.query.id"() {
+      // 播放器销毁
+      window.player && window.player.destroy();
       this.getVideo();
       this.getVideoComments();
     },
