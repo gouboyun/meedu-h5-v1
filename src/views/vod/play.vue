@@ -297,7 +297,7 @@ export default {
     $route(to, from) {
       this.$router.go(0);
     },
-    id() {
+    "$route.query.id"() {
       this.getVideo();
       this.getVideoComments();
     },
@@ -316,7 +316,7 @@ export default {
       this.currentTab = current;
     },
     getVideo() {
-      this.$api.Course.Video(this.id)
+      this.$api.Course.Video(this.$route.query.id)
         .then((res) => {
           this.video = res.data.video;
           this.course = res.data.course;
@@ -435,7 +435,7 @@ export default {
       this.$set(this.configkey, index, !this.configkey[index]);
     },
     getVideoComments() {
-      this.$api.Course.VideoComments(this.id).then((res) => {
+      this.$api.Course.VideoComments(this.$route.query.id).then((res) => {
         this.comments = res.data.comments;
         this.commentUsers = res.data.users;
       });

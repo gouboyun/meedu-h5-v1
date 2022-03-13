@@ -20,8 +20,8 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
-  padding-top: 100px;
-  padding-bottom: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
   background-color: #f4fafe;
   &.active {
     background-color: #fff;
