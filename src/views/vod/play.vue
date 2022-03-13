@@ -294,9 +294,6 @@ export default {
     window.player && window.player.destroy();
   },
   watch: {
-    $route(to, from) {
-      this.$router.go(0);
-    },
     "$route.query.id"() {
       // 播放器销毁
       window.player && window.player.destroy();
@@ -307,6 +304,8 @@ export default {
   },
   methods: {
     resetData() {
+      this.video = null;
+      this.course = null;
       this.currentTab = 0;
       this.swiperIndex = 0;
       this.playendedStatus = false;
