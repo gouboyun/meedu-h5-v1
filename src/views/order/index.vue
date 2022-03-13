@@ -342,6 +342,8 @@ export default {
       justify-content: center;
       margin-top: 35px;
       .input-item {
+        -webkit-appearance: none;
+        border-radius: 0;
         width: 255px;
         height: 45px;
         display: flex;
@@ -454,7 +456,8 @@ export default {
   padding-right: 15px;
   cursor: pointer;
   .info {
-    width: 75px;
+    display: inline-block;
+    width: auto;
     height: 15px;
     font-size: 15px;
     font-weight: 400;
