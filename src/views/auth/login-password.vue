@@ -166,7 +166,7 @@ export default {
     margin-bottom: 50px;
 
     .name {
-      width: 48px;
+      min-width: 48px;
       height: auto;
       font-size: 16px;
       font-weight: 400;

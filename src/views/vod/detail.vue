@@ -85,7 +85,7 @@
                       class="free"
                       v-if="
                         course.is_free !== 1 &&
-                        (video.charge === 0 || video.free_seconds > 0)
+                          (video.charge === 0 || video.free_seconds > 0)
                       "
                       >试看</span
                     >
@@ -110,7 +110,7 @@
                   class="free"
                   v-if="
                     course.is_free !== 1 &&
-                    (video.charge === 0 || video.free_seconds > 0)
+                      (video.charge === 0 || video.free_seconds > 0)
                   "
                   >试看</span
                 >
@@ -514,7 +514,8 @@ export default {
   justify-content: space-between;
   padding: 20px 80px;
   .item-tab {
-    width: 30px;
+    display: inline-block;
+    width: auto;
     height: 15px;
     font-size: 15px;
     font-weight: 400;

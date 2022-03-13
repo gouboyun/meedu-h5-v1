@@ -103,7 +103,7 @@
                     class="free"
                     v-if="
                       course.is_free !== 1 &&
-                      (videoItem.charge === 0 || videoItem.free_seconds > 0)
+                        (videoItem.charge === 0 || videoItem.free_seconds > 0)
                     "
                     >试看</span
                   >
@@ -137,7 +137,7 @@
                 class="free"
                 v-if="
                   course.is_free !== 1 &&
-                  (videoItem.charge === 0 || videoItem.free_seconds > 0)
+                    (videoItem.charge === 0 || videoItem.free_seconds > 0)
                 "
                 >试看</span
               >
@@ -294,11 +294,25 @@ export default {
     window.player && window.player.destroy();
   },
   watch: {
-    $route(to, from) {
-      this.$router.go(0);
+    "$route.query.id"() {
+      // 播放器销毁
+      window.player && window.player.destroy();
+      this.resetData();
+      this.getVideo();
+      this.getVideoComments();
     },
   },
   methods: {
+    resetData() {
+      this.video = null;
+      this.course = null;
+      this.currentTab = 0;
+      this.swiperIndex = 0;
+      this.playendedStatus = false;
+      this.playDuration = 0;
+      this.isWatch = false;
+      this.isIframe = false;
+    },
     tabChange(index) {
       this.currentTab = index;
       this.swiperIndex = index;
@@ -312,7 +326,7 @@ export default {
       this.currentTab = current;
     },
     getVideo() {
-      this.$api.Course.Video(this.id)
+      this.$api.Course.Video(this.$route.query.id)
         .then((res) => {
           this.video = res.data.video;
           this.course = res.data.course;
@@ -431,7 +445,7 @@ export default {
       this.$set(this.configkey, index, !this.configkey[index]);
     },
     getVideoComments() {
-      this.$api.Course.VideoComments(this.id).then((res) => {
+      this.$api.Course.VideoComments(this.$route.query.id).then((res) => {
         this.comments = res.data.comments;
         this.commentUsers = res.data.users;
       });
@@ -598,7 +612,8 @@ export default {
   justify-content: space-between;
   padding: 20px 100px;
   .item-tab {
-    width: 30px;
+    display: inline-block;
+    width: auto;
     height: 15px;
     font-size: 15px;
     font-weight: 400;

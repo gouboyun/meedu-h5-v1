@@ -20,8 +20,6 @@ export default {
   width: 100%;
   height: 100%;
   float: left;
-  padding-top: 100px;
-  padding-bottom: 100px;
   background-color: #f4fafe;
   &.active {
     background-color: #fff;
@@ -39,8 +37,8 @@ export default {
     .image-empty-item {
       display: inline-block;
       img {
-        width: 200px;
-        height: 200px;
+        width: 120px;
+        height: 120px;
       }
     }
   }
