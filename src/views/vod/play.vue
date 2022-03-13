@@ -300,11 +300,20 @@ export default {
     "$route.query.id"() {
       // 播放器销毁
       window.player && window.player.destroy();
+      this.resetData();
       this.getVideo();
       this.getVideoComments();
     },
   },
   methods: {
+    resetData() {
+      this.currentTab = 0;
+      this.swiperIndex = 0;
+      this.playendedStatus = false;
+      this.playDuration = 0;
+      this.isWatch = false;
+      this.isIframe = false;
+    },
     tabChange(index) {
       this.currentTab = index;
       this.swiperIndex = index;
