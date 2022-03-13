@@ -69,7 +69,8 @@ export default {
       line-height: 19px;
     }
     .more {
-      width: 52px;
+      display: inline-block;
+      width: auto;
       height: 13px;
       font-size: 13px;
       font-weight: 400;

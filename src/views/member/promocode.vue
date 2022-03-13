@@ -419,7 +419,8 @@ export default {
         text-align: center;
       }
       .tit {
-        width: 65px;
+        display: inline-block;
+        width: auto;
         height: 13px;
         font-size: 13px;
         font-weight: 400;
@@ -461,7 +462,8 @@ export default {
         text-align: center;
       }
       .tit {
-        width: 65px;
+        display: inline-block;
+        width: auto;
         height: 13px;
         font-size: 13px;
         font-weight: 400;
