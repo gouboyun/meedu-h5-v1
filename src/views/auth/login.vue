@@ -460,14 +460,12 @@ export default {
 
 .login-other-way {
   width: 100%;
-  height: 48px;
   float: left;
+  height: 48px;
   box-sizing: border-box;
   padding-left: 30px;
   padding-right: 30px;
-  position: fixed;
-  bottom: 50px;
-  left: 0;
+  margin-top: 120px;
 
   .auth-login-divider {
     background-color: #f8f8f8 !important;
