@@ -24,7 +24,7 @@
       <template v-else>
         <div class="alert-message" v-if="isLogin">
           <div v-if="playendedStatus">
-            <div class="subscribe-info" v-if="isWatch === false">
+            <div class="subscribe-info" v-if="isTrySee">
               试看结束，购买课程观看所有视频
             </div>
             <div
@@ -284,6 +284,12 @@ export default {
   },
   computed: {
     ...mapState(["isLogin", "user", "config"]),
+    isTrySee() {
+      if (!this.video) {
+        return false;
+      }
+      return this.isWatch === false && this.video.free_seconds > 0;
+    },
   },
   mounted() {
     this.getVideo();
@@ -439,6 +445,21 @@ export default {
       window.player.on("sub_course", () => {
         this.buyCourse();
       });
+      // 微信同层播放
+      setTimeout(() => {
+        const dplay = document.querySelector(".dplayer-video");
+        const u = navigator.userAgent;
+        let isAndroid = u.indexOf("Android") > -1 || u.indexOf("Adr") > -1;
+        if (isAndroid) {
+          dplay.setAttribute("x5-video-player-type", "h5-page");
+          dplay.removeAttribute("playsinline");
+          dplay.removeAttribute("webkit-playsinline");
+        } else {
+          dplay.removeAttribute("x5-video-player-type", "h5-page");
+          dplay.setAttribute("playsinline", "");
+          dplay.setAttribute("webkit-playsinline", "");
+        }
+      }, 200);
     },
     //展开目录文章详情
     showArticle(index) {
