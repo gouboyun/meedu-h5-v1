@@ -445,7 +445,7 @@ export default {
       window.player.on("sub_course", () => {
         this.buyCourse();
       });
-      // 微信同层播放
+      // 开始微信同层播放
       setTimeout(() => {
         const dplay = document.querySelector(".dplayer-video");
         const u = navigator.userAgent;
