@@ -460,8 +460,8 @@ export default {
 
 .login-other-way {
   width: 100%;
-  height: 48px;
   float: left;
+  height: 48px;
   box-sizing: border-box;
   padding-left: 30px;
   padding-right: 30px;
