@@ -14,7 +14,7 @@
     "timeago.js": "^4.0.2",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
-    "vue-confirm-dialog": "^1.0.2",
+    "vue-confirm-dialog": "^1.1.0",
     "vue-m-message": "^3.1.0",
     "vue-router": "^3.5.2",
     "vue-words-highlight": "^1.1.2",
