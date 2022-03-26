@@ -64,12 +64,12 @@
         <img
           class="icon"
           src="../../assets/img/paywechat.png"
-          v-if="item.sign === 'wechat_h5' || item.sign === 'wechat-jsapi'"
+          v-else-if="item.sign === 'wechat-jsapi'"
         />
         <img
           class="icon"
           src="../../assets/img/payhand.png"
-          v-if="item.sign === 'handPay'"
+          v-else-if="item.sign === 'handPay'"
         />
         <span>{{ item.name }}</span>
         <div class="sel">
@@ -104,7 +104,6 @@ export default {
         charge: this.$route.query.goods_charge,
         label: this.$route.query.goods_label,
         type: this.$route.query.goods_type,
-        tgGid: this.$route.query.tg_gid || 0,
       },
       configTip: false,
       openmask: false,
@@ -251,14 +250,10 @@ export default {
           this.$router.back();
         }, 1000);
       } else {
-        if (
-          this.payment === "alipay" ||
-          this.payment === "wechat_h5" ||
-          this.payment === "wechat-jsapi"
-        ) {
-          let host = window.location.host;
-          let redirect = encodeURIComponent(host + "/order/success");
-          let indexUrl = encodeURIComponent(host);
+        if (this.payment === "alipay" || this.payment === "wechat-jsapi") {
+          let host = this.$utils.getHost();
+          let sUrl = encodeURIComponent(host + "/#/order/success");
+
           window.location.href =
             this.config.url +
             "/api/v2/order/pay/redirect?order_id=" +
@@ -270,11 +265,11 @@ export default {
             "&payment=" +
             this.payment +
             "&token=" +
-            window.localStorage.getItem("token") +
-            "&redirect=" +
-            redirect +
-            "&cancel_redirect=" +
-            indexUrl;
+            this.$utils.getToken() +
+            "&s_url=" +
+            sUrl +
+            "&f_url=" +
+            encodeURIComponent(host);
         } else if (this.payment === "handPay") {
           this.$router.push({
             name: "OrderPay",
@@ -287,13 +282,10 @@ export default {
             },
           });
         } else {
-          this.payFailure();
+          this.$message.error("无法支付");
+          this.loading = false;
         }
       }
-    },
-    payFailure(e) {
-      this.$message.error("无法支付");
-      this.loading = false;
     },
   },
 };
