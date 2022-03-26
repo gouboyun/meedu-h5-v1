@@ -5,14 +5,11 @@ import store from './store'
 import utils from './js/utils'
 import api from './js/request/request';
 import Message from 'vue-m-message'
-import VueConfirmDialog from 'vue-confirm-dialog'
 import { highlight } from 'vue-words-highlight';
 import 'vue-m-message/dist/index.css'
 // 全局样式
 import './assets/commen/variable.less';
 
-Vue.use(VueConfirmDialog)
-Vue.component('vue-confirm-dialog', VueConfirmDialog.default)
 Vue.config.productionTip = false;
 Vue.prototype.$api = api;
 Vue.prototype.$Request = Request;
