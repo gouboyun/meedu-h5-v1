@@ -20,16 +20,16 @@ export default {
       }
     },
   },
-  mounted() {
-    this.getConfig();
-    this.autoLogin();
+  async mounted() {
+    await this.getConfig();
+    await this.autoLogin();
   },
   computed: {
     ...mapState(["config"]),
   },
   methods: {
     ...mapMutations(["submitLogin", "setConfig"]),
-    autoLogin(key) {
+    async autoLogin(key) {
       if (this.$route.name !== "Login") {
         let token = null;
         if (key) {
@@ -41,7 +41,7 @@ export default {
           token = this.$utils.getToken();
         }
         if (token) {
-          this.getUser();
+          await this.getUser();
         }
       }
     },
