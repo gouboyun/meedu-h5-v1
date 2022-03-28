@@ -80,7 +80,7 @@ export function destroy(url) {
 export function post(url, params) {
   return new Promise((resolve, reject) => {
     axios
-      .post(url, QS.stringify(params))
+      .post(url, params)
       .then((res) => {
         resolve(res.data);
       })

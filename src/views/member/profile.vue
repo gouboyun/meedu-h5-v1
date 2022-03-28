@@ -93,27 +93,9 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-import config from "../../js/config";
 import { mapState, mapMutations } from "vuex";
 
-// 请求域名
-axios.defaults.baseURL = config.url;
-axios.defaults.timeout = 10000;
-
-// 请求拦截器(附带上token)
-axios.interceptors.request.use(
-  (config) => {
-    const token = this.$utils.getToken();
-    token && (config.headers.Authorization = "Bearer " + token);
-    return config;
-  },
-  (error) => {
-    return Promise.error(error);
-  }
-);
 export default {
-  components: {},
   computed: {
     ...mapState(["isLogin", "config", "user"]),
   },
@@ -135,6 +117,9 @@ export default {
     };
   },
   mounted() {
+    if (this.error) {
+      this.$message.error(this.error);
+    }
     this.getProfile();
     this.getData();
   },
@@ -143,9 +128,6 @@ export default {
     getProfile() {
       this.$api.Member.Profile().then((res) => {
         this.profile = res.data;
-        if (this.error) {
-          this.$message.error(this.error);
-        }
       });
     },
     getData() {
@@ -165,8 +147,8 @@ export default {
       }
       let formData = new FormData();
       formData.append("file", files[0]);
-      axios.post("/api/v2/member/detail/avatar", formData).then((res) => {
-        if (res.data.code === 0) {
+      this.$api.Member.UploadAvatar(formData).then((res) => {
+        if (res.code === 0) {
           this.$message.success("上传头像成功");
           this.getData();
         } else {
