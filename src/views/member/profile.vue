@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-if="user">
     <div class="mask" v-if="openmask">
-      <div class="popup borderbox" v-if="changeNick">
+      <div class="popup borderbox">
         <div class="cancel" @click="cancel()">
           <img src="../../assets/img/close.png" />
         </div>
@@ -111,7 +111,6 @@ export default {
     return {
       list: [],
       openmask: false,
-      changeNick: false,
       error: this.$route.query.error,
       loading: false,
       profile: [],
@@ -177,11 +176,9 @@ export default {
         this.$message.error("您已经设置过昵称了哦");
         return;
       }
-      this.changeNick = true;
       this.openmask = true;
     },
     cancel() {
-      this.changeNick = false;
       this.openmask = false;
     },
     bindWechat() {
@@ -235,6 +232,7 @@ export default {
         .then(() => {
           this.$message.success("修改成功");
           this.form.content = null;
+          this.cancel();
           setTimeout(() => {
             this.getData();
           }, 500);
