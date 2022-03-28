@@ -60,11 +60,11 @@
           </div>
         </div>
       </div>
-      <div class="info">
+      <div class="info" v-if="promoCode">
         <p>邀请者分享邀请链接给其他人下单成功后，将的到如下对应金额奖励：</p>
-        <p>一级用户：奖励5%实际下单金额</p>
-        <p>二级用户：奖励2%下单金额</p>
-        <p>三级用户：奖励1%下单金额</p>
+        <p>邀请人奖励：{{ promoCode.invite_user_reward }}元</p>
+        <p>被邀请人奖励：{{ promoCode.invited_user_reward }}元</p>
+        <p>订单抽成：{{ parseInt(promoCode.per_order_draw * 100) }}%</p>
       </div>
     </div>
     <div class="type-box borderbox">
@@ -118,6 +118,7 @@ export default {
       over: false,
       type: 1,
       list: [],
+      promoCode: null,
       invite: {
         code: null,
         count: 0,
@@ -307,6 +308,7 @@ export default {
         let code = res.data.code;
         if (code) {
           this.invite.code = res.data.code;
+          this.promoCode = res.data;
         } else {
           this.$message.error("邀请码不对当前用户开放");
         }

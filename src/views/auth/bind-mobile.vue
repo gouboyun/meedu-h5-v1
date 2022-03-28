@@ -6,13 +6,7 @@
       @change="sendSms"
       @cancel="qx"
     ></captcha-dialog>
-    <div class="navheader borderbox" style="border-bottom:none;">
-      <img
-        class="back"
-        @click="goBack()"
-        src="../../assets/img/icon-back.png"
-      />
-    </div>
+    <div class="navheader borderbox" style="border-bottom:none;"></div>
     <template v-if="!confirmDialog">
       <div class="group-form-box">
         <div class="group-title">绑定手机号</div>
@@ -44,6 +38,9 @@
           获取短信验证码
         </div>
       </div>
+      <div class="login-button-box">
+        <span class="login-password-way" @click="logout">退出</span>
+      </div>
     </template>
     <template v-else>
       <confirm-login
@@ -59,7 +56,7 @@
 </template>
 
 <script>
-import ConfirmLogin from "../auth/components/confirm-login";
+import ConfirmLogin from "./components/confirm-login";
 import CaptchaDialog from "../../components/captcha-dialog";
 export default {
   components: {
@@ -135,6 +132,10 @@ export default {
     cancel() {
       this.confirmDialog = false;
     },
+    logout() {
+      this.$utils.clearToken();
+      window.location.href = "/";
+    },
     submit(val) {
       if (this.loading) {
         return;
@@ -149,7 +150,9 @@ export default {
           this.loading = false;
           this.$message.success("成功");
           setTimeout(() => {
-            this.$router.back();
+            this.$router.push({
+              name: "Index",
+            });
           }, 500);
         })
         .catch((e) => {
@@ -176,6 +179,23 @@ export default {
   cursor: pointer;
   &.active {
     background: #3ca7fa;
+  }
+}
+.login-button-box {
+  width: 100%;
+  height: auto;
+  float: left;
+
+  .login-password-way {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 30px;
+    margin-bottom: 35px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #999999;
   }
 }
 

@@ -100,6 +100,9 @@ const Api = {
     Detail() {
       return get("/api/v2/member/detail");
     },
+    UploadAvatar(params) {
+      return post("/api/v2/member/detail/avatar", params);
+    },
     NicknameChange(params) {
       return post("/api/v2/member/detail/nickname", params);
     },

@@ -58,7 +58,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data() {
@@ -70,7 +70,9 @@ export default {
       },
     };
   },
-  computed: {},
+  computed: {
+    ...mapState(["config"]),
+  },
   methods: {
     ...mapMutations(["submitLogin"]),
     clearMobile() {
@@ -92,11 +94,20 @@ export default {
       })
         .then((res) => {
           // 写入token
-          window.localStorage.setItem("token", res.data.token);
+          this.$utils.saveToken(res.data.token);
 
           this.$api.User.Detail().then((res) => {
             this.submitLogin(res.data);
-            this.$router.go(-2);
+            if (
+              this.config.member.enabled_mobile_bind_alert === 1 &&
+              res.data.is_bind_mobile !== 1
+            ) {
+              this.$router.push({
+                name: "BindMobile",
+              });
+            } else {
+              this.$router.go(-2);
+            }
           });
         })
         .catch((e) => {
