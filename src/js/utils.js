@@ -73,7 +73,7 @@ export default {
   },
   copyright() {
     let outs = [];
-    let fi = function() {
+    let fi = function () {
       return {
         msg: "",
         style: "",
@@ -88,11 +88,14 @@ export default {
 
     oi = fi();
     oi.msg =
-      "\r\n官网：\nhttps://meedu.vip\r\n\r\nGitHub：\nhttps://github.com/qsnh/meedu\r\n\r\n使用手册：\nhttps://www.yuque.com/meedu/fvvkbf\r\n\r\n当前版本：v4.5.4\r\n";
+      "\r\n官网：\nhttps://meedu.vip\r\n\r\nGitHub：\nhttps://github.com/qsnh/meedu\r\n\r\n使用手册：\nhttps://www.yuque.com/meedu/fvvkbf\r\n\r\n当前版本：v4.5.5\r\n";
     outs.push(oi);
 
-    outs.map(function(x) {
+    outs.map(function (x) {
       console.log("%c" + x.msg, x.style);
     });
+  },
+  getHost() {
+    return window.location.protocol + "//" + window.location.host;
   },
 };

@@ -14,7 +14,6 @@
     "timeago.js": "^4.0.2",
     "vue": "^2.6.11",
     "vue-awesome-swiper": "^4.1.1",
-    "vue-confirm-dialog": "^1.0.2",
     "vue-m-message": "^3.1.0",
     "vue-router": "^3.5.2",
     "vue-words-highlight": "^1.1.2",
@@ -27,8 +26,8 @@
     "babel-eslint": "^10.1.0",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
-    "less": "^4.1.1",
-    "less-loader": "5.0.0",
+    "less": "^2.7.3",
+    "less-loader": "6.0.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {
