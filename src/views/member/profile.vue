@@ -15,6 +15,16 @@
         </div>
         <div class="confirm" @click="submitHandle()">确认</div>
       </div>
+      <div class="popup borderbox" v-if="dialog">
+        <div class="cancel" @click="cancel()">
+          <img src="../../assets/img/close.png" />
+        </div>
+        <div class="text">
+          <template v-if="resource === 'qq'">是否解除绑定QQ？</template>
+          <template v-else>是否解除绑定微信？</template>
+        </div>
+        <div class="confirm" @click="cancelBind()">确认</div>
+      </div>
     </div>
     <div class="navheader borderbox">
       <img
@@ -47,17 +57,17 @@
       </div>
       <div class="group-item">
         <div class="name">绑定微信</div>
-        <div class="value">
+        <div class="value" @click="bindWechat">
           <span v-if="user.is_bind_wechat === 1">已绑定</span>
-          <span class="un" v-else @click="bindWechat">点击绑定</span>
+          <span class="un" v-else>点击绑定</span>
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
       <div class="group-item">
         <div class="name">绑定QQ</div>
-        <div class="value">
+        <div class="value" @click="bindQQ">
           <span v-if="user.is_bind_qq === 1">已绑定</span>
-          <span class="un" v-else @click="bindQQ">点击绑定</span>
+          <span class="un" v-else>点击绑定</span>
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
@@ -83,27 +93,9 @@
   </div>
 </template>
 <script>
-import axios from "axios";
-import config from "../../js/config";
 import { mapState, mapMutations } from "vuex";
 
-// 请求域名
-axios.defaults.baseURL = config.url;
-axios.defaults.timeout = 10000;
-
-// 请求拦截器(附带上token)
-axios.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem("token");
-    token && (config.headers.Authorization = "Bearer " + token);
-    return config;
-  },
-  (error) => {
-    return Promise.error(error);
-  }
-);
 export default {
-  components: {},
   computed: {
     ...mapState(["isLogin", "config", "user"]),
   },
@@ -112,6 +104,7 @@ export default {
       list: [],
       openmask: false,
       changeNick: false,
+      dialog: false,
       error: this.$route.query.error,
       loading: false,
       profile: [],
@@ -120,36 +113,27 @@ export default {
         nick_name: null,
         content: null,
       },
+      resource: null,
     };
   },
   mounted() {
+    if (this.error) {
+      this.$message.error(this.error);
+    }
     this.getProfile();
+    this.getData();
   },
   methods: {
     ...mapMutations(["submitLogin"]),
     getProfile() {
       this.$api.Member.Profile().then((res) => {
         this.profile = res.data;
-        if (this.error) {
-          this.$message.error(this.error);
-        }
       });
     },
     getData() {
-      this.$api.User.Detail()
-        .then((res) => {
-          this.submitLogin(res.data);
-        })
-        .catch((e) => {
-          if (e.code === 401) {
-            window.localStorage.removeItem("token");
-            this.$router.replace({
-              name: "Index",
-            });
-          } else {
-            this.$message.error(e.message);
-          }
-        });
+      this.$api.User.Detail().then((res) => {
+        this.submitLogin(res.data);
+      });
     },
     uploadAvatar(e) {
       let files = e.target.files;
@@ -163,8 +147,8 @@ export default {
       }
       let formData = new FormData();
       formData.append("file", files[0]);
-      axios.post("/api/v2/member/detail/avatar", formData).then((res) => {
-        if (res.data.code === 0) {
+      this.$api.Member.UploadAvatar(formData).then((res) => {
+        if (res.code === 0) {
           this.$message.success("上传头像成功");
           this.getData();
         } else {
@@ -181,28 +165,49 @@ export default {
       this.openmask = true;
     },
     cancel() {
+      this.dialog = false;
       this.changeNick = false;
       this.openmask = false;
+      this.resource = null;
     },
     bindWechat() {
+      if (this.user.is_bind_wechat === 1) {
+        this.dialog = true;
+        this.openmask = true;
+        this.resource = "wechat";
+        return;
+      }
       let host = window.location.href;
       let redirect = encodeURIComponent(host);
       window.location.href =
         this.config.url +
         "/api/v2/member/wechatBind?token=" +
-        window.localStorage.getItem("token") +
+        this.$utils.getToken() +
         "&redirect_url=" +
         redirect;
     },
     bindQQ() {
+      if (this.user.is_bind_qq === 1) {
+        this.dialog = true;
+        this.openmask = true;
+        this.resource = "qq";
+        return;
+      }
       let host = window.location.href;
       let redirect = encodeURIComponent(host);
       window.location.href =
         this.config.url +
         "/api/v2/member/socialite/qq?token=" +
-        window.localStorage.getItem("token") +
+        this.$utils.getToken() +
         "&redirect_url=" +
         redirect;
+    },
+    cancelBind() {
+      this.$api.Member.CancelBind(this.resource).then((res) => {
+        this.$message.success("解绑成功");
+        this.cancel();
+        this.getData();
+      });
     },
     getCaptcha() {
       this.$api.Other.Captcha().then((res) => {
@@ -225,21 +230,28 @@ export default {
       });
     },
     submitHandle() {
+      if (this.loading) {
+        return;
+      }
       if (!this.form.content) {
         this.$message.error("请输入昵称");
         return;
       }
+      this.loading = true;
       this.$api.Member.NicknameChange({
         nick_name: this.form.content,
       })
         .then(() => {
+          this.loading = false;
           this.$message.success("修改成功");
           this.form.content = null;
+          this.cancel();
           setTimeout(() => {
             this.getData();
           }, 500);
         })
         .catch((e) => {
+          this.loading = false;
           this.$message.error(e.message);
         });
     },
@@ -373,6 +385,16 @@ export default {
         width: 24px;
         height: 24px;
       }
+    }
+    .text {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      margin-top: 35px;
+      font-size: 18px;
+      font-weight: 400;
+      color: #333333;
     }
     .input-box {
       width: 100%;

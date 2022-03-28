@@ -7,7 +7,7 @@
         <div class="value">
           <input
             type="number"
-            class="input-text"
+            class="input"
             v-model="form.mobile"
             placeholder="请输入新的手机号码"
           />
@@ -255,6 +255,16 @@ export default {
         box-sizing: border-box;
         align-items: center;
         height: 36px;
+        .input {
+          max-width: 200px;
+          height: 36px;
+          float: left;
+          box-sizing: border-box;
+          outline: none;
+          color: #333333;
+          font-size: 16px;
+          border: none;
+        }
         .input-text {
           max-width: 133px;
           height: 36px;
@@ -270,7 +280,7 @@ export default {
         width: 90px;
         height: 36px;
         padding-top: 0px;
-        margin-left: 19px;
+        margin-left: 15px;
       }
       .buttons {
         width: auto;

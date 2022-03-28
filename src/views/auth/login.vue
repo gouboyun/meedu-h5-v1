@@ -214,19 +214,28 @@ export default {
     },
     handler(token) {
       // 写入token
-      window.localStorage.setItem("token", token);
+      this.$utils.saveToken(token);
 
       this.$api.User.Detail()
         .then((res) => {
           this.submitLogin(res.data);
-          // 跳转到之前的页面
-          setTimeout(() => {
-            this.$router.back();
-          }, 500);
+          if (
+            this.config.member.enabled_mobile_bind_alert === 1 &&
+            res.data.is_bind_mobile !== 1
+          ) {
+            this.$router.push({
+              name: "BindMobile",
+            });
+          } else {
+            // 跳转到之前的页面
+            setTimeout(() => {
+              this.$router.back();
+            }, 500);
+          }
         })
         .catch((e) => {
           if (e.code === 401) {
-            window.localStorage.removeItem("token");
+            this.$utils.clearToken();
             window.location.href = this.url;
           } else {
             this.$message.error(e.message);
