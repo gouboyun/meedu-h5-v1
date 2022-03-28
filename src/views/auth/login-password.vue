@@ -94,7 +94,7 @@ export default {
       })
         .then((res) => {
           // 写入token
-          window.localStorage.setItem("token", res.data.token);
+          this.$utils.saveToken(res.data.token);
 
           this.$api.User.Detail().then((res) => {
             this.submitLogin(res.data);

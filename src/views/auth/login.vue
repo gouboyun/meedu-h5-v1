@@ -214,7 +214,7 @@ export default {
     },
     handler(token) {
       // 写入token
-      window.localStorage.setItem("token", token);
+      this.$utils.saveToken(token);
 
       this.$api.User.Detail()
         .then((res) => {
@@ -235,7 +235,7 @@ export default {
         })
         .catch((e) => {
           if (e.code === 401) {
-            window.localStorage.removeItem("token");
+            this.$utils.clearToken();
             window.location.href = this.url;
           } else {
             this.$message.error(e.message);
