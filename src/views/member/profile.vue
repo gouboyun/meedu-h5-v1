@@ -223,14 +223,19 @@ export default {
       });
     },
     submitHandle() {
+      if (this.loading) {
+        return;
+      }
       if (!this.form.content) {
         this.$message.error("请输入昵称");
         return;
       }
+      this.loading = true;
       this.$api.Member.NicknameChange({
         nick_name: this.form.content,
       })
         .then(() => {
+          this.loading = false;
           this.$message.success("修改成功");
           this.form.content = null;
           this.cancel();
@@ -239,6 +244,7 @@ export default {
           }, 500);
         })
         .catch((e) => {
+          this.loading = false;
           this.$message.error(e.message);
         });
     },
