@@ -33,6 +33,14 @@ const routes = [
     component: () => import("../views/auth/login-password.vue"),
   },
   {
+    path: "/auth/bind-mobile",
+    name: "BindMobile",
+    meta: {
+      title: "绑定手机号",
+    },
+    component: () => import("../views/auth/bind-mobile.vue"),
+  },
+  {
     path: "/search",
     name: "Search",
     meta: {
