@@ -1,7 +1,7 @@
 <template>
   <div class="container" v-if="user">
     <div class="mask" v-if="openmask">
-      <div class="popup borderbox">
+      <div class="popup borderbox" v-if="changeNick">
         <div class="cancel" @click="cancel()">
           <img src="../../assets/img/close.png" />
         </div>
@@ -14,6 +14,16 @@
           />
         </div>
         <div class="confirm" @click="submitHandle()">确认</div>
+      </div>
+      <div class="popup borderbox" v-if="dialog">
+        <div class="cancel" @click="cancel()">
+          <img src="../../assets/img/close.png" />
+        </div>
+        <div class="text">
+          <template v-if="resource === 'qq'">是否解除绑定QQ？</template>
+          <template v-else>是否解除绑定微信？</template>
+        </div>
+        <div class="confirm" @click="cancelBind()">确认</div>
       </div>
     </div>
     <div class="navheader borderbox">
@@ -47,17 +57,17 @@
       </div>
       <div class="group-item">
         <div class="name">绑定微信</div>
-        <div class="value">
+        <div class="value" @click="bindWechat">
           <span v-if="user.is_bind_wechat === 1">已绑定</span>
-          <span class="un" v-else @click="bindWechat">点击绑定</span>
+          <span class="un" v-else>点击绑定</span>
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
       <div class="group-item">
         <div class="name">绑定QQ</div>
-        <div class="value">
+        <div class="value" @click="bindQQ">
           <span v-if="user.is_bind_qq === 1">已绑定</span>
-          <span class="un" v-else @click="bindQQ">点击绑定</span>
+          <span class="un" v-else>点击绑定</span>
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
@@ -111,6 +121,8 @@ export default {
     return {
       list: [],
       openmask: false,
+      changeNick: false,
+      dialog: false,
       error: this.$route.query.error,
       loading: false,
       profile: [],
@@ -119,6 +131,7 @@ export default {
         nick_name: null,
         content: null,
       },
+      resource: null,
     };
   },
   mounted() {
@@ -136,20 +149,9 @@ export default {
       });
     },
     getData() {
-      this.$api.User.Detail()
-        .then((res) => {
-          this.submitLogin(res.data);
-        })
-        .catch((e) => {
-          if (e.code === 401) {
-            window.localStorage.removeItem("token");
-            this.$router.replace({
-              name: "Index",
-            });
-          } else {
-            this.$message.error(e.message);
-          }
-        });
+      this.$api.User.Detail().then((res) => {
+        this.submitLogin(res.data);
+      });
     },
     uploadAvatar(e) {
       let files = e.target.files;
@@ -177,12 +179,22 @@ export default {
         this.$message.error("您已经设置过昵称了哦");
         return;
       }
+      this.changeNick = true;
       this.openmask = true;
     },
     cancel() {
+      this.dialog = false;
+      this.changeNick = false;
       this.openmask = false;
+      this.resource = null;
     },
     bindWechat() {
+      if (this.user.is_bind_wechat === 1) {
+        this.dialog = true;
+        this.openmask = true;
+        this.resource = "wechat";
+        return;
+      }
       let host = window.location.href;
       let redirect = encodeURIComponent(host);
       window.location.href =
@@ -193,6 +205,12 @@ export default {
         redirect;
     },
     bindQQ() {
+      if (this.user.is_bind_qq === 1) {
+        this.dialog = true;
+        this.openmask = true;
+        this.resource = "qq";
+        return;
+      }
       let host = window.location.href;
       let redirect = encodeURIComponent(host);
       window.location.href =
@@ -201,6 +219,13 @@ export default {
         window.localStorage.getItem("token") +
         "&redirect_url=" +
         redirect;
+    },
+    cancelBind() {
+      this.$api.Member.CancelBind(this.resource).then((res) => {
+        this.$message.success("解绑成功");
+        this.cancel();
+        this.getData();
+      });
     },
     getCaptcha() {
       this.$api.Other.Captcha().then((res) => {
@@ -378,6 +403,16 @@ export default {
         width: 24px;
         height: 24px;
       }
+    }
+    .text {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      margin-top: 35px;
+      font-size: 18px;
+      font-weight: 400;
+      color: #333333;
     }
     .input-box {
       width: 100%;
