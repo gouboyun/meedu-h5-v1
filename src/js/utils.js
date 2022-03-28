@@ -73,7 +73,7 @@ export default {
   },
   copyright() {
     let outs = [];
-    let fi = function () {
+    let fi = function() {
       return {
         msg: "",
         style: "",
@@ -91,7 +91,7 @@ export default {
       "\r\n官网：\nhttps://meedu.vip\r\n\r\nGitHub：\nhttps://github.com/qsnh/meedu\r\n\r\n使用手册：\nhttps://www.yuque.com/meedu/fvvkbf\r\n\r\n当前版本：v4.5.5\r\n";
     outs.push(oi);
 
-    outs.map(function (x) {
+    outs.map(function(x) {
       console.log("%c" + x.msg, x.style);
     });
   },
