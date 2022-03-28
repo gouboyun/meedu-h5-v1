@@ -141,7 +141,7 @@ export default {
       }
       this.loading = true;
       this.form.sms = val;
-      this.$api.Member.MobileChange({
+      this.$api.Member.NewMobile({
         mobile: this.form.mobile,
         mobile_code: this.form.sms,
       })
