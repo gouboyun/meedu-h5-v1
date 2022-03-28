@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { mapMutations } from "vuex";
+import { mapState, mapMutations } from "vuex";
 
 export default {
   data() {
@@ -22,8 +22,11 @@ export default {
     },
   },
   mounted() {
-    this.autoLogin();
     this.getConfig();
+    this.autoLogin();
+  },
+  computed: {
+    ...mapState(["config"]),
   },
   methods: {
     ...mapMutations(["submitLogin", "setConfig"]),
@@ -43,34 +46,32 @@ export default {
         }
       }
     },
-    getUser() {
-      this.$api.User.Detail()
-        .then((res) => {
-          this.submitLogin(res.data);
-        })
-        .catch(() => {
-          window.localStorage.removeItem("token");
-        })
-        .catch((e) => {
-          if (e.code === 401) {
-            window.localStorage.removeItem("token");
-            this.$router.replace({
-              name: "Index",
-            });
-          } else {
-            this.$message.error(e.message);
-          }
-        });
-    },
-    getConfig() {
-      this.$api.Other.Config().then((res) => {
-        this.setConfig(res.data);
-        if (!this.$utils.isMobile()) {
-          if (res.data.pc_url !== "") {
-            window.location.href = res.data.pc_url;
-          }
+    async getUser() {
+      try {
+        let res = await this.$api.User.Detail();
+        this.submitLogin(res.data);
+        // 强制绑定手机号
+        if (
+          this.config &&
+          res.data.is_bind_mobile === 0 &&
+          this.config.member.enabled_mobile_bind_alert === 1
+        ) {
+          this.$router.push({
+            name: "BindMobile",
+          });
         }
-      });
+      } catch (e) {
+        this.$message.error(e.message);
+      }
+    },
+    async getConfig() {
+      let res = await this.$api.Other.Config();
+      this.setConfig(res.data);
+      if (!this.$utils.isMobile()) {
+        if (res.data.pc_url !== "") {
+          window.location.href = res.data.pc_url;
+        }
+      }
     },
   },
 };
