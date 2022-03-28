@@ -124,6 +124,11 @@ export default {
   mounted() {
     this.getProfile();
   },
+  watch: {
+    $route(to, from) {
+      this.getData();
+    },
+  },
   methods: {
     ...mapMutations(["submitLogin"]),
     getProfile() {
