@@ -38,6 +38,9 @@
           获取短信验证码
         </div>
       </div>
+      <div class="login-button-box">
+        <span class="login-password-way" @click="logout">退出</span>
+      </div>
     </template>
     <template v-else>
       <confirm-login
@@ -129,6 +132,10 @@ export default {
     cancel() {
       this.confirmDialog = false;
     },
+    logout() {
+      this.$utils.clearToken();
+      window.location.href = "/";
+    },
     submit(val) {
       if (this.loading) {
         return;
@@ -172,6 +179,23 @@ export default {
   cursor: pointer;
   &.active {
     background: #3ca7fa;
+  }
+}
+.login-button-box {
+  width: 100%;
+  height: auto;
+  float: left;
+
+  .login-password-way {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 30px;
+    margin-bottom: 35px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #999999;
   }
 }
 
