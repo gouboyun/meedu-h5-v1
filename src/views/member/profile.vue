@@ -104,7 +104,7 @@ axios.defaults.timeout = 10000;
 // 请求拦截器(附带上token)
 axios.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const token = this.$utils.getToken();
     token && (config.headers.Authorization = "Bearer " + token);
     return config;
   },
@@ -200,7 +200,7 @@ export default {
       window.location.href =
         this.config.url +
         "/api/v2/member/wechatBind?token=" +
-        window.localStorage.getItem("token") +
+        this.$utils.getToken() +
         "&redirect_url=" +
         redirect;
     },
@@ -216,7 +216,7 @@ export default {
       window.location.href =
         this.config.url +
         "/api/v2/member/socialite/qq?token=" +
-        window.localStorage.getItem("token") +
+        this.$utils.getToken() +
         "&redirect_url=" +
         redirect;
     },

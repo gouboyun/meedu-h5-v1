@@ -34,11 +34,11 @@ export default {
         let token = null;
         if (key) {
           token = key;
-          window.localStorage.setItem("token", token);
+          this.$utils.saveToken(token);
           let newUrl = this.$utils.removeTokenParams(window.location.href);
           window.location.href = newUrl;
         } else {
-          token = window.localStorage.getItem("token");
+          token = this.$utils.getToken();
         }
         if (token) {
           this.getUser();
