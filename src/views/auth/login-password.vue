@@ -13,7 +13,7 @@
         <div class="name">手机号</div>
         <div class="input">
           <input
-            type="text"
+            type="number"
             class="input-text"
             placeholder="请输入手机号码"
             v-model="passwordForm.mobile"
@@ -83,6 +83,10 @@ export default {
     },
     passwordLoginHandler() {
       if (!this.passwordForm.mobile) {
+        return;
+      }
+      if (!this.$utils.isChinaMobilePhone(this.passwordForm.mobile)) {
+        this.$message.error("请输入正确的手机号");
         return;
       }
       if (!this.passwordForm.password) {

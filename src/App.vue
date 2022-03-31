@@ -48,16 +48,20 @@ export default {
     async getUser() {
       try {
         let res = await this.$api.User.Detail();
-        this.submitLogin(res.data);
         // 强制绑定手机号
         if (
           this.config &&
           res.data.is_bind_mobile === 0 &&
           this.config.member.enabled_mobile_bind_alert === 1
         ) {
+          let token = this.$utils.getToken();
+          this.$utils.saveTmpToken(token);
+          this.$utils.clearToken();
           this.$router.push({
             name: "BindMobile",
           });
+        } else {
+          this.submitLogin(res.data);
         }
       } catch (e) {
         this.$message.error(e.message);

@@ -114,6 +114,10 @@ export default {
         this.$message.error("请输入新手机号");
         return;
       }
+      if (!this.$utils.isChinaMobilePhone(this.form.mobile)) {
+        this.$message.error("请输入正确的手机号");
+        return;
+      }
       if (!this.form.captcha) {
         this.$message.error("请输入图形验证码");
         return;
@@ -149,7 +153,10 @@ export default {
       if (this.form.mobile.trim() === "" || this.form.sms.trim() === "") {
         return;
       }
-
+      if (!this.$utils.isChinaMobilePhone(this.form.mobile)) {
+        this.$message.error("请输入正确的手机号");
+        return;
+      }
       this.$api.Member.MobileChange({
         mobile: this.form.mobile,
         mobile_code: this.form.sms,

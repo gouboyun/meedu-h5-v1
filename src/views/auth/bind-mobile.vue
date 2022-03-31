@@ -6,7 +6,7 @@
       @change="sendSms"
       @cancel="qx"
     ></captcha-dialog>
-    <div class="navheader borderbox" style="border-bottom:none;"></div>
+    <div class="navheader borderbox" style="border-bottom: none"></div>
     <template v-if="!confirmDialog">
       <div class="group-form-box">
         <div class="group-title">绑定手机号</div>
@@ -22,7 +22,7 @@
             <img
               v-show="form.mobile"
               src="../../assets/img/new/close.png"
-              style="width:16px;height:16px;"
+              style="width: 16px; height: 16px"
               @click="clearMobile()"
             />
           </div>
@@ -37,9 +37,6 @@
         >
           获取短信验证码
         </div>
-      </div>
-      <div class="login-button-box">
-        <span class="login-password-way" @click="logout">退出</span>
       </div>
     </template>
     <template v-else>
@@ -56,6 +53,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
 import ConfirmLogin from "./components/confirm-login";
 import CaptchaDialog from "../../components/captcha-dialog";
 export default {
@@ -85,8 +83,11 @@ export default {
       reCaptcha: false,
     };
   },
-  mounted() {},
+  computed: {
+    ...mapState(["config"]),
+  },
   methods: {
+    ...mapMutations(["submitLogin"]),
     clearMobile() {
       this.form.mobile = null;
     },
@@ -96,6 +97,10 @@ export default {
         return;
       }
       if (!this.form.mobile) {
+        return;
+      }
+      if (!this.$utils.isChinaMobilePhone(this.form.mobile)) {
+        this.$message.error("请输入正确的手机号");
         return;
       }
       this.form.captcha = null;
@@ -145,15 +150,21 @@ export default {
       this.$api.Member.NewMobile({
         mobile: this.form.mobile,
         mobile_code: this.form.sms,
+        token: this.$utils.getTmpToken(),
       })
         .then((res) => {
           this.loading = false;
           this.$message.success("成功");
-          setTimeout(() => {
-            this.$router.push({
-              name: "Index",
-            });
-          }, 500);
+          this.$utils.saveToken(this.$utils.getTmpToken());
+          this.$utils.clearTmpToken();
+          this.$api.User.Detail().then((res) => {
+            this.submitLogin(res.data);
+            setTimeout(() => {
+              this.$router.push({
+                name: "Index",
+              });
+            }, 500);
+          });
         })
         .catch((e) => {
           this.loading = false;

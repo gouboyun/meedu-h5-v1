@@ -66,7 +66,7 @@
 
           <div
             class="socialite-login-item"
-            v-if="config.socialites.wechat_oauth === 1"
+            v-if="isInH5Wechat && config.socialites.wechat_oauth === 1"
             @click="h5WorkWeixinLogin()"
           >
             <img src="../../assets/img/wechat.png" />
@@ -132,6 +132,9 @@ export default {
   },
   computed: {
     ...mapState(["config"]),
+    isInH5Wechat() {
+      return this.$utils.isWechat();
+    },
   },
   mounted() {
     this.getCaptcha();
@@ -153,6 +156,10 @@ export default {
         return;
       }
       if (this.form.mobile.trim() === "") {
+        return;
+      }
+      if (!this.$utils.isChinaMobilePhone(this.form.mobile)) {
+        this.$message.error("请输入正确的手机号");
         return;
       }
       if (this.agreeProtocol === false) {

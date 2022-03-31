@@ -55,7 +55,10 @@
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
-      <div class="group-item">
+      <div
+        class="group-item"
+        v-if="config && config.socialites.wechat_oauth === 1 && isInH5Wechat"
+      >
         <div class="name">绑定微信</div>
         <div class="value" @click="bindWechat">
           <span v-if="user.is_bind_wechat === 1">已绑定</span>
@@ -63,7 +66,7 @@
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
-      <div class="group-item">
+      <div class="group-item" v-if="config && config.socialites.qq === 1">
         <div class="name">绑定QQ</div>
         <div class="value" @click="bindQQ">
           <span v-if="user.is_bind_qq === 1">已绑定</span>
@@ -98,6 +101,9 @@ import { mapState, mapMutations } from "vuex";
 export default {
   computed: {
     ...mapState(["isLogin", "config", "user"]),
+    isInH5Wechat() {
+      return this.$utils.isWechat();
+    },
   },
   data() {
     return {
