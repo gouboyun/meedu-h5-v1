@@ -101,6 +101,10 @@ export default {
       if (!this.form.mobile) {
         return;
       }
+      if (!this.$utils.isChinaMobilePhone(this.form.mobile)) {
+        this.$message.error("请输入正确的手机号");
+        return;
+      }
       this.form.captcha = null;
       this.openmask = true;
     },

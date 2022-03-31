@@ -13,7 +13,7 @@
         <div class="name">手机号</div>
         <div class="input">
           <input
-            type="text"
+            type="number"
             class="input-text"
             placeholder="请输入手机号码"
             v-model="passwordForm.mobile"
@@ -85,6 +85,10 @@ export default {
       if (!this.passwordForm.mobile) {
         return;
       }
+      if (!this.$utils.isChinaMobilePhone(this.passwordForm.mobile)) {
+        this.$message.error("请输入正确的手机号");
+        return;
+      }
       if (!this.passwordForm.password) {
         return;
       }
@@ -98,16 +102,7 @@ export default {
 
           this.$api.User.Detail().then((res) => {
             this.submitLogin(res.data);
-            if (
-              this.config.member.enabled_mobile_bind_alert === 1 &&
-              res.data.is_bind_mobile !== 1
-            ) {
-              this.$router.push({
-                name: "BindMobile",
-              });
-            } else {
-              this.$router.go(-2);
-            }
+            this.$router.go(-2);
           });
         })
         .catch((e) => {

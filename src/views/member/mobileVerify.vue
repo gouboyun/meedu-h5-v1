@@ -87,6 +87,10 @@ export default {
         // 冷却中
         return;
       }
+      if (!this.$utils.isChinaMobilePhone(this.user.mobile)) {
+        this.$message.error("请输入正确的手机号");
+        return;
+      }
       this.form.captcha = null;
       this.openmask = true;
     },
