@@ -66,7 +66,10 @@
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
-      <div class="group-item" v-if="config && config.socialites.qq === 1">
+      <div
+        class="group-item"
+        v-if="config && config.socialites.qq === 1 && !isInH5Wechat"
+      >
         <div class="name">绑定QQ</div>
         <div class="value" @click="bindQQ">
           <span v-if="user.is_bind_qq === 1">已绑定</span>
