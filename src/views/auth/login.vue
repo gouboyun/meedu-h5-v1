@@ -58,7 +58,7 @@
         <div class="socialite-box">
           <div
             class="socialite-login-item"
-            v-if="config.socialites.qq === 1"
+            v-if="!isInH5Wechat && config.socialites.qq === 1"
             @click="socialiteLogin('qq')"
           >
             <img src="../../assets/img/icon-qq.png" />

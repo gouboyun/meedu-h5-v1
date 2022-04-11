@@ -97,10 +97,21 @@ export default {
     },
     getCategories() {
       this.$api.Course.Categories().then((res) => {
-        let data = res.data;
-        let categories = [];
-        categories.push(...data);
-        this.categories.push(...categories);
+        let categories = res.data;
+        let box = [];
+        for (let i = 0; i < categories.length; i++) {
+          if (categories[i].children.length > 0) {
+            box.push(categories[i]);
+            let children = categories[i].children;
+            for (let j = 0; j < children.length; j++) {
+              children[j].name = "|----" + children[j].name;
+              box.push(children[j]);
+            }
+          } else {
+            box.push(categories[i]);
+          }
+        }
+        this.categories = box;
       });
     },
     getData(more = false) {

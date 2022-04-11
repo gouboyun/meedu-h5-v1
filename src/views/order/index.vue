@@ -252,7 +252,7 @@ export default {
       } else {
         if (this.payment === "alipay" || this.payment === "wechat-jsapi") {
           let host = this.$utils.getHost();
-          let sUrl = encodeURIComponent(host + "/#/order/success");
+          let sUrl = encodeURIComponent(host + "/order/success");
 
           window.location.href =
             this.config.url +
@@ -271,7 +271,7 @@ export default {
             "&f_url=" +
             encodeURIComponent(host);
         } else if (this.payment === "handPay") {
-          this.$router.push({
+          this.$router.replace({
             name: "OrderPay",
             query: {
               orderId: order.order_id,
