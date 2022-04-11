@@ -85,7 +85,7 @@ export default {
   },
   copyright() {
     let outs = [];
-    let fi = function () {
+    let fi = function() {
       return {
         msg: "",
         style: "",
@@ -103,12 +103,20 @@ export default {
       "\r\n官网：\nhttps://meedu.vip\r\n\r\nGitHub：\nhttps://github.com/qsnh/meedu\r\n\r\n使用手册：\nhttps://www.yuque.com/meedu/fvvkbf\r\n\r\n当前版本：v4.5.7\r\n";
     outs.push(oi);
 
-    outs.map(function (x) {
+    outs.map(function(x) {
       console.log("%c" + x.msg, x.style);
     });
   },
   getHost() {
-    return window.location.protocol + "//" + window.location.host;
+    if (window.location.pathname === "/") {
+      return window.location.protocol + "//" + window.location.host;
+    }
+    return (
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      window.location.pathname
+    );
   },
   isWechat() {
     let ua = window.navigator.userAgent.toLowerCase();
