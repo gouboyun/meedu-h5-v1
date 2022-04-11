@@ -271,7 +271,7 @@ export default {
             "&f_url=" +
             encodeURIComponent(host);
         } else if (this.payment === "handPay") {
-          this.$router.push({
+          this.$router.replace({
             name: "OrderPay",
             query: {
               orderId: order.order_id,
