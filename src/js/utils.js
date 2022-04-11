@@ -108,15 +108,12 @@ export default {
     });
   },
   getHost() {
-    if (window.location.pathname === "/") {
-      return window.location.protocol + "//" + window.location.host;
+    let host = window.location.protocol + "//" + window.location.host;
+    let pathname = window.location.pathname;
+    if (pathname && pathname !== "/") {
+      host += pathname;
     }
-    return (
-      window.location.protocol +
-      "//" +
-      window.location.host +
-      window.location.pathname
-    );
+    return host + "/#";
   },
   isWechat() {
     let ua = window.navigator.userAgent.toLowerCase();
