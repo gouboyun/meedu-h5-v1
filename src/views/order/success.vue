@@ -20,12 +20,12 @@ export default {
   methods: {
     goIndex() {
       this.$router.replace({
-        name: "index",
+        name: "Index",
       });
     },
     find() {
       this.$router.replace({
-        name: "MemberOrders",
+        name: "MemberOrder",
       });
     },
   },
