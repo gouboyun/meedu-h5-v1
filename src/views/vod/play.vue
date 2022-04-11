@@ -416,10 +416,7 @@ export default {
       // 初始化播放器
       let bulletSecretFontSize = !this.config.player.bullet_secret.size
         ? 14
-        : parseInt(this.config.player.bullet_secret.size);
-      let bulletSecretText = this.config.player.bullet_secret.text
-        .replace("${user.mobile}", this.user.mobile)
-        .replace("${user.id}", this.user.id);
+        : this.config.player.bullet_secret.size;
       window.player = new window.DPlayer({
         container: document.getElementById("meedu-player-container"),
         autoplay: false,
@@ -432,7 +429,9 @@ export default {
         try: isTrySee === 1,
         bulletSecret: {
           enabled: parseInt(this.config.player.enabled_bullet_secret) === 1,
-          text: bulletSecretText,
+          text: this.config.player.bullet_secret.text
+            .replace("${user.mobile}", this.user.mobile)
+            .replace("${user.id}", this.user.id),
           size: bulletSecretFontSize + "px",
           color: !this.config.player.bullet_secret.color
             ? "red"
