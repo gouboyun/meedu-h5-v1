@@ -51,7 +51,9 @@ export default {
   },
   methods: {
     initData() {
-      this.$api.Order.HandPay()
+      this.$api.Order.HandPay({
+        order_id: this.orderId,
+      })
         .then((res) => {
           this.text = res.data.text;
         })

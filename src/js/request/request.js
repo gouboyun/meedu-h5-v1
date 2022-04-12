@@ -195,8 +195,8 @@ const Api = {
     PayWechatScan(params) {
       return post("/api/v2/order/pay/wechatScan", params);
     },
-    HandPay() {
-      return get("/api/v2/order/pay/handPay");
+    HandPay(params) {
+      return post("/api/v3/order/pay/handPay", params);
     },
   },
   MultiLevelShare: {

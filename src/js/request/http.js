@@ -28,7 +28,7 @@ axios.interceptors.response.use(
       // api请求返回错误
       if (code === 401) {
         Utils.clearToken();
-        window.location.href = "/";
+        window.location.href = Utils.getHost();
       }
       return Promise.reject(response);
     } else {
