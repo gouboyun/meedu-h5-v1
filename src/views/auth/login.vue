@@ -264,6 +264,7 @@ export default {
       }
       let host = this.url;
       let redirecUrl = encodeURIComponent(host);
+      let failUrl = encodeURIComponent(this.$utils.getHost() + "/login-error");
       window.location.href =
         this.config.url +
         "/api/v2/login/socialite/" +
@@ -271,7 +272,7 @@ export default {
         "?success_redirect=" +
         redirecUrl +
         "&failed_redirect=" +
-        redirecUrl;
+        failUrl;
     },
     h5WorkWeixinLogin() {
       if (!this.agreeProtocol) {
@@ -280,12 +281,13 @@ export default {
       }
       let host = this.url;
       let redirecUrl = encodeURIComponent(host);
+      let failUrl = encodeURIComponent(this.$utils.getHost() + "/login-error");
       window.location.href =
         this.config.url +
         "/api/v2/login/wechat/oauth?success_redirect=" +
         redirecUrl +
         "&failed_redirect=" +
-        redirecUrl;
+        failUrl;
     },
   },
 };
