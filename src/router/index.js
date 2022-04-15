@@ -37,7 +37,6 @@ const routes = [
     name: "LoginError",
     meta: {
       title: "错误",
-      auth: true,
     },
     component: () => import("../views/auth/login-error.vue"),
   },
@@ -97,7 +96,6 @@ const routes = [
     name: "OrderSuccess",
     meta: {
       title: "支付成功",
-      auth: true,
     },
     component: () => import("../views/order/success.vue"),
   },
