@@ -96,7 +96,6 @@ const routes = [
     name: "OrderSuccess",
     meta: {
       title: "支付成功",
-      auth: true,
     },
     component: () => import("../views/order/success.vue"),
   },
