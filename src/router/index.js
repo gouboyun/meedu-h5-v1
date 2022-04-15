@@ -37,7 +37,6 @@ const routes = [
     name: "LoginError",
     meta: {
       title: "错误",
-      auth: true,
     },
     component: () => import("../views/auth/login-error.vue"),
   },
