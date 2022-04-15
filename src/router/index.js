@@ -33,6 +33,15 @@ const routes = [
     component: () => import("../views/auth/login-password.vue"),
   },
   {
+    path: "/login-error",
+    name: "LoginError",
+    meta: {
+      title: "错误",
+      auth: true,
+    },
+    component: () => import("../views/auth/login-error.vue"),
+  },
+  {
     path: "/bind-mobile",
     name: "BindMobile",
     meta: {
