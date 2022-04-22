@@ -115,7 +115,6 @@ export default {
       });
     },
     getData(more = false) {
-      document.title = this.title;
       if (this.loading) {
         return;
       }
