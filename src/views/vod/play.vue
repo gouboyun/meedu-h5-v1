@@ -123,6 +123,43 @@
               </div>
             </div>
           </div>
+          <template v-if="videos[0] && videos[0].length > 0">
+            <div class="chapter-item">
+              <div class="chapter-name">无章节内容</div>
+              <div class="chapter-videos-box">
+                <div
+                  class="video-item"
+                  :class="{ active: video.id === videoItem.id }"
+                  @click="goVideo(videoItem)"
+                  v-for="videoItem in videos[0]"
+                  :key="videoItem.id"
+                >
+                  <div class="video-title">
+                    <span
+                      class="free"
+                      v-if="
+                        course.is_free !== 1 &&
+                          (videoItem.charge === 0 || videoItem.free_seconds > 0)
+                      "
+                      >试看</span
+                    >
+                    <span class="text">{{ videoItem.title }}</span>
+                  </div>
+                  <div v-if="video.id === videoItem.id" class="video-duration">
+                    <img
+                      width="24"
+                      height="24"
+                      class="play-icon"
+                      src="../../assets/img/play.gif"
+                    />
+                  </div>
+                  <div v-else class="video-duration">
+                    <duration :seconds="videoItem.duration"></duration>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </template>
         </template>
         <template v-else>
           <div
