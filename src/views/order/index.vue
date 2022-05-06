@@ -172,7 +172,7 @@ export default {
             this.promoCodeModel = res.data.promo_code;
             this.discount = parseInt(this.promoCodeModel.invited_user_reward);
             this.$message.success("优惠码有效，抵扣" + this.discount + "元");
-            this.cancel();
+            this.openmask = false;
           }
         })
         .catch((e) => {
