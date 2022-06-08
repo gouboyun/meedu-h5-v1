@@ -43,7 +43,7 @@
           >
             <span>订阅课程 ￥{{ course.charge }}</span>
           </div>
-          <div
+          <!--<div
             class="subscribe-button2"
             v-if="
               video.charge > 0 && video.is_ban_sell === 0 && isWatch === false
@@ -51,7 +51,7 @@
             @click="buyVideo"
           >
             <span>或点击此处单独购买本节视频￥{{ video.charge }}</span>
-          </div>
+          </div>-->
         </div>
         <div class="alert-message" v-else>请登录后观看</div>
       </template>
