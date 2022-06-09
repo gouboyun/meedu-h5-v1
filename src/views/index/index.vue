@@ -33,6 +33,11 @@
         :name="block.config_render.title"
         :items="block.config_render.items"
       ></index-vod-v1>
+      <index-gzh-v1
+        v-else-if="block.sign === 'h5-gzh-v1'"
+        :name="block.config_render.title"
+        :items="block.config_render"
+      ></index-gzh-v1>
     </div>
     <tech-support></tech-support>
     <nav-footer type="index"></nav-footer>
@@ -45,8 +50,10 @@ import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 import IndexBlank from "./components/blank.vue";
 import IndexVodV1 from "./components/vod-v1.vue";
+import IndexGzhV1 from "./components/gzh-v1.vue";
 import TechSupport from "../../components/tech-support";
 import NavFooter from "../../components/nav-footer";
+
 var vm = null;
 export default {
   components: {
@@ -55,6 +62,7 @@ export default {
     TechSupport,
     IndexVodV1,
     IndexBlank,
+    IndexGzhV1,
     NavFooter,
   },
   data() {
@@ -77,7 +85,7 @@ export default {
         },
         effect: "slide",
         on: {
-          click: function (e) {
+          click: function(e) {
             let url = e.target.name;
             if (url) {
               if (
@@ -138,7 +146,7 @@ export default {
   },
 };
 </script>
-<style lang='less' scoped>
+<style lang="less" scoped>
 .container {
   width: 100%;
   height: 100%;
