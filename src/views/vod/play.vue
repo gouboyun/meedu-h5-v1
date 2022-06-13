@@ -543,7 +543,7 @@ export default {
       if (!this.comment.content.trim()) {
         return;
       }
-      this.$api.Course.SubmitVideoComment(this.id, this.comment)
+      this.$api.Course.SubmitVideoComment(this.$route.query.id, this.comment)
         .then(() => {
           this.$message.success("成功");
           this.comment.content = "";
