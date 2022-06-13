@@ -115,6 +115,9 @@ export default {
       });
     },
     getData(more = false) {
+      if (this.over) {
+        return;
+      }
       if (this.loading) {
         return;
       }
