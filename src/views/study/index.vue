@@ -14,72 +14,17 @@
         </div>
       </div>
 
-      <div
-        class="course-type-nav"
-        v-if="form.nav !== 'history' && courseTypes.length > 1"
-      >
-        <div
-          class="nav-item"
-          @click="setCourseType(item.key)"
-          :class="{ active: item.key === form.courseType }"
-          v-for="item in courseTypes"
-          :key="item.key"
-        >
-          <div class="item-text">{{ item.name }}</div>
-        </div>
-      </div>
-      <div class="gray"></div>
-      <div
-        class="courses-box"
-        v-if="form.nav === 'course' || form.nav === 'collect'"
-      >
+      <div class="courses-box">
         <template v-if="page.list.length > 0">
-          <div
-            class="course-item"
-            v-for="(item, index) in page.list"
-            :key="index"
-            @click="goDetail(item)"
-          >
-            <div class="course-thumb">
-              <img :src="item.thumb" />
-            </div>
-            <div class="course-body">
-              <div class="course-title">{{ item.title }}</div>
-              <div class="at" v-if="item.published_at">
-                订阅时间&nbsp;{{ item.published_at | changeTime }}
-              </div>
-            </div>
-          </div>
+          <course-item
+            v-if="form.courseType === 'vod'"
+            :list="page.list"
+            :currenStatus="form.nav"
+          ></course-item>
         </template>
         <template v-else>
           <empty-comp></empty-comp>
         </template>
-      </div>
-
-      <div class="history-box" v-if="form.nav === 'history'">
-        <div
-          class="history-item"
-          v-for="(item, index1) in page.list"
-          :key="index1"
-        >
-          <div class="name">
-            <div class="icon">
-              <img class="icon-text" src="../../assets/img/circle.png" />
-            </div>
-            <div class="text">{{ index1 }}</div>
-          </div>
-          <div class="history-courses-box">
-            <div
-              class="history-course-item"
-              v-for="(item2, index2) in item"
-              :key="index2"
-              @click="goDetail({ type: item2.other_type, id: item2.other_id })"
-            >
-              <div class="at">{{ item2.hour }}&nbsp;学习了</div>
-              <div class="course-title">{{ item2.title }}</div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- 加载更多 -->
@@ -119,27 +64,33 @@
 import { mapState } from "vuex";
 import EmptyComp from "../../components/empty.vue";
 import NavFooter from "../../components/nav-footer";
+import CourseItem from "./components/course-item.vue";
 
 export default {
   components: {
     EmptyComp,
     NavFooter,
+    CourseItem,
   },
   data() {
     return {
       url: window.location.href,
       navs: [
         {
-          name: "订阅课程",
+          name: "在学",
+          key: "study",
+        },
+        {
+          name: "订阅",
           key: "course",
         },
         {
-          name: "收藏课程",
+          name: "收藏",
           key: "collect",
         },
       ],
       form: {
-        nav: "course",
+        nav: "study",
         courseType: "vod",
       },
       pagination: {
@@ -159,7 +110,7 @@ export default {
     courseTypes() {
       let types = [
         {
-          name: "点播",
+          name: "录播课",
           key: "vod",
         },
       ];
@@ -224,6 +175,8 @@ export default {
         this.getUserCourses();
       } else if (this.form.nav === "collect") {
         this.getLikeCourses();
+      } else if (this.form.nav === "study") {
+        this.getViewStudy();
       }
     },
     getUserCourses() {
@@ -237,17 +190,15 @@ export default {
       };
       Object.assign(filter, this.pagination);
 
-      this.$api.User.Courses(filter).then((res) => {
+      this.$api.Member.NewCourses(filter).then((res) => {
         this.page.total = res.data.total;
         this.page.list.push(...res.data.data);
 
         // 计算
-        if (
-          Math.ceil(this.page.total / this.pagination.size) <=
-          this.pagination.page
-        ) {
+        if (this.pagination.size !== res.data.data.length) {
           this.page.over = true;
         }
+        this.page.loading = false;
       });
     },
     getLikeCourses() {
@@ -261,17 +212,37 @@ export default {
       };
       Object.assign(filter, this.pagination);
 
-      this.$api.User.LikeCourses(filter).then((res) => {
-        (this.page.total = res), res.data.total;
+      this.$api.Member.CoursesCollects(filter).then((res) => {
+        this.page.total = res.data.total;
         this.page.list.push(...res.data.data);
 
         // 计算
-        if (
-          Math.ceil(this.page.total / this.pagination.size) >=
-          this.pagination.page
-        ) {
+        if (this.pagination.size !== res.data.data.length) {
           this.page.over = true;
         }
+        this.page.loading = false;
+      });
+    },
+    getViewStudy() {
+      if (this.page.loading || this.page.over) {
+        return;
+      }
+      this.pagination.loading = true;
+
+      let filter = {
+        type: this.form.courseType,
+      };
+      Object.assign(filter, this.pagination);
+
+      this.$api.Member.Learned.Courses(filter).then((res) => {
+        this.page.total = res.data.total;
+        this.page.list.push(...res.data.data);
+
+        // 计算
+        if (this.pagination.size !== res.data.data.length) {
+          this.page.over = true;
+        }
+        this.page.loading = false;
       });
     },
     goDetail(item) {
@@ -287,30 +258,32 @@ export default {
 }
 
 .top-nav {
+  position: fixed;
+  z-index: 400;
   width: 100%;
   height: auto;
   float: left;
   box-sizing: border-box;
-  position: sticky;
-  top: 0;
-  z-index: 999;
   display: flex;
-  padding-top: 17px;
-  padding-bottom: 8px;
+  padding: 15px 20px 4px 20px;
   background-color: white;
 
   .nav-item {
-    flex: 1;
     position: relative;
-
+    width: auto;
+    height: auto;
+    margin-right: 40px;
+    &:last-child {
+      margin-right: 0px;
+    }
     .item-text {
       width: 100%;
       height: auto;
       float: left;
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 400;
       color: #666666;
-      line-height: 16px;
+      line-height: 14px;
       text-align: center;
       padding-bottom: 9px;
     }
@@ -318,9 +291,7 @@ export default {
     .item-dot {
       position: absolute;
       bottom: 0;
-      left: 50%;
-      margin-left: -5px;
-      width: 10px;
+      width: 28px;
       height: 3px;
       background: white;
       border-radius: 2px;
@@ -328,7 +299,7 @@ export default {
 
     &.active {
       .item-text {
-        color: #333333;
+        color: #3ca7fa;
         font-weight: 600;
       }
 
@@ -344,38 +315,6 @@ export default {
   height: 10px;
   background: #f3f6f9;
 }
-.course-type-nav {
-  width: 100%;
-  height: auto;
-  float: left;
-  background-color: white;
-  margin-top: 10px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  padding-top: 15px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid #f3f6f9;
-
-  .nav-item {
-    flex: 1;
-    text-align: center;
-
-    .item-text {
-      font-size: 14px;
-      font-weight: 400;
-      color: #333333;
-      line-height: 14px;
-    }
-
-    &.active {
-      .item-text {
-        font-weight: 600;
-        color: #3ca7fa;
-      }
-    }
-  }
-}
 
 .courses-box {
   width: 100%;
@@ -383,61 +322,8 @@ export default {
   float: left;
   background-color: white;
   box-sizing: border-box;
+  margin-top: 42px;
   padding: 15px;
-
-  .course-item {
-    width: 100%;
-    height: auto;
-    float: left;
-    margin-bottom: 15px;
-    display: flex;
-
-    &:last-child {
-      margin-bottom: 0;
-    }
-
-    .course-thumb {
-      margin-right: 10px;
-      img {
-        width: 120px;
-        height: 90px;
-        border-radius: 4px;
-      }
-    }
-
-    .course-body {
-      flex: 1;
-      padding-top: 5px;
-
-      .course-title {
-        width: 100%;
-        height: 40px;
-        float: left;
-        font-size: 15px;
-        font-weight: 500;
-        color: #171923;
-        line-height: 20px;
-        text-overflow: -o-ellipsis-lastline;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        line-clamp: 2;
-        -webkit-box-orient: vertical;
-        margin-bottom: 22px;
-      }
-
-      .at {
-        width: 100%;
-        height: auto;
-        float: left;
-        font-size: 12px;
-        font-weight: 400;
-        color: #999999;
-        line-height: 12px;
-      }
-    }
-  }
 }
 
 .loadmore-box {
@@ -446,95 +332,6 @@ export default {
   float: left;
   padding-top: 25px;
   padding-bottom: 25px;
-}
-
-.history-box {
-  width: 100%;
-  height: auto;
-  float: left;
-  box-sizing: border-box;
-  background-color: white;
-  margin-top: 10px;
-  padding: 0 15px;
-
-  .history-item {
-    width: 100%;
-    height: auto;
-    float: left;
-    box-sizing: border-box;
-    padding: 30px 0;
-    border-bottom: 1px solid #f3f6f9;
-
-    .name {
-      width: 100%;
-      height: auto;
-      float: left;
-      margin-bottom: 20px;
-      display: flex;
-      align-items: center;
-
-      .icon {
-        display: block;
-        box-sizing: border-box;
-        margin-right: 10px;
-        .icon-text {
-          display: inline-block;
-          width: 13px;
-          height: 13px;
-        }
-      }
-
-      .text {
-        flex: 1;
-        font-size: 15px;
-        font-weight: 600;
-        color: #666666;
-        line-height: 15px;
-      }
-    }
-
-    .history-courses-box {
-      width: 100%;
-      height: auto;
-      float: left;
-      box-sizing: border-box;
-      padding-left: 20px;
-      padding-right: 20px;
-
-      .history-course-item {
-        width: 100%;
-        height: auto;
-        float: left;
-        box-sizing: border-box;
-        margin-bottom: 20px;
-
-        &:last-child {
-          margin-bottom: 0;
-        }
-
-        .at {
-          width: 100%;
-          height: auto;
-          float: left;
-          font-size: 12px;
-          color: #999999;
-          line-height: 12px;
-          margin-bottom: 10px;
-        }
-
-        .course-title {
-          width: 100%;
-          height: auto;
-          float: left;
-          font-size: 15px;
-          font-weight: 500;
-          color: #333333;
-          line-height: 15px;
-          word-break: break-all;
-        }
-      }
-    }
-  }
 }
 
 .btn-login-box {
@@ -562,11 +359,12 @@ export default {
 .drop {
   display: inline-block;
   width: 100%;
+  float: left;
   text-align: center;
   color: #cccccc;
   font-size: 14px;
   margin-top: 30px;
-  margin-bottom: 30px;
+  margin-bottom: 60px;
 }
 </style>
 
