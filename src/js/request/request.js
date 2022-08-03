@@ -175,6 +175,17 @@ const Api = {
     UnReadNum() {
       return get("/api/v2/member/unreadNotificationCount");
     },
+    NewCourses(params) {
+      return get("/api/v3/member/courses", params);
+    },
+    CoursesCollects(params) {
+      return get("/api/v3/member/courses/like", params);
+    },
+    Learned: {
+      Courses(params) {
+        return get("/api/v3/member/courses/learned", params);
+      },
+    },
   },
   Order: {
     Payments(params) {

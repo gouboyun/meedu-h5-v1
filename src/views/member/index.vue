@@ -282,8 +282,8 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  margin-bottom: 53px;
   background: #f3f6f9;
+  overflow: hidden;
 }
 .user-icon {
   width: 100%;
