@@ -101,10 +101,7 @@
                 <div class="video-title">
                   <span
                     class="free"
-                    v-if="
-                      course.is_free !== 1 &&
-                        (videoItem.charge === 0 || videoItem.free_seconds > 0)
-                    "
+                    v-if="course.is_free !== 1 && videoItem.free_seconds > 0"
                     >试看</span
                   >
                   <span class="text">{{ videoItem.title }}</span>
@@ -137,10 +134,7 @@
                   <div class="video-title">
                     <span
                       class="free"
-                      v-if="
-                        course.is_free !== 1 &&
-                          (videoItem.charge === 0 || videoItem.free_seconds > 0)
-                      "
+                      v-if="course.is_free !== 1 && videoItem.free_seconds > 0"
                       >试看</span
                     >
                     <span class="text">{{ videoItem.title }}</span>
@@ -172,10 +166,7 @@
             <div class="video-title">
               <span
                 class="free"
-                v-if="
-                  course.is_free !== 1 &&
-                    (videoItem.charge === 0 || videoItem.free_seconds > 0)
-                "
+                v-if="course.is_free !== 1 && videoItem.free_seconds > 0"
                 >试看</span
               >
               <span class="text">{{ videoItem.title }}</span>
