@@ -25,6 +25,15 @@
         </div>
         <div class="confirm" @click="cancelBind()">确认</div>
       </div>
+      <div class="popup borderbox" v-if="destroyDialog">
+        <div class="cancel" @click="cancel()">
+          <img src="../../assets/img/close.png" />
+        </div>
+        <div class="text">
+          确认注销账号？确认之后账号将在7天后自动注销，期间内登录账号将会自动取消账号注销。
+        </div>
+        <div class="confirm" @click="destroyUserValidate()">确认</div>
+      </div>
     </div>
     <div class="navheader borderbox">
       <img
@@ -95,6 +104,13 @@
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
+      <div class="group-item" @click="destroyUser">
+        <div class="name">注销账号</div>
+        <div class="value">
+          <span class="un">注销</span>
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -123,6 +139,7 @@ export default {
         content: null,
       },
       resource: null,
+      destroyDialog: false,
     };
   },
   mounted() {
@@ -142,7 +159,7 @@ export default {
     });
   },
   methods: {
-    ...mapMutations(["submitLogin"]),
+    ...mapMutations(["submitLogin", "logout"]),
     getProfile() {
       this.$api.Member.Profile().then((res) => {
         this.profile = res.data;
@@ -183,6 +200,7 @@ export default {
       this.openmask = true;
     },
     cancel() {
+      this.destroyDialog = false;
       this.dialog = false;
       this.changeNick = false;
       this.openmask = false;
@@ -287,6 +305,24 @@ export default {
         })
         .catch((e) => {
           this.loading = false;
+          this.$message.error(e.message);
+        });
+    },
+    destroyUser() {
+      this.destroyDialog = true;
+      this.openmask = true;
+    },
+    destroyUserValidate() {
+      this.$api.Auth.DestroyUser()
+        .then((res) => {
+          this.$message.success("注销成功");
+          this.cancel();
+          this.logout();
+          this.$router.push({
+            name: "Me",
+          });
+        })
+        .catch((e) => {
           this.$message.error(e.message);
         });
     },
@@ -430,6 +466,10 @@ export default {
       font-size: 18px;
       font-weight: 400;
       color: #333333;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      padding: 0 15px;
     }
     .input-box {
       width: 100%;

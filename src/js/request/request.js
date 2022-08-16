@@ -33,6 +33,9 @@ const Api = {
     CodeBind(params) {
       return post(`/api/v3/member/socialite/bindWithCode`, params);
     },
+    DestroyUser(params) {
+      return post(`/api/v3/member/destroy`, params);
+    },
   },
   Other: {
     Captcha() {
