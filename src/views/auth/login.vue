@@ -258,7 +258,7 @@ export default {
       let failUrl = encodeURIComponent(this.$utils.getHost() + "/login-error");
       window.location.href =
         this.config.url +
-        "/api/v3//auth/login/socialite/" +
+        "/api/v3/auth/login/socialite/" +
         app +
         "?s_url=" +
         redirecUrl +

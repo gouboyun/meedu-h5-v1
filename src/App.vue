@@ -15,7 +15,7 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.query.login_code) {
+      if (to.query.login_code && to.query.action === "login") {
         this.CodeLogin(to.query.login_code);
       }
     },
