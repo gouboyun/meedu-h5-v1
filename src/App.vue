@@ -56,7 +56,7 @@ export default {
       this.setConfig(res.data);
       if (!this.$utils.isMobile()) {
         if (res.data.pc_url !== "") {
-          // window.location.href = res.data.pc_url;
+          window.location.href = res.data.pc_url;
         }
       }
     },
