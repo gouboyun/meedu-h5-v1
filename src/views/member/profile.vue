@@ -202,7 +202,8 @@ export default {
         "/api/v3/auth/login/wechat/oauth?s_url=" +
         redirect +
         "&f_url=" +
-        redirect;
+        redirect +
+        "&action=bind";
     },
     bindQQ() {
       if (this.user.is_bind_qq === 1) {
@@ -218,7 +219,8 @@ export default {
         "/api/v3/auth/login/socialite/qq?s_url=" +
         redirect +
         "&f_url=" +
-        redirect;
+        redirect +
+        "&action=bind";
     },
     CodeBind(code) {
       if (this.$utils.getSessionLoginCode(code)) {

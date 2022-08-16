@@ -263,7 +263,8 @@ export default {
         "?s_url=" +
         redirecUrl +
         "&f_url=" +
-        failUrl;
+        failUrl +
+        "&action=login";
     },
     h5WorkWeixinLogin() {
       if (!this.agreeProtocol) {
@@ -278,7 +279,8 @@ export default {
         "/api/v3/auth/login/wechat/oauth?s_url=" +
         redirecUrl +
         "&f_url=" +
-        failUrl;
+        failUrl +
+        "&action=login";
     },
   },
 };
