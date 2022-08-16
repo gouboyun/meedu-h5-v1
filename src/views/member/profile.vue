@@ -107,7 +107,6 @@
       <div class="group-item" @click="destroyUser">
         <div class="name">注销账号</div>
         <div class="value">
-          <span class="un">注销</span>
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
