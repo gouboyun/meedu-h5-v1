@@ -27,6 +27,9 @@ const Api = {
     WechatMiniLoginMobile(params) {
       return post("/api/v2/login/wechatMiniMobile", params);
     },
+    CodeLogin(params) {
+      return post(`/api/v3/auth/login/code`, params);
+    },
   },
   Other: {
     Captcha() {
@@ -117,6 +120,9 @@ const Api = {
     },
     NewMobile(params) {
       return post("/api/v2/member/detail/mobile", params);
+    },
+    CodeBindMobile(params) {
+      return post("/api/v3/auth/register/withSocialite", params);
     },
     PasswordChange(params) {
       return post("/api/v2/member/detail/password", params);

@@ -17,6 +17,21 @@ export default {
   clearTmpToken() {
     window.localStorage.removeItem("meedu-h5-tmp-token");
   },
+  saveLoginCode(code) {
+    window.localStorage.setItem("login_code", code);
+  },
+  getLoginCode() {
+    return window.localStorage.getItem("login_code");
+  },
+  clearLoginCode() {
+    window.localStorage.removeItem("login_code");
+  },
+  saveSessionLoginCode(code) {
+    window.sessionStorage.setItem("login_code:" + code, code);
+  },
+  getSessionLoginCode(code) {
+    return window.sessionStorage.getItem("login_code:" + code);
+  },
   removeTokenParams(url) {
     let parseUrl = new URL(url);
     let hash = parseUrl.hash;

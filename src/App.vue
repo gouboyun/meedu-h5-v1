@@ -15,8 +15,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      if (to.query.token) {
-        this.autoLogin(to.query.token);
+      if (to.query.login_code) {
+        this.CodeLogin(to.query.login_code);
       }
     },
   },
@@ -29,22 +29,6 @@ export default {
   },
   methods: {
     ...mapMutations(["submitLogin", "setConfig"]),
-    async autoLogin(key) {
-      if (this.$route.name !== "Login") {
-        let token = null;
-        if (key) {
-          token = key;
-          this.$utils.saveToken(token);
-          let newUrl = this.$utils.removeTokenParams(window.location.href);
-          window.location.href = newUrl;
-        } else {
-          token = this.$utils.getToken();
-        }
-        if (token) {
-          await this.getUser();
-        }
-      }
-    },
     async getUser() {
       try {
         let res = await this.$api.User.Detail();
@@ -76,6 +60,29 @@ export default {
           window.location.href = res.data.pc_url;
         }
       }
+    },
+    CodeLogin(code) {
+      if (this.$utils.getSessionLoginCode(code)) {
+        return;
+      }
+      this.$utils.saveSessionLoginCode(code);
+      this.$api.Auth.CodeLogin({ code: code })
+        .then((res) => {
+          if (res.data.success === 1) {
+            this.$utils.saveToken(res.data.token);
+            this.getUser();
+          } else {
+            if (res.data.action === "bind_mobile") {
+              this.$utils.saveLoginCode(code);
+              this.$router.push({
+                name: "CodeBindMobile",
+              });
+            }
+          }
+        })
+        .catch((e) => {
+          this.$message.error(e.message);
+        });
     },
   },
 };
