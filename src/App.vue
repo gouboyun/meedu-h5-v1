@@ -22,12 +22,22 @@ export default {
   },
   async mounted() {
     await this.getConfig();
+    await this.autoLogin();
   },
   computed: {
     ...mapState(["config"]),
   },
   methods: {
     ...mapMutations(["submitLogin", "setConfig"]),
+    async autoLogin() {
+      if (this.$route.name !== "Login") {
+        let token = this.$utils.getToken();
+
+        if (token) {
+          await this.getUser();
+        }
+      }
+    },
     async getUser() {
       try {
         let res = await this.$api.User.Detail();
@@ -56,7 +66,7 @@ export default {
       this.setConfig(res.data);
       if (!this.$utils.isMobile()) {
         if (res.data.pc_url !== "") {
-          window.location.href = res.data.pc_url;
+          // window.location.href = res.data.pc_url;
         }
       }
     },

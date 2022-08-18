@@ -308,6 +308,8 @@ export default {
       playDuration: 0,
       currentTab: 0,
       swiperIndex: 0,
+      playingTime: 0,
+      last_see_value: null,
     };
   },
   computed: {
@@ -317,6 +319,9 @@ export default {
         return false;
       }
       return this.isWatch === false && this.video.free_seconds > 0;
+    },
+    isBanDrag() {
+      return parseInt(this.video.ban_drag) === 1;
     },
   },
   mounted() {
@@ -394,6 +399,18 @@ export default {
           if (this.isWatch || this.video.free_seconds > 0) {
             this.getPlayInfo();
           }
+
+          //播放记录跳转
+          if (
+            this.video_watched_progress &&
+            this.video_watched_progress[this.video.id] &&
+            this.video_watched_progress[this.video.id].watch_seconds > 0
+          ) {
+            this.last_see_value = {
+              time: 5,
+              pos: this.video_watched_progress[this.video.id].watch_seconds,
+            };
+          }
         })
         .catch((e) => {
           this.$message.error(e.message);
@@ -467,15 +484,36 @@ export default {
             : this.config.player.bullet_secret.color,
           opacity: this.config.player.bullet_secret.opacity,
         },
-        ban_drag: parseInt(this.video.ban_drag) === 1,
+        ban_drag: this.isBanDrag,
+        last_see_pos: this.last_see_value,
       });
 
       // 监听播放进度更新evt
       window.player.on("timeupdate", () => {
-        this.playTimeUpdate(parseInt(window.player.video.currentTime));
+        let currentTime = parseInt(window.player.video.currentTime);
+        if (
+          this.isBanDrag &&
+          this.last_see_value &&
+          currentTime - this.playingTime >= 2 &&
+          currentTime > parseInt(this.last_see_value.pos)
+        ) {
+          window.player.seek(this.playingTime);
+        } else {
+          this.playingTime = currentTime;
+          this.playTimeUpdate(currentTime);
+        }
       });
       window.player.on("ended", () => {
-        this.playTimeUpdate(parseInt(window.player.video.currentTime), true);
+        let currentTime = parseInt(window.player.video.currentTime);
+        if (
+          this.isBanDrag &&
+          window.player.video.duration - this.playingTime >= 2
+        ) {
+          window.player.seek(this.playingTime);
+          return;
+        }
+        this.playingTime = 0;
+        this.playTimeUpdate(currentTime, true);
         this.playendedStatus = true;
         window.player.destroy();
       });
