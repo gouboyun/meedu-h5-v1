@@ -254,7 +254,7 @@ export default {
         return;
       }
       let host = this.url;
-      let redirecUrl = encodeURIComponent(host);
+      let redirecUrl = encodeURIComponent(this.$utils.removeTokenParams(host));
       let failUrl = encodeURIComponent(this.$utils.getHost() + "/login-error");
       window.location.href =
         this.config.url +
@@ -272,7 +272,7 @@ export default {
         return;
       }
       let host = this.url;
-      let redirecUrl = encodeURIComponent(host);
+      let redirecUrl = encodeURIComponent(this.$utils.removeTokenParams(host));
       let failUrl = encodeURIComponent(this.$utils.getHost() + "/login-error");
       window.location.href =
         this.config.url +

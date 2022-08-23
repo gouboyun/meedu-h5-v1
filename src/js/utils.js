@@ -47,7 +47,11 @@ export default {
 
     let data = [];
     for (let i = 0; i < params.length; i++) {
-      if (params[i].indexOf("token=") === -1) {
+      if (
+        params[i].indexOf("token=") === -1 &&
+        params[i].indexOf("login_code=") === -1 &&
+        params[i].indexOf("action=") === -1
+      ) {
         data.push(params[i]);
       }
     }
