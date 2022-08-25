@@ -310,6 +310,7 @@ export default {
       swiperIndex: 0,
       playingTime: 0,
       last_see_value: null,
+      watchedSeconds: 0,
     };
   },
   computed: {
@@ -410,6 +411,9 @@ export default {
               time: 5,
               pos: this.video_watched_progress[this.video.id].watch_seconds,
             };
+            this.watchedSeconds = this.video_watched_progress[
+              this.video.id
+            ].watch_seconds;
           }
         })
         .catch((e) => {
@@ -493,9 +497,8 @@ export default {
         let currentTime = parseInt(window.player.video.currentTime);
         if (
           this.isBanDrag &&
-          this.last_see_value &&
           currentTime - this.playingTime >= 2 &&
-          currentTime > parseInt(this.last_see_value.pos)
+          currentTime > parseInt(this.watchedSeconds)
         ) {
           window.player.seek(this.playingTime);
         } else {
