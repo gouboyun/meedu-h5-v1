@@ -592,6 +592,9 @@ export default {
       this.playTimeUpdate(duration);
     },
     playTimeUpdate(duration, isEnd) {
+      if (duration > parseInt(this.watchedSeconds)) {
+        this.watchedSeconds = duration;
+      }
       if (duration - this.playDuration >= 10 || isEnd === true) {
         this.playDuration = duration;
         this.$api.Course.VideoRecord(this.video.id, {
