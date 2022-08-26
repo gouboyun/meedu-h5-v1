@@ -277,6 +277,10 @@ export default {
       });
     },
     changePassword() {
+      if (this.user.is_bind_mobile !== 1) {
+        this.$message.error("请绑定手机号");
+        return;
+      }
       this.$router.push({
         name: "ChangePassword",
       });
