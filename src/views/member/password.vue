@@ -17,20 +17,9 @@
       <div class="group-form-box">
         <div class="group-title">重置密码</div>
         <div class="group-item">
-          <div class="name">手机号</div>
-          <div class="value">
-            <input
-              class="input-text"
-              type="number"
-              v-model="form.mobile"
-              placeholder="请输入手机号码"
-            />
-            <img
-              v-show="form.mobile"
-              src="../../assets/img/new/close.png"
-              style="width:16px;height:16px;"
-              @click="clearMobile()"
-            />
+          <div class="mobile">
+            <span class="tit">手机号</span>
+            {{ localUser.mobile }}
           </div>
         </div>
         <div class="group-item">
@@ -55,7 +44,7 @@
       <div class="box pl-60 pr-60">
         <div
           class="btn-confirm"
-          :class="{ active: form.mobile && form.password }"
+          :class="{ active: form.password }"
           @click="openDialog"
         >
           获取短信验证码
@@ -67,7 +56,7 @@
         text="确定"
         scene="password_reset"
         :status="confirmDialog"
-        :mobile="form.mobile"
+        :mobile="localUser.mobile"
         @change="submit"
         @cancel="cancel"
       ></confirm-login>
@@ -105,12 +94,17 @@ export default {
       },
       openmask: false,
       reCaptcha: false,
+      localUser: null,
     };
   },
-  mounted() {},
+  mounted() {
+    this.getData();
+  },
   methods: {
-    clearMobile() {
-      this.form.mobile = null;
+    getData() {
+      this.$api.Member.Detail().then((res) => {
+        this.localUser = res.data;
+      });
     },
     clearPassword() {
       this.form.password = null;
@@ -120,10 +114,7 @@ export default {
         // 冷却中
         return;
       }
-      if (!this.form.mobile) {
-        return;
-      }
-      if (!this.$utils.isChinaMobilePhone(this.form.mobile)) {
+      if (!this.$utils.isChinaMobilePhone(this.localUser.mobile)) {
         this.$message.error("请输入正确的手机号");
         return;
       }
@@ -141,7 +132,7 @@ export default {
       this.form.captcha = val;
       this.captcha = cap;
       this.$api.Other.SendSms({
-        mobile: this.form.mobile,
+        mobile: this.localUser.mobile,
         image_key: this.captcha.key,
         image_captcha: this.form.captcha,
         scene: "password_reset",
@@ -167,16 +158,12 @@ export default {
       }
       this.loading = true;
       this.form.sms = val;
-      if (!this.form.mobile) {
-        this.$message.error("请输入手机号");
-        return;
-      }
       if (!this.form.password) {
         this.$message.error("请输入密码");
         return;
       }
       this.$api.Member.PasswordChange({
-        mobile: this.form.mobile,
+        mobile: this.localUser.mobile,
         mobile_code: this.form.sms,
         password: this.form.password,
       })
@@ -249,6 +236,18 @@ export default {
       display: flex;
       border-bottom: 1px solid #f4faff;
       margin-bottom: 50px;
+      .mobile {
+        width: auto;
+        height: auto;
+        font-size: 16px;
+        font-weight: 400;
+        color: #333333;
+        line-height: 26px;
+        .tit {
+          margin-right: 25px;
+        }
+      }
+
       .name {
         width: auto;
         height: auto;

@@ -3,15 +3,10 @@
     <div class="mask" v-if="status">
       <div class="modal">
         <div class="body">
+          <div class="top">
+            <div class="btn_default" @click="cancel">取消</div>
+          </div>
           <div class="item">
-            <div class="input">
-              <input
-                type="text"
-                class="input-text"
-                placeholder="请输入图形验证码"
-                v-model="form.captcha"
-              />
-            </div>
             <div class="captcha">
               <img
                 v-show="captcha.img"
@@ -20,10 +15,25 @@
               />
             </div>
           </div>
+          <div class="item">
+            <div class="input">
+              <input
+                type="text"
+                class="input-text"
+                placeholder="请输入图中字符"
+                v-model="form.captcha"
+              />
+            </div>
+          </div>
         </div>
         <div class="bottom">
-          <div class="btn_default" @click="cancel">取消</div>
-          <div class="btn_primary" @click="change">确认</div>
+          <div
+            class="btn_primary"
+            :class="{ active: form.captcha }"
+            @click="change"
+          >
+            确认
+          </div>
         </div>
       </div>
     </div>
@@ -62,6 +72,9 @@ export default {
       this.$emit("cancel", true);
     },
     change() {
+      if (this.form.captcha.trim() === "") {
+        return;
+      }
       this.$emit("change", this.form.captcha, this.captcha);
     },
   },
@@ -80,57 +93,81 @@ export default {
   .modal {
     position: fixed;
     z-index: 999;
-    width: 300px;
-    height: 168px;
-    top: 50%;
-    left: 50%;
-    margin-top: -84px;
-    margin-left: -150px;
+    width: 100%;
+    height: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background-color: #fff;
     text-align: center;
-    border-radius: 3px;
+    border-radius: 12px 12px 0px 0px;
     overflow: hidden;
     animation: window-open 0.3s;
 
     .body {
-      padding: 40px 15px;
+      box-sizing: border-box;
+      padding: 30px 15px;
       font-size: 15px;
       line-height: 1.4;
       color: #999;
       overflow-x: hidden;
       overflow-y: auto;
+      .top {
+        width: 100%;
+        display: flex;
+        justify-content: right;
+        margin-bottom: 20px;
+        .btn_default {
+          width: auto;
+          height: 14px;
+          font-size: 14px;
+          font-weight: 400;
+          color: #666666;
+          line-height: 14px;
+        }
+      }
       .item {
         width: 100%;
         height: 40px;
         display: flex;
         flex-direction: row;
         align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+        padding: 0px 15px;
+        margin-bottom: 30px;
+        &:last-child {
+          margin-bottom: 0px;
+        }
         .input {
-          width: 161px;
+          width: 100%;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           box-sizing: border-box;
           align-items: center;
+          justify-content: center;
           border-bottom: 1px solid #dcdfe6;
           .input-text {
-            max-width: 161px;
-            height: 36px;
+            max-width: 200px;
+            height: 16px;
             float: left;
             box-sizing: border-box;
             outline: none;
             color: #333333;
             font-size: 16px;
             border: none;
+            text-align: center;
+            margin-bottom: 16px;
           }
         }
         .captcha {
-          width: 90px;
-          height: 36px;
-          padding-top: 0;
-          margin-left: 19px;
+          width: 100px;
+          height: 40px;
+          border-radius: 4px;
+          overflow: hidden;
           img {
-            width: 90px;
+            width: 100px;
             display: inline-block;
             overflow: hidden;
             position: relative;
@@ -139,35 +176,31 @@ export default {
       }
     }
     .bottom {
-      position: relative;
-      line-height: 48px;
-      font-size: 18px;
-      display: -webkit-box;
-      display: -webkit-flex;
+      width: 100%;
+      height: auto;
       display: flex;
-      border-top: 1px solid #f5f5f5;
-      .btn_default {
-        display: block;
-        -webkit-box-flex: 1;
-        -webkit-flex: 1;
-        flex: 1;
-        color: rgb(0, 0, 0);
-        text-decoration: none;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        position: relative;
-        cursor: pointer;
-        border-right: 1px solid #f5f5f5;
-      }
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      padding: 0px 30px 30px 30px;
+
       .btn_primary {
-        display: block;
-        -webkit-box-flex: 1;
-        -webkit-flex: 1;
-        flex: 1;
-        color: rgb(0, 122, 255);
-        text-decoration: none;
-        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
-        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 48px;
+        background: rgba(#3ca7fa, 0.6);
+        border-radius: 4px;
+        font-size: 15px;
+        font-weight: 500;
+        color: #ffffff;
+        line-height: 15px;
         cursor: pointer;
+        &.active {
+          background: #3ca7fa;
+        }
       }
     }
   }
