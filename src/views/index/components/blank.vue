@@ -16,7 +16,6 @@ export default {
   width: 100%;
   height: auto;
   float: left;
-  margin-top: 10px;
   background: #ffffff;
   display: flex;
 }
