@@ -199,15 +199,6 @@ const routes = [
     },
     component: () => import("../views/member/mobileVerify.vue"),
   },
-  {
-    path: "/member/promocode",
-    name: "MemberPromoCode",
-    meta: {
-      title: "我的邀请码",
-      auth: true,
-    },
-    component: () => import("../views/member/promocode.vue"),
-  },
 ];
 
 const router = new VueRouter({
