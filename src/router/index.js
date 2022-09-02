@@ -49,6 +49,14 @@ const routes = [
     component: () => import("../views/auth/bind-mobile.vue"),
   },
   {
+    path: "/code-bind-mobile",
+    name: "CodeBindMobile",
+    meta: {
+      title: "绑定手机号",
+    },
+    component: () => import("../views/auth/code-bind-mobile.vue"),
+  },
+  {
     path: "/search",
     name: "Search",
     meta: {
@@ -190,15 +198,6 @@ const routes = [
       title: "验证原手机号",
     },
     component: () => import("../views/member/mobileVerify.vue"),
-  },
-  {
-    path: "/member/promocode",
-    name: "MemberPromoCode",
-    meta: {
-      title: "我的邀请码",
-      auth: true,
-    },
-    component: () => import("../views/member/promocode.vue"),
   },
 ];
 

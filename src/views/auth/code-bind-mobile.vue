@@ -6,36 +6,24 @@
       @change="sendSms"
       @cancel="qx"
     ></captcha-dialog>
-    <div class="navheader borderbox" style="border-bottom:none;">
-      <img
-        class="back"
-        @click="goBack()"
-        src="../../assets/img/icon-back.png"
-      />
-    </div>
+    <div class="navheader borderbox" style="border-bottom:none;"></div>
     <template v-if="!confirmDialog">
       <div class="group-form-box">
-        <div class="group-title">重置密码</div>
+        <div class="group-title">绑定手机号</div>
         <div class="group-item">
-          <div class="mobile">
-            <span class="tit">手机号</span>
-            {{ localUser.mobile }}
-          </div>
-        </div>
-        <div class="group-item">
-          <div class="name">新密码</div>
+          <div class="name">手机号</div>
           <div class="value">
             <input
               class="input-text"
-              type="password"
-              v-model="form.password"
-              placeholder="请输入新密码"
+              type="number"
+              v-model="form.mobile"
+              placeholder="请输入您的手机号"
             />
             <img
-              v-show="form.password"
+              v-show="form.mobile"
               src="../../assets/img/new/close.png"
               style="width:16px;height:16px;"
-              @click="clearPassword()"
+              @click="clearMobile()"
             />
           </div>
         </div>
@@ -44,7 +32,7 @@
       <div class="box pl-60 pr-60">
         <div
           class="btn-confirm"
-          :class="{ active: form.password }"
+          :class="{ active: form.mobile }"
           @click="openDialog"
         >
           获取短信验证码
@@ -53,10 +41,10 @@
     </template>
     <template v-else>
       <confirm-login
-        text="确定"
-        scene="password_reset"
+        text="绑定"
+        scene="mobile_bind"
         :status="confirmDialog"
-        :mobile="localUser.mobile"
+        :mobile="form.mobile"
         @change="submit"
         @cancel="cancel"
       ></confirm-login>
@@ -65,9 +53,9 @@
 </template>
 
 <script>
-import ConfirmLogin from "../auth/components/confirm-login";
+import { mapState, mapMutations } from "vuex";
+import ConfirmLogin from "./components/confirm-login";
 import CaptchaDialog from "../../components/captcha-dialog";
-
 export default {
   components: {
     ConfirmLogin,
@@ -76,7 +64,6 @@ export default {
   data() {
     return {
       loading: false,
-      confirmDialog: false,
       captcha: {
         img: null,
         key: null,
@@ -85,36 +72,35 @@ export default {
         mobile: "",
         sms: "",
         captcha: "",
-        password: "",
       },
       sms: {
         max: 120,
         current: 0,
         loading: false,
       },
+      confirmDialog: false,
       openmask: false,
       reCaptcha: false,
-      localUser: null,
     };
   },
-  mounted() {
-    this.getData();
+  computed: {
+    ...mapState(["config"]),
   },
+  mounted() {},
   methods: {
-    getData() {
-      this.$api.Member.Detail().then((res) => {
-        this.localUser = res.data;
-      });
-    },
-    clearPassword() {
-      this.form.password = null;
+    ...mapMutations(["submitLogin"]),
+    clearMobile() {
+      this.form.mobile = null;
     },
     openDialog() {
       if (this.sms.loading) {
         // 冷却中
         return;
       }
-      if (!this.$utils.isChinaMobilePhone(this.localUser.mobile)) {
+      if (!this.form.mobile) {
+        return;
+      }
+      if (!this.$utils.isChinaMobilePhone(this.form.mobile)) {
         this.$message.error("请输入正确的手机号");
         return;
       }
@@ -132,10 +118,10 @@ export default {
       this.form.captcha = val;
       this.captcha = cap;
       this.$api.Other.SendSms({
-        mobile: this.localUser.mobile,
+        mobile: this.form.mobile,
         image_key: this.captcha.key,
         image_captcha: this.form.captcha,
-        scene: "password_reset",
+        scene: "mobile_bind",
       })
         .then((res) => {
           // 发送成功
@@ -152,27 +138,34 @@ export default {
     cancel() {
       this.confirmDialog = false;
     },
+    logout() {
+      this.$utils.clearToken();
+      window.location.href = "/";
+    },
     submit(val) {
       if (this.loading) {
         return;
       }
       this.loading = true;
       this.form.sms = val;
-      if (!this.form.password) {
-        this.$message.error("请输入密码");
-        return;
-      }
-      this.$api.Member.PasswordChange({
-        mobile: this.localUser.mobile,
+      this.$api.Member.CodeBindMobile({
+        mobile: this.form.mobile,
         mobile_code: this.form.sms,
-        password: this.form.password,
+        code: this.$utils.getLoginCode(),
       })
         .then((res) => {
           this.loading = false;
           this.$message.success("成功");
-          setTimeout(() => {
-            this.$router.back();
-          }, 500);
+          this.$utils.clearLoginCode();
+          this.$utils.saveToken(res.data.token);
+          this.$api.User.Detail().then((res) => {
+            this.submitLogin(res.data);
+            setTimeout(() => {
+              this.$router.push({
+                name: "Index",
+              });
+            }, 500);
+          });
         })
         .catch((e) => {
           this.loading = false;
@@ -198,6 +191,23 @@ export default {
   cursor: pointer;
   &.active {
     background: #3ca7fa;
+  }
+}
+.login-button-box {
+  width: 100%;
+  height: auto;
+  float: left;
+
+  .login-password-way {
+    display: block;
+    width: 100%;
+    height: auto;
+    margin-top: 30px;
+    margin-bottom: 35px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 400;
+    color: #999999;
   }
 }
 
@@ -236,18 +246,6 @@ export default {
       display: flex;
       border-bottom: 1px solid #f4faff;
       margin-bottom: 50px;
-      .mobile {
-        width: auto;
-        height: auto;
-        font-size: 16px;
-        font-weight: 400;
-        color: #333333;
-        line-height: 26px;
-        .tit {
-          margin-right: 25px;
-        }
-      }
-
       .name {
         width: auto;
         height: auto;

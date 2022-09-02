@@ -263,16 +263,17 @@ export default {
         return;
       }
       let host = this.url;
-      let redirecUrl = encodeURIComponent(host);
+      let redirecUrl = encodeURIComponent(this.$utils.removeTokenParams(host));
       let failUrl = encodeURIComponent(this.$utils.getHost() + "/login-error");
       window.location.href =
         this.config.url +
-        "/api/v2/login/socialite/" +
+        "/api/v3/auth/login/socialite/" +
         app +
-        "?success_redirect=" +
+        "?s_url=" +
         redirecUrl +
-        "&failed_redirect=" +
-        failUrl;
+        "&f_url=" +
+        failUrl +
+        "&action=login";
     },
     h5WorkWeixinLogin() {
       if (!this.agreeProtocol) {
@@ -280,14 +281,15 @@ export default {
         return;
       }
       let host = this.url;
-      let redirecUrl = encodeURIComponent(host);
+      let redirecUrl = encodeURIComponent(this.$utils.removeTokenParams(host));
       let failUrl = encodeURIComponent(this.$utils.getHost() + "/login-error");
       window.location.href =
         this.config.url +
-        "/api/v2/login/wechat/oauth?success_redirect=" +
+        "/api/v3/auth/login/wechat/oauth?s_url=" +
         redirecUrl +
-        "&failed_redirect=" +
-        failUrl;
+        "&f_url=" +
+        failUrl +
+        "&action=login";
     },
   },
 };

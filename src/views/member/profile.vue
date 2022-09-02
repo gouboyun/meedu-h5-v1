@@ -25,6 +25,15 @@
         </div>
         <div class="confirm" @click="cancelBind()">确认</div>
       </div>
+      <div class="popup borderbox" v-if="destroyDialog">
+        <div class="cancel" @click="cancel()">
+          <img src="../../assets/img/close.png" />
+        </div>
+        <div class="text">
+          确认注销账号？确认之后账号将在7天后自动注销，期间内登录账号将会自动取消账号注销。
+        </div>
+        <div class="confirm" @click="destroyUserValidate()">确认</div>
+      </div>
     </div>
     <div class="navheader borderbox">
       <img
@@ -95,6 +104,12 @@
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
+      <div class="group-item" @click="destroyUser">
+        <div class="name">账号注销</div>
+        <div class="value">
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -123,17 +138,27 @@ export default {
         content: null,
       },
       resource: null,
+      destroyDialog: false,
     };
   },
   mounted() {
-    if (this.error) {
-      this.$message.error(this.error);
-    }
-    this.getProfile();
-    this.getData();
+    this.$router.onReady(() => {
+      // 社交绑定回调处理
+      if (this.$route.query.login_code && this.$route.query.action === "bind") {
+        this.CodeBind(this.$route.query.login_code);
+      }
+      if (this.$route.query.login_err_msg) {
+        this.$message.error(this.$route.query.login_err_msg);
+      }
+      if (this.error) {
+        this.$message.error(this.error);
+      }
+      this.getProfile();
+      this.getData();
+    });
   },
   methods: {
-    ...mapMutations(["submitLogin"]),
+    ...mapMutations(["submitLogin", "logout"]),
     getProfile() {
       this.$api.Member.Profile().then((res) => {
         this.profile = res.data;
@@ -174,6 +199,7 @@ export default {
       this.openmask = true;
     },
     cancel() {
+      this.destroyDialog = false;
       this.dialog = false;
       this.changeNick = false;
       this.openmask = false;
@@ -190,10 +216,11 @@ export default {
       let redirect = encodeURIComponent(host);
       window.location.href =
         this.config.url +
-        "/api/v2/member/wechatBind?token=" +
-        this.$utils.getToken() +
-        "&redirect_url=" +
-        redirect;
+        "/api/v3/auth/login/wechat/oauth?s_url=" +
+        redirect +
+        "&f_url=" +
+        redirect +
+        "&action=bind";
     },
     bindQQ() {
       if (this.user.is_bind_qq === 1) {
@@ -206,10 +233,26 @@ export default {
       let redirect = encodeURIComponent(host);
       window.location.href =
         this.config.url +
-        "/api/v2/member/socialite/qq?token=" +
-        this.$utils.getToken() +
-        "&redirect_url=" +
-        redirect;
+        "/api/v3/auth/login/socialite/qq?s_url=" +
+        redirect +
+        "&f_url=" +
+        redirect +
+        "&action=bind";
+    },
+    CodeBind(code) {
+      if (this.$utils.getSessionLoginCode(code)) {
+        return;
+      }
+      this.$utils.saveSessionLoginCode(code);
+      this.$api.Auth.CodeBind({ code: code })
+        .then((res) => {
+          this.$message.success("绑定成功");
+          this.cancel();
+          this.getData();
+        })
+        .catch((e) => {
+          this.$message.error(e.message);
+        });
     },
     cancelBind() {
       this.$api.Member.CancelBind(this.resource).then((res) => {
@@ -234,6 +277,10 @@ export default {
       });
     },
     changePassword() {
+      if (this.user.is_bind_mobile !== 1) {
+        this.$message.error("请绑定手机号");
+        return;
+      }
       this.$router.push({
         name: "ChangePassword",
       });
@@ -261,6 +308,24 @@ export default {
         })
         .catch((e) => {
           this.loading = false;
+          this.$message.error(e.message);
+        });
+    },
+    destroyUser() {
+      this.destroyDialog = true;
+      this.openmask = true;
+    },
+    destroyUserValidate() {
+      this.$api.Auth.DestroyUser()
+        .then((res) => {
+          this.$message.success("注销成功");
+          this.cancel();
+          this.logout();
+          this.$router.push({
+            name: "Me",
+          });
+        })
+        .catch((e) => {
           this.$message.error(e.message);
         });
     },
@@ -404,6 +469,10 @@ export default {
       font-size: 18px;
       font-weight: 400;
       color: #333333;
+      box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      padding: 0 15px;
     }
     .input-box {
       width: 100%;

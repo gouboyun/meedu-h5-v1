@@ -17,6 +17,21 @@ export default {
   clearTmpToken() {
     window.localStorage.removeItem("meedu-h5-tmp-token");
   },
+  saveLoginCode(code) {
+    window.localStorage.setItem("login_code", code);
+  },
+  getLoginCode() {
+    return window.localStorage.getItem("login_code");
+  },
+  clearLoginCode() {
+    window.localStorage.removeItem("login_code");
+  },
+  saveSessionLoginCode(code) {
+    window.sessionStorage.setItem("login_code:" + code, code);
+  },
+  getSessionLoginCode(code) {
+    return window.sessionStorage.getItem("login_code:" + code);
+  },
   removeTokenParams(url) {
     let parseUrl = new URL(url);
     let hash = parseUrl.hash;
@@ -32,7 +47,11 @@ export default {
 
     let data = [];
     for (let i = 0; i < params.length; i++) {
-      if (params[i].indexOf("token=") === -1) {
+      if (
+        params[i].indexOf("token=") === -1 &&
+        params[i].indexOf("login_code=") === -1 &&
+        params[i].indexOf("action=") === -1
+      ) {
         data.push(params[i]);
       }
     }
@@ -100,7 +119,7 @@ export default {
 
     oi = fi();
     oi.msg =
-      "\r\n官网：\nhttps://meedu.vip\r\n\r\nGitHub：\nhttps://github.com/qsnh/meedu\r\n\r\n使用手册：\nhttps://www.yuque.com/meedu/fvvkbf\r\n\r\n当前版本：v4.7.0\r\n";
+      "\r\n官网：\nhttps://meedu.vip\r\n\r\nGitHub：\nhttps://github.com/qsnh/meedu\r\n\r\n使用手册：\nhttps://www.yuque.com/meedu/fvvkbf\r\n\r\n当前版本：v4.8.0\r\n";
     outs.push(oi);
 
     outs.map(function(x) {

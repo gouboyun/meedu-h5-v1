@@ -101,10 +101,7 @@
                 <div class="video-title">
                   <span
                     class="free"
-                    v-if="
-                      course.is_free !== 1 &&
-                        (videoItem.charge === 0 || videoItem.free_seconds > 0)
-                    "
+                    v-if="course.is_free !== 1 && videoItem.free_seconds > 0"
                     >试看</span
                   >
                   <span class="text">{{ videoItem.title }}</span>
@@ -137,10 +134,7 @@
                   <div class="video-title">
                     <span
                       class="free"
-                      v-if="
-                        course.is_free !== 1 &&
-                          (videoItem.charge === 0 || videoItem.free_seconds > 0)
-                      "
+                      v-if="course.is_free !== 1 && videoItem.free_seconds > 0"
                       >试看</span
                     >
                     <span class="text">{{ videoItem.title }}</span>
@@ -172,10 +166,7 @@
             <div class="video-title">
               <span
                 class="free"
-                v-if="
-                  course.is_free !== 1 &&
-                    (videoItem.charge === 0 || videoItem.free_seconds > 0)
-                "
+                v-if="course.is_free !== 1 && videoItem.free_seconds > 0"
                 >试看</span
               >
               <span class="text">{{ videoItem.title }}</span>
@@ -317,6 +308,9 @@ export default {
       playDuration: 0,
       currentTab: 0,
       swiperIndex: 0,
+      playingTime: 0,
+      last_see_value: null,
+      watchedSeconds: 0,
     };
   },
   computed: {
@@ -326,6 +320,9 @@ export default {
         return false;
       }
       return this.isWatch === false && this.video.free_seconds > 0;
+    },
+    isBanDrag() {
+      return parseInt(this.video.ban_drag) === 1;
     },
   },
   mounted() {
@@ -403,6 +400,21 @@ export default {
           if (this.isWatch || this.video.free_seconds > 0) {
             this.getPlayInfo();
           }
+
+          //播放记录跳转
+          if (
+            this.video_watched_progress &&
+            this.video_watched_progress[this.video.id] &&
+            this.video_watched_progress[this.video.id].watch_seconds > 0
+          ) {
+            this.last_see_value = {
+              time: 5,
+              pos: this.video_watched_progress[this.video.id].watch_seconds,
+            };
+            this.watchedSeconds = this.video_watched_progress[
+              this.video.id
+            ].watch_seconds;
+          }
         })
         .catch((e) => {
           this.$message.error(e.message);
@@ -476,15 +488,35 @@ export default {
             : this.config.player.bullet_secret.color,
           opacity: this.config.player.bullet_secret.opacity,
         },
-        ban_drag: parseInt(this.video.ban_drag) === 1,
+        ban_drag: this.isBanDrag,
+        last_see_pos: this.last_see_value,
       });
 
       // 监听播放进度更新evt
       window.player.on("timeupdate", () => {
-        this.playTimeUpdate(parseInt(window.player.video.currentTime));
+        let currentTime = parseInt(window.player.video.currentTime);
+        if (
+          this.isBanDrag &&
+          currentTime - this.playingTime >= 2 &&
+          currentTime > parseInt(this.watchedSeconds)
+        ) {
+          window.player.seek(this.playingTime);
+        } else {
+          this.playingTime = currentTime;
+          this.playTimeUpdate(currentTime);
+        }
       });
       window.player.on("ended", () => {
-        this.playTimeUpdate(parseInt(window.player.video.currentTime), true);
+        let currentTime = parseInt(window.player.video.currentTime);
+        if (
+          this.isBanDrag &&
+          window.player.video.duration - this.playingTime >= 2
+        ) {
+          window.player.seek(this.playingTime);
+          return;
+        }
+        this.playingTime = 0;
+        this.playTimeUpdate(currentTime, true);
         this.playendedStatus = true;
         window.player.destroy();
       });
@@ -560,6 +592,9 @@ export default {
       this.playTimeUpdate(duration);
     },
     playTimeUpdate(duration, isEnd) {
+      if (duration > parseInt(this.watchedSeconds)) {
+        this.watchedSeconds = duration;
+      }
       if (duration - this.playDuration >= 10 || isEnd === true) {
         this.playDuration = duration;
         this.$api.Course.VideoRecord(this.video.id, {
