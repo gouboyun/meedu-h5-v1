@@ -14,20 +14,26 @@
         @keyup.enter="search()"
       />
     </div>
-    <div class="banner borderbox" v-show="sliders && sliders.length > 0">
-      <swiper ref="mySwiper" :options="swiperOptions">
-        <swiper-slide v-for="item in sliders" :key="item.sort">
-          <img :src="item.src" :name="item.href" />
-        </swiper-slide>
-        <div class="swiper-pagination" slot="pagination"></div>
-      </swiper>
-    </div>
     <div class="box" v-for="block in blocks" :key="block.id">
       <index-blank
         :height="block.config_render.height"
         :bg-color="block.config_render.bgcolor"
         v-if="block.sign === 'blank'"
       ></index-blank>
+      <index-slider
+        :items="block.config_render"
+        v-else-if="block.sign === 'slider'"
+      ></index-slider>
+      <index-grid-nav
+        :line-count="block.config_render.line_count"
+        :items="block.config_render.items"
+        v-else-if="block.sign === 'grid-nav'"
+      ></index-grid-nav>
+      <index-image-group
+        v-else-if="block.sign === 'image-group'"
+        :items="block.config_render.items"
+        :v="block.config_render.v"
+      ></index-image-group>
       <index-vod-v1
         v-if="block.sign === 'h5-vod-v1'"
         :name="block.config_render.title"
@@ -46,9 +52,10 @@
 
 <script>
 import { mapState } from "vuex";
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/css/swiper.css";
 import IndexBlank from "./components/blank.vue";
+import IndexSlider from "./components/slider.vue";
+import IndexGridNav from "./components/grid-nav.vue";
+import IndexImageGroup from "./components/image-group.vue";
 import IndexVodV1 from "./components/vod-v1.vue";
 import IndexGzhV1 from "./components/gzh-v1.vue";
 import TechSupport from "../../components/tech-support";
@@ -57,60 +64,24 @@ import NavFooter from "../../components/nav-footer";
 var vm = null;
 export default {
   components: {
-    Swiper,
-    SwiperSlide,
     TechSupport,
     IndexVodV1,
     IndexBlank,
+    IndexSlider,
+    IndexGridNav,
+    IndexImageGroup,
     IndexGzhV1,
     NavFooter,
   },
   data() {
     return {
       loading: false,
-      sliders: [],
       blocks: [],
       keywords: null,
-      swiperOptions: {
-        direction: "horizontal",
-        loop: true,
-        autoplay: {
-          disableOnInteraction: false,
-          delay: 3000,
-        },
-        pagination: {
-          el: ".swiper-pagination",
-          type: "bullets",
-          clickable: true,
-        },
-        effect: "slide",
-        on: {
-          click: function(e) {
-            let url = e.target.name;
-            if (url) {
-              if (
-                url.match("https:") ||
-                url.match("http:") ||
-                url.match("www")
-              ) {
-                window.location.href = url;
-              } else {
-                vm.$router.push({ path: url });
-              }
-            }
-          },
-        },
-      },
     };
-  },
-  created() {
-    vm = this;
   },
   computed: {
     ...mapState(["isLogin", "config"]),
-    swiper() {
-      return this.$refs.mySwiper.$swiper;
-    },
   },
   mounted() {
     this.getPageBlocks();
@@ -135,12 +106,6 @@ export default {
       }).then((res) => {
         let blocks = res.data;
         this.blocks = blocks;
-        for (var i = 0; i < blocks.length; i++) {
-          if (blocks[i].sign === "slider") {
-            this.sliders = blocks[i].config_render;
-          }
-        }
-        this.swiper.slideTo(3, 1000, false);
       });
     },
   },
@@ -177,28 +142,7 @@ export default {
       font-size: 14px;
     }
   }
-  .banner {
-    width: 100%;
-    margin-top: 0px;
-    padding: 10px 15px;
-    height: 135px;
-    overflow: hidden;
-    background: #ffffff;
-    .swiper-container {
-      width: 100%;
-      height: 115px;
-      border-radius: 8px;
-      overflow: hidden;
-      .swiper-slide {
-        width: 100%;
-        height: 115px;
-        img {
-          width: 100%;
-          height: 115px;
-        }
-      }
-    }
-  }
+
   .blocks-box {
     width: 100%;
     height: 173px;
