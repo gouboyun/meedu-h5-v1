@@ -352,6 +352,7 @@ export default {
         align-items: center;
         .icon-img {
           display: inline-block;
+          height: 35px;
           img {
             width: 35px;
             height: 35px;
@@ -381,7 +382,8 @@ export default {
 
       .arrow-icon {
         display: inline-block;
-
+        width: 15px;
+        height: 15px;
         img {
           width: 15px;
           height: 15px;
