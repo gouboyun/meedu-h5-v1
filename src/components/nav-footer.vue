@@ -65,6 +65,7 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   padding: 5px 50px;
+  z-index:100;
   .item {
     height: 53px;
     display: flex;
