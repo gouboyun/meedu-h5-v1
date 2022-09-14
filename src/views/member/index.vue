@@ -41,6 +41,7 @@
     <div class="vip-banner-box">
       <div class="banner" @click="goRole">
         <img class="icon" src="../../assets/img/new/VIP.png" />
+        <img class="back" src="../../assets/img/new/banner.png" />
         <div class="info">海量课程免费学！</div>
         <div class="btn">会员中心</div>
       </div>
@@ -294,6 +295,12 @@ export default {
       height: 20px;
       top: 20px;
       left: 30px;
+    }
+    .back {
+      position: absolute;
+      height: 68px;
+      top: 0px;
+      right: 0px;
     }
     .info {
       width: 100%;
