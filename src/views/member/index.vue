@@ -1,26 +1,7 @@
 <template>
   <div id="content" class="container">
     <!-- 用户信息 -->
-    <div class="user-icon">
-      <div class="left-icon" @click="$router.push({ name: 'Messages' })">
-        <i class="count" v-if="newStatus"></i>
-        <img
-          src="../../assets/img/icon-message@2x.png"
-          style="width:26px; height: 26px"
-        />
-      </div>
-      <div class="right-icon">
-        <div
-          class="user-setting"
-          @click="$router.push({ name: 'MemberSetting' })"
-        >
-          <img
-            src="../../assets/img/icon-setting@2x.png"
-            style="width: 26px; height: 26px"
-          />
-        </div>
-      </div>
-    </div>
+    <div class="user-icon"></div>
     <div
       class="user-info-box"
       @click="$router.push({ name: 'MemberProfile' })"
@@ -38,7 +19,7 @@
       <div class="user-back">
         <img
           src="../../assets/img/new/back.png"
-          style="width: 12px; height: 12px"
+          style="width: 15px; height: 15px"
         />
       </div>
     </div>
@@ -52,38 +33,83 @@
       <div class="user-back">
         <img
           src="../../assets/img/new/back.png"
-          style="width: 12px; height: 12px"
+          style="width: 15px; height: 15px"
         />
       </div>
     </div>
 
-    <div class="vip-banner-box" @click="goRole">
-      <img src="../../assets/img/VIPcenter@2x.png" />
+    <div class="vip-banner-box">
+      <div class="banner" @click="goRole">
+        <img class="icon" src="../../assets/img/new/VIP.png" />
+        <div class="info">海量课程免费学！</div>
+        <div class="btn">会员中心</div>
+      </div>
     </div>
 
     <div class="user-banner-item">
-      <div class="banner-title">我的账号</div>
       <div class="banner-body">
-        <div class="grid-box">
-          <div
-            class="grid-item"
-            v-if="isLogin"
-            @click="$router.push({ name: 'MemberOrder' })"
-          >
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-list@2x.png" />
-              </div>
+        <div
+          class="item"
+          v-if="isLogin"
+          @click="$router.push({ name: 'MemberOrder' })"
+        >
+          <div class="icon">
+            <div class="icon-img">
+              <img src="../../assets/img/new/order.png" />
             </div>
             <div class="name">我的订单</div>
           </div>
-          <div class="grid-item" v-else @click="goLogin">
-            <div class="icon">
-              <div class="icon-img">
-                <img src="../../assets/img/icon-list@2x.png" />
-              </div>
+          <div class="arrow-icon">
+            <img src="../../assets/img/new/back.png" />
+          </div>
+        </div>
+        <div class="item" v-else @click="goLogin">
+          <div class="icon">
+            <div class="icon-img">
+              <img src="../../assets/img/new/order.png" />
             </div>
             <div class="name">我的订单</div>
+          </div>
+          <div class="arrow-icon">
+            <img src="../../assets/img/new/back.png" />
+          </div>
+        </div>
+        <div
+          class="item"
+          v-if="isLogin"
+          @click="$router.push({ name: 'Messages' })"
+        >
+          <div class="icon">
+            <div class="icon-img">
+              <img src="../../assets/img/new/message.png" />
+            </div>
+            <div class="name">我的消息</div>
+          </div>
+          <i class="count" v-if="newStatus"></i>
+          <div class="arrow-icon">
+            <img src="../../assets/img/new/back.png" />
+          </div>
+        </div>
+        <div class="item" v-else>
+          <div class="icon">
+            <div class="icon-img">
+              <img src="../../assets/img/new/message.png" />
+            </div>
+            <div class="name">我的消息</div>
+          </div>
+          <div class="arrow-icon">
+            <img src="../../assets/img/new/back.png" />
+          </div>
+        </div>
+        <div class="item" @click="$router.push({ name: 'MemberSetting' })">
+          <div class="icon">
+            <div class="icon-img">
+              <img src="../../assets/img/new/setting.png" />
+            </div>
+            <div class="name">我的设置</div>
+          </div>
+          <div class="arrow-icon">
+            <img src="../../assets/img/new/back.png" />
           </div>
         </div>
       </div>
@@ -168,42 +194,16 @@ export default {
 
 <style lang="less" scoped>
 .container {
-  background: #f3f6f9;
+  background: #fff;
   overflow: hidden;
 }
 .user-icon {
   width: 100%;
   background: #ffffff;
-  height: auto;
+  height: 25px;
   float: left;
   box-sizing: border-box;
-  padding: 20px 15px 0 15px;
   display: flex;
-  justify-content: space-between;
-  .left-icon {
-    position: relative;
-    width: 26px;
-    height: 26px;
-    .count {
-      position: absolute;
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: #ff5068;
-      top: 0;
-      right: 0;
-    }
-  }
-  .right-icon {
-    flex: 1;
-    display: flex;
-    flex-direction: row-reverse;
-    .user-setting {
-      position: relative;
-      width: 26px;
-      height: 26px;
-    }
-  }
 }
 
 /* 用户信息 */
@@ -274,12 +274,51 @@ export default {
 /* vip-banner */
 .vip-banner-box {
   width: 100%;
-  height: 60px;
+  height: auto;
   float: left;
   background: #ffffff;
-  text-align: center;
-  img {
-    height: 60px;
+  box-sizing: border-box;
+  padding: 0px 15px;
+  .banner {
+    width: 100%;
+    float: left;
+    height: 94px;
+    background: linear-gradient(90deg, #ffe9b8 0%, #efcc8d 100%);
+    box-shadow: 0px 8px 24px 0px rgba(255, 179, 59, 0.2);
+    border-radius: 16px;
+    position: relative;
+    box-sizing: border-box;
+    padding: 30px;
+    .icon {
+      position: absolute;
+      height: 20px;
+      top: 20px;
+      left: 30px;
+    }
+    .info {
+      width: 100%;
+      font-size: 14px;
+      font-weight: 500;
+      color: #613400;
+      line-height: 14px;
+      margin-top: 30px;
+    }
+    .btn {
+      position: absolute;
+      top: 34px;
+      right: 20px;
+      width: 68px;
+      height: 26px;
+      background: #9b5300;
+      border-radius: 15px;
+      font-size: 12px;
+      font-weight: 400;
+      color: #f9ddb2;
+      line-height: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 }
 
@@ -289,59 +328,63 @@ export default {
   float: left;
   background-color: white;
   box-sizing: border-box;
-  padding: 30px 15px;
-  margin-bottom: 10px;
-
-  .banner-title {
-    width: 100%;
-    height: auto;
-    float: left;
-    margin-bottom: 25px;
-    font-size: 15px;
-    font-weight: 600;
-    color: #333333;
-    line-height: 15px;
-  }
+  padding: 20px 0px;
 
   .banner-body {
     width: 100%;
     height: auto;
     float: left;
-
-    .grid-box {
-      display: grid;
-      gap: 20px;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+    .item {
+      width: 100%;
+      height: 75px;
       box-sizing: border-box;
-      padding-left: 15px;
-      padding-right: 15px;
-
-      .grid-item {
-        .icon {
-          width: 100%;
-          height: auto;
-          float: left;
-          margin-bottom: 10px;
-          text-align: center;
-
-          .icon-img {
-            display: inline-block;
-            img {
-              width: 30px;
-              height: 30px;
-            }
+      padding: 20px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      position: relative;
+      .icon {
+        width: 100%;
+        height: 35px;
+        float: left;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        .icon-img {
+          display: inline-block;
+          img {
+            width: 35px;
+            height: 35px;
+            margin-right: 15px;
           }
         }
-
         .name {
           width: 100%;
-          height: auto;
           float: left;
-          font-size: 12px;
+          height: 15px;
+          font-size: 15px;
           font-weight: 400;
           color: #333333;
-          line-height: 12px;
-          text-align: center;
+          line-height: 15px;
+        }
+      }
+
+      .count {
+        position: absolute;
+        width: 9px;
+        height: 9px;
+        background: #ff4d4f;
+        border-radius: 50%;
+        top: 33px;
+        right: 45px;
+      }
+
+      .arrow-icon {
+        display: inline-block;
+
+        img {
+          width: 15px;
+          height: 15px;
         }
       }
     }
@@ -351,6 +394,6 @@ export default {
 
 <style>
 #page {
-  background-color: #f3f6f9;
+  background-color: #fff;
 }
 </style>
