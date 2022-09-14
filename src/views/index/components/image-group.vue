@@ -3,6 +3,7 @@
     <template v-if="v === 'v-1' || v === 'v-2' || v === 'v-3' || v === 'v-4'">
       <div
         class="image-group-item"
+        :class="{ 'v-item': v === 'v-1' || v === 'v-3' || v === 'v-4' }"
         @click="go(item)"
         v-for="(item, index) in items"
         :key="index"
@@ -12,7 +13,7 @@
     </template>
     <template v-else-if="v === 'v-1-2'">
       <div @click="go(items[0])" class="image-group-item">
-        <img :src="items[0].src" />
+        <img class="image" :src="items[0].src" />
       </div>
       <div class="image-group-item">
         <div @click="go(items[1])" class="box">
@@ -73,9 +74,27 @@ export default {
 
   .image-group-item {
     flex: 1;
+    height: 150px;
+    &.v-item {
+      height: auto;
+      float: left;
+      .image {
+        width: 100%;
+        height: auto;
+      }
+    }
+    .image {
+      width: 100%;
+      height: 150px;
+    }
+    .box {
+      width: 100%;
+      height: 75px;
+      .image {
+        width: 100%;
+        height: 75px;
+      }
+    }
   }
-}
-.image {
-  width: 100%;
 }
 </style>
