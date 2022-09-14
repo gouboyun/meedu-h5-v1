@@ -90,7 +90,7 @@
             <img src="../../assets/img/new/back.png" />
           </div>
         </div>
-        <div class="item" v-else>
+        <div class="item" v-else @click="goLogin">
           <div class="icon">
             <div class="icon-img">
               <img src="../../assets/img/new/message.png" />
