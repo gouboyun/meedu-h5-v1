@@ -306,7 +306,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 999;
   .popup {
     width: 325px;
     height: 204px;

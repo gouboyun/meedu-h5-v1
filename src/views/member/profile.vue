@@ -34,6 +34,15 @@
         </div>
         <div class="confirm" @click="destroyUserValidate()">确认</div>
       </div>
+      <div class="popup borderbox" v-if="logoutDialog">
+        <div class="cancel" @click="cancel()">
+          <img src="../../assets/img/close.png" />
+        </div>
+        <div class="text">
+          确认安全退出登录？
+        </div>
+        <div class="confirm" @click="goLogout()">确认</div>
+      </div>
     </div>
     <div class="navheader borderbox">
       <img
@@ -110,6 +119,12 @@
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
+      <div class="group-item" @click="openLogoutDialog">
+        <div class="name">退出登录</div>
+        <div class="value">
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -139,6 +154,7 @@ export default {
       },
       resource: null,
       destroyDialog: false,
+      logoutDialog: false,
     };
   },
   mounted() {
@@ -199,6 +215,7 @@ export default {
       this.openmask = true;
     },
     cancel() {
+      this.logoutDialog = false;
       this.destroyDialog = false;
       this.dialog = false;
       this.changeNick = false;
@@ -329,6 +346,18 @@ export default {
           this.$message.error(e.message);
         });
     },
+    openLogoutDialog() {
+      this.logoutDialog = true;
+      this.openmask = true;
+    },
+    goLogout() {
+      this.$message.success("已安全退出");
+      this.cancel();
+      this.logout();
+      this.$router.push({
+        name: "Me",
+      });
+    },
   },
 };
 </script>
@@ -348,7 +377,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100;
+  z-index: 999;
   .mobile-box {
     width: 325px;
     height: 305px;
