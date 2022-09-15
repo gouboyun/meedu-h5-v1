@@ -6,7 +6,7 @@
         @click="goBack()"
         src="../../assets/img/icon-back.png"
       />
-      <div class="title">设置</div>
+      <div class="title">关于平台</div>
     </div>
     <div class="group-box mt-15">
       <div class="group-item" @click="openPage(config.user_protocol)">

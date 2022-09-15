@@ -162,7 +162,7 @@ const routes = [
     path: "/member/setting",
     name: "MemberSetting",
     meta: {
-      title: "设置",
+      title: "关于平台",
     },
     component: () => import("../views/member/setting.vue"),
   },
