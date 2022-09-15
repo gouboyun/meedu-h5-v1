@@ -23,10 +23,6 @@
       </div>
     </div>
 
-    <div class="box pl-30 pr-30" v-if="isLogin">
-      <btn-block @taptap="goLogout" text="安全退出"></btn-block>
-    </div>
-
     <copyright-comp></copyright-comp>
   </div>
 </template>
@@ -34,12 +30,10 @@
 <script>
 import { mapState, mapMutations } from "vuex";
 import CopyrightComp from "../../components/copyright";
-import BtnBlock from "../../components/btn-block";
 
 export default {
   components: {
     CopyrightComp,
-    BtnBlock,
   },
   computed: {
     ...mapState(["isLogin", "config"]),
@@ -53,13 +47,6 @@ export default {
     ...mapMutations(["logout"]),
     openPage(url) {
       window.open(url);
-    },
-    goLogout() {
-      this.$message.success("已安全退出");
-      this.logout();
-      this.$router.push({
-        name: "MemberSetting",
-      });
     },
   },
 };

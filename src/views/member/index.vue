@@ -107,7 +107,7 @@
             <div class="icon-img">
               <img src="../../assets/img/new/setting.png" />
             </div>
-            <div class="name">我的设置</div>
+            <div class="name">关于平台</div>
           </div>
           <div class="arrow-icon">
             <img src="../../assets/img/new/back.png" />
