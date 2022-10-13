@@ -146,7 +146,7 @@ export default {
         .catch((e) => {
           this.form.captcha = null;
           this.getCaptcha();
-          this.$message.errort(e.message);
+          this.$message.error(e.message);
         });
     },
     submit() {

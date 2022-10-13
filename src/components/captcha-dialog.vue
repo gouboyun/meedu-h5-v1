@@ -150,15 +150,16 @@ export default {
           border-bottom: 1px solid #dcdfe6;
           .input-text {
             max-width: 200px;
-            height: 16px;
+            height: 20px;
             float: left;
             box-sizing: border-box;
             outline: none;
             color: #333333;
             font-size: 16px;
+            line-height: 20px;
             border: none;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
           }
         }
         .captcha {
