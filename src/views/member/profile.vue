@@ -105,6 +105,14 @@
           <img src="../../assets/img/new/back@2x.png" class="arrow" />
         </div>
       </div>
+      <div class="group-item">
+        <div class="name">实名认证</div>
+        <div class="value">
+          <span v-if="user.is_face_verify === true">已认证</span>
+          <span class="un" v-else @click="goFaceVerify">未认证</span>
+          <img src="../../assets/img/new/back@2x.png" class="arrow" />
+        </div>
+      </div>
       <div class="group-item" @click="changePassword">
         <div class="name">修改密码</div>
         <div class="value">
@@ -155,6 +163,7 @@ export default {
       resource: null,
       destroyDialog: false,
       logoutDialog: false,
+      verifyLoading: false,
     };
   },
   mounted() {
@@ -238,6 +247,25 @@ export default {
         "&f_url=" +
         redirect +
         "&action=bind";
+    },
+    goFaceVerify() {
+      if (this.verifyLoading) {
+        return;
+      }
+      this.verifyLoading = true;
+      let redirect = encodeURIComponent(
+        this.$utils.getHost() + "/auth/faceSuccess"
+      );
+      this.$api.Member.TecentFaceVerify({
+        s_url: redirect,
+      })
+        .then((res) => {
+          this.verifyLoading = false;
+          window.location.href = res.data.url;
+        })
+        .catch((e) => {
+          this.$message.error(e.message || "无法发起实人认证");
+        });
     },
     bindQQ() {
       if (this.user.is_bind_qq === 1) {
