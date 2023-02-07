@@ -11,7 +11,6 @@ export default {
   data() {
     return {
       token: this.$route.query.token,
-      verifyLoading: false,
     };
   },
   watch: {
@@ -56,14 +55,6 @@ export default {
           });
         } else {
           this.submitLogin(res.data);
-          //强制实名认证
-          if (
-            this.config &&
-            res.data.is_face_verify === false &&
-            this.config.member.enabled_face_verify === true
-          ) {
-            this.goFaceVerify();
-          }
         }
       } catch (e) {
         this.$message.error(e.message);
@@ -77,25 +68,6 @@ export default {
           window.location.href = res.data.pc_url;
         }
       }
-    },
-    goFaceVerify() {
-      if (this.verifyLoading) {
-        return;
-      }
-      this.verifyLoading = true;
-      let redirect = encodeURIComponent(
-        this.$utils.getHost() + "/auth/faceSuccess"
-      );
-      this.$api.Member.TecentFaceVerify({
-        s_url: redirect,
-      })
-        .then((res) => {
-          this.verifyLoading = false;
-          window.location.href = res.data.url;
-        })
-        .catch((e) => {
-          this.$message.error(e.message || "无法发起实人认证");
-        });
     },
     CodeLogin(code) {
       if (this.$utils.getSessionLoginCode(code)) {
