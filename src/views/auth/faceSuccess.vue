@@ -24,6 +24,9 @@
       </div>
     </template>
     <div class="result" v-else>正在查询实人认证结果</div>
+    <div class="btn-box" v-if="loading">
+      <div class="button" @click="goIndex()">返回首页</div>
+    </div>
   </div>
 </template>
 <script>
@@ -54,7 +57,6 @@ export default {
       });
     },
     getData(ruleId, bizToken) {
-      alert(ruleId);
       this.$api.Member.TecentFaceVerifyQuery({
         biz_token: bizToken,
         rule_id: ruleId,
@@ -71,6 +73,7 @@ export default {
         this.checkSuccess = true;
         this.$utils.clearBizToken();
         this.$utils.clearRuleId();
+        this.loading = true;
       });
     },
   },
@@ -134,8 +137,7 @@ export default {
     justify-content: center;
     margin-top: 56px;
     .button {
-      width: 315px;
-      height: 48px;
+      padding: 12px 20px;
       border-radius: 4px;
       background: #3ca7fa;
       display: flex;
