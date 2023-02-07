@@ -260,6 +260,8 @@ export default {
         s_url: redirect,
       })
         .then((res) => {
+          this.$utils.saveBizToken(res.data.biz_token);
+          this.$utils.saveRuleId(res.data.rule_id);
           this.verifyLoading = false;
           window.location.href = res.data.url;
         })

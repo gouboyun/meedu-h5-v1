@@ -39,13 +39,8 @@ export default {
     ...mapState(["isLogin", "config", "user"]),
   },
   mounted() {
-    let url = new URL(window.location.href);
-    let extra = url.searchParams.get("Extra");
-    if (extra) {
-      extra = JSON.parse(extra);
-      if (extra["rule_id"]) {
-        this.getData(extra["rule_id"], extra["biz_token"]);
-      }
+    if (this.$utils.getBizToken() && this.$utils.getBizToken()) {
+      this.getData(this.$utils.getBizToken(), this.$utils.getBizToken());
     }
     if (this.user.is_face_verify) {
       this.checkSuccess = true;
@@ -73,6 +68,8 @@ export default {
         this.submitLogin(res.data);
         this.$message.success("实人认证成功");
         this.checkSuccess = true;
+        this.$utils.clearBizToken();
+        this.$utils.clearRuleId();
       });
     },
   },

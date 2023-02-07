@@ -26,6 +26,24 @@ export default {
   clearLoginCode() {
     window.localStorage.removeItem("login_code");
   },
+  getBizToken() {
+    return window.localStorage.getItem("meedu-user-face-bizToken");
+  },
+  saveBizToken(token) {
+    window.localStorage.setItem("meedu-user-face-bizToken", token);
+  },
+  clearBizToken() {
+    window.localStorage.removeItem("meedu-user-face-bizToken");
+  },
+  getRuleId() {
+    return window.localStorage.getItem("meedu-user-face-ruleId");
+  },
+  saveRuleId(token) {
+    window.localStorage.setItem("meedu-user-face-ruleId", token);
+  },
+  clearRuleId() {
+    window.localStorage.removeItem("meedu-user-face-ruleId");
+  },
   saveSessionLoginCode(code) {
     window.sessionStorage.setItem("login_code:" + code, code);
   },
