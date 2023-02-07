@@ -255,9 +255,7 @@ export default {
         return;
       }
       this.verifyLoading = true;
-      let redirect = encodeURIComponent(
-        this.$utils.getHost() + "/auth/faceSuccess"
-      );
+      let redirect = this.$utils.getHost() + "/auth/faceSuccess";
       this.$api.Member.TecentFaceVerify({
         s_url: redirect,
       })
