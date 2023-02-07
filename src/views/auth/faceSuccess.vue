@@ -39,8 +39,8 @@ export default {
     ...mapState(["isLogin", "config", "user"]),
   },
   mounted() {
-    if (this.$utils.getBizToken() && this.$utils.getBizToken()) {
-      this.getData(this.$utils.getBizToken(), this.$utils.getBizToken());
+    if (this.$utils.getRuleId() && this.$utils.getBizToken()) {
+      this.getData(this.$utils.getRuleId(), this.$utils.getBizToken());
     }
     if (this.user.is_face_verify) {
       this.checkSuccess = true;
@@ -54,6 +54,7 @@ export default {
       });
     },
     getData(ruleId, bizToken) {
+      alert(ruleId);
       this.$api.Member.TecentFaceVerifyQuery({
         biz_token: bizToken,
         rule_id: ruleId,
