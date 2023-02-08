@@ -23,7 +23,7 @@
         </div>
       </div>
     </template>
-    <div class="result" v-else>正在查询实人认证结果</div>
+    <div class="result" v-else>正在查询实名认证结果</div>
     <div class="btn-box" v-if="loading">
       <div class="button" @click="goIndex()">返回首页</div>
     </div>
@@ -69,7 +69,7 @@ export default {
     getUser() {
       this.$api.User.Detail().then((res) => {
         this.submitLogin(res.data);
-        this.$message.success("实人认证成功");
+        this.$message.success("实名认证成功");
         this.checkSuccess = true;
         this.$utils.clearBizToken();
         this.$utils.clearRuleId();
