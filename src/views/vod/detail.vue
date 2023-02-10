@@ -169,10 +169,11 @@
           </template>
           <none type="white" v-else></none>
         </div>
+        <attach-box :status="course.id && currentTab === 3" :cid="course.id">
+        </attach-box>
       </div>
-
-      <div class="block"></div>
-      <div class="bottom-bar">
+      <div class="block" v-if="currentTab !== 3"></div>
+      <div class="bottom-bar" v-if="currentTab !== 3">
         <template v-if="currentTab === 0 || currentTab === 1">
           <div
             class="collect-button"
@@ -250,11 +251,13 @@
 import { mapState } from "vuex";
 import Duration from "../../components/duration";
 import None from "../../components/none";
+import AttachBox from "./components/attach-box.vue";
 
 export default {
   components: {
     Duration,
     None,
+    AttachBox,
   },
   data() {
     return {
@@ -283,6 +286,11 @@ export default {
           name: "评论",
           key: "comment",
           id: 2,
+        },
+        {
+          name: "课件",
+          key: "attach",
+          id: 3,
         },
       ],
       comment: {
@@ -531,7 +539,7 @@ export default {
   flex-direction: row;
   position: relative;
   justify-content: space-between;
-  padding: 20px 80px;
+  padding: 20px 30px;
   .item-tab {
     display: inline-block;
     width: auto;

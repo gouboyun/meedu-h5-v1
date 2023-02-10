@@ -213,6 +213,8 @@
         </template>
         <none type="white" v-else></none>
       </div>
+      <attach-box :status="course.id && currentTab === 3" :cid="course.id">
+      </attach-box>
     </div>
 
     <template v-if="currentTab === 0 && !isWatch">
@@ -266,11 +268,13 @@
 import { mapState } from "vuex";
 import Duration from "../../components/duration";
 import None from "../../components/none";
+import AttachBox from "./components/attach-box.vue";
 
 export default {
   components: {
     Duration,
     None,
+    AttachBox,
   },
   data() {
     return {
@@ -296,6 +300,11 @@ export default {
           name: "评论",
           key: "comment",
           id: 1,
+        },
+        {
+          name: "课件",
+          key: "attach",
+          id: 3,
         },
       ],
       comment: {
@@ -712,7 +721,7 @@ export default {
   flex-direction: row;
   position: relative;
   justify-content: space-between;
-  padding: 20px 100px;
+  padding: 20px 80px;
   .item-tab {
     display: inline-block;
     width: auto;
