@@ -85,7 +85,7 @@
       <div class="price-box">
         总计￥<span class="big">{{ totalVal }}</span>
       </div>
-      <div class="btn-submit" @click="payHandler()">立即支付</div>
+      <div class="btn-submit" @click="payHandler()">提交订单</div>
     </div>
   </div>
 </template>
