@@ -41,30 +41,38 @@ export default {
     },
     async getUser() {
       try {
+        //获取用户信息
         let res = await this.$api.User.Detail();
-        // 强制绑定手机号
+
+        //检测是否开启强制绑定手机号
         if (
-          this.config &&
-          res.data.is_bind_mobile === 0 &&
-          this.config.member.enabled_mobile_bind_alert === 1
+          res.data.is_bind_mobile === 0 && //未绑定手机号
+          this.config.member.enabled_mobile_bind_alert === 1 //已开启强制绑定手机号
         ) {
+          //将token临时存储
           let token = this.$utils.getToken();
           this.$utils.saveTmpToken(token);
+
+          //清除已保存的token->形成未登录的情景->也就是必须绑定手机号之后才能登录
           this.$utils.clearToken();
+
+          //跳转到手机号绑定页面
           this.$router.push({
             name: "BindMobile",
           });
-        } else {
-          this.submitLogin(res.data);
-          //强制实名认证
-          if (
-            this.$route.name !== "FaceSuccesss" &&
-            this.config &&
-            res.data.is_face_verify === false &&
-            this.config.member.enabled_face_verify === true
-          ) {
-            this.goFaceVerify();
-          }
+          return;
+        }
+
+        //保存token到本地->意味着用户已完成登录
+        this.submitLogin(res.data);
+
+        //检测是否开启强制实名认证+未进行实名认证
+        if (
+          this.$route.name !== "FaceSuccesss" && //非实名认证结果查询页面
+          res.data.is_face_verify === false && //未完成实名认证
+          this.config.member.enabled_face_verify === true //已开启强制实名认证
+        ) {
+          this.goFaceVerify();
         }
       } catch (e) {
         this.$message.error(e.message);
