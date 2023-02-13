@@ -54,10 +54,11 @@ export default {
           this.$router.push({
             name: "BindMobile",
           });
-        } else if (this.$route.name !== "FaceSuccesss") {
+        } else {
           this.submitLogin(res.data);
           //强制实名认证
           if (
+            this.$route.name !== "FaceSuccesss" &&
             this.config &&
             res.data.is_face_verify === false &&
             this.config.member.enabled_face_verify === true
