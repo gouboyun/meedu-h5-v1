@@ -141,18 +141,16 @@ export default {
         }
         .input {
           width: 100%;
+          height: auto;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           box-sizing: border-box;
           align-items: center;
-          justify-content: center;
           border-bottom: 1px solid #dcdfe6;
           .input-text {
-            max-width: 200px;
+            width: 100%;
             height: 20px;
-            float: left;
-            box-sizing: border-box;
             outline: none;
             color: #333333;
             font-size: 16px;
