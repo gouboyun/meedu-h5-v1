@@ -149,6 +149,7 @@ export default {
           align-items: center;
           border-bottom: 1px solid #dcdfe6;
           .input-text {
+            display: inline-block;
             width: 100%;
             height: 20px;
             outline: none;
