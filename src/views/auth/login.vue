@@ -55,7 +55,7 @@
 
       <!-- H5社交登录 -->
       <div class="login-other-way" v-if="config">
-        <div class="socialite-box">
+        <div class="socialite-box" v-show="isOriginHei">
           <div
             class="socialite-login-item"
             v-if="!isInH5Wechat && config.socialites.qq === 1"
@@ -142,6 +142,9 @@ export default {
       modelTitle: null,
       modelText: null,
       confirmText: null,
+      originHeight: 0, // 原始高度
+      screenHeight: 0, // 实际高度
+      isOriginHei: true,
     };
   },
   computed: {
@@ -150,11 +153,37 @@ export default {
       return this.$utils.isWechat();
     },
   },
+  watch: {
+    screenHeight(newHeight) {
+      // 监听屏幕高度变化
+      this.isOriginHei = this.originalHeight <= newHeight;
+    },
+  },
   mounted() {
+    this.originalHeight = document.documentElement.clientHeight;
+    // 监听屏幕变化并获取到屏幕原始高度
+    window.addEventListener("resize", this.watchResize);
     this.getCaptcha();
+  },
+  beforeDestroy() {
+    // 删除对resize的监听变化
+    window.removeEventListener("resize", this.watchResize);
   },
   methods: {
     ...mapMutations(["submitLogin", "logout"]),
+    watchResize() {
+      // 实时变化的窗口高度
+      this.screenHeight = document.documentElement.clientHeight;
+      // 解决可视区域不可见问题
+      if (
+        document.activeElement.tagName === "INPUT" ||
+        document.activeElement.tagName === "TEXTAREA"
+      ) {
+        window.setTimeout(() => {
+          document.activeElement.scrollIntoViewIfNeeded();
+        }, 0);
+      }
+    },
     cancelModel() {
       this.logout();
       this.visible = false;
