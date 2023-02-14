@@ -106,8 +106,8 @@ export default {
     cancelModel() {
       this.logout();
       this.visible = false;
-      this.$router.push({
-        name: "Index",
+      this.$router.replace({
+        name: "Me",
       });
     },
     confirmModel() {

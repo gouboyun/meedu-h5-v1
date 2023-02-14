@@ -105,7 +105,7 @@ export default {
     cancelModel() {
       this.logout();
       this.visible = false;
-      this.$router.push({
+      this.$router.replace({
         name: "Me",
       });
     },

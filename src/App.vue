@@ -49,6 +49,9 @@ export default {
     cancelModel() {
       this.logout();
       this.visible = false;
+      this.$router.replace({
+        name: "Me",
+      });
     },
     confirmModel() {
       if (this.modelTitle === "实名认证") {
