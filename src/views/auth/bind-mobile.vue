@@ -159,11 +159,18 @@ export default {
           this.$utils.clearTmpToken();
           this.$api.User.Detail().then((res) => {
             this.submitLogin(res.data);
-            setTimeout(() => {
-              this.$router.push({
-                name: "Index",
-              });
-            }, 500);
+            if (
+              res.data.is_face_verify === false && //未完成实名认证
+              this.config.member.enabled_face_verify === true //已开启强制实名认证
+            ) {
+              this.goFaceVerify();
+            } else {
+              setTimeout(() => {
+                this.$router.push({
+                  name: "Index",
+                });
+              }, 500);
+            }
           });
         })
         .catch((e) => {
