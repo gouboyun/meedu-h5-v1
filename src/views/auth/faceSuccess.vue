@@ -3,7 +3,7 @@
     <div class="navheader borderbox">
       <img
         class="back"
-        @click="goBack()"
+        @click="reBackCheck()"
         src="../../assets/img/icon-back.png"
       />
       <div class="title">实名认证</div>
@@ -36,6 +36,7 @@ export default {
     return {
       loading: false,
       checkSuccess: false,
+      status: null,
     };
   },
   computed: {
@@ -43,6 +44,7 @@ export default {
   },
   mounted() {
     if (this.$utils.getRuleId() && this.$utils.getBizToken()) {
+      this.status = "face-check";
       this.getData(this.$utils.getRuleId(), this.$utils.getBizToken());
     }
     if (this.user.is_face_verify) {
@@ -51,6 +53,15 @@ export default {
   },
   methods: {
     ...mapMutations(["submitLogin"]),
+    reBackCheck() {
+      if (this.status === "face-check") {
+        this.$router.replace({
+          name: "Index",
+        });
+      } else {
+        this.$router.go(-1);
+      }
+    },
     goIndex() {
       this.$router.replace({
         name: "Index",
