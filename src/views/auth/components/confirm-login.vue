@@ -290,6 +290,11 @@ export default {
       font-weight: 500;
       color: #ffffff;
       cursor: pointer;
+      -ms-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
       &.active {
         background: #3ca7fa;
       }

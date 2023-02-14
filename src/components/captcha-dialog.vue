@@ -198,6 +198,11 @@ export default {
         color: #ffffff;
         line-height: 15px;
         cursor: pointer;
+        -ms-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
         &.active {
           background: #3ca7fa;
         }
