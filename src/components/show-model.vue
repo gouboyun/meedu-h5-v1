@@ -114,6 +114,11 @@ export default {
         color: #3ca7fa;
         line-height: 16px;
         border-left: 1px solid #f5f5f5;
+        -ms-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
       }
       .btn_cancel {
         width: 50%;
@@ -125,6 +130,11 @@ export default {
         font-weight: 500;
         color: #666666;
         line-height: 16px;
+        -ms-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
       }
     }
   }
