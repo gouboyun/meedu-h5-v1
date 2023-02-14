@@ -49,6 +49,14 @@
         @cancel="cancel"
       ></confirm-login>
     </template>
+    <show-model
+      v-if="visible"
+      :title="modelTitle"
+      :text="modelText"
+      :confirmText="confirmText"
+      @change="confirmModel"
+      @cancel="cancelModel"
+    ></show-model>
   </div>
 </template>
 
@@ -56,10 +64,12 @@
 import { mapState, mapMutations } from "vuex";
 import ConfirmLogin from "./components/confirm-login";
 import CaptchaDialog from "../../components/captcha-dialog";
+import ShowModel from "@/components/show-model.vue";
 export default {
   components: {
     ConfirmLogin,
     CaptchaDialog,
+    ShowModel,
   },
   data() {
     return {
@@ -81,13 +91,29 @@ export default {
       confirmDialog: false,
       openmask: false,
       reCaptcha: false,
+      visible: false,
+      modelTitle: null,
+      modelText: null,
+      confirmText: null,
     };
   },
   computed: {
     ...mapState(["config"]),
   },
   methods: {
-    ...mapMutations(["submitLogin"]),
+    ...mapMutations(["submitLogin", "logout"]),
+    cancelModel() {
+      this.logout();
+      this.visible = false;
+      this.$router.push({
+        name: "Me",
+      });
+    },
+    confirmModel() {
+      if (this.modelTitle === "实名认证") {
+        this.goFaceVerify();
+      }
+    },
     clearMobile() {
       this.form.mobile = null;
     },
@@ -163,7 +189,10 @@ export default {
               res.data.is_face_verify === false && //未完成实名认证
               this.config.member.enabled_face_verify === true //已开启强制实名认证
             ) {
-              this.goFaceVerify();
+              this.modelTitle = "实名认证";
+              this.modelText = "登录前请完成实名认证";
+              this.confirmText = "立即认证";
+              this.visible = true;
             } else {
               setTimeout(() => {
                 this.$router.push({
