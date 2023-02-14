@@ -49,6 +49,14 @@
         @cancel="cancel"
       ></confirm-login>
     </template>
+    <show-model
+      v-if="visible"
+      :title="modelTitle"
+      :text="modelText"
+      :confirmText="confirmText"
+      @change="confirmModel"
+      @cancel="cancelModel"
+    ></show-model>
   </div>
 </template>
 
@@ -56,10 +64,12 @@
 import { mapState, mapMutations } from "vuex";
 import ConfirmLogin from "./components/confirm-login";
 import CaptchaDialog from "../../components/captcha-dialog";
+import ShowModel from "@/components/show-model.vue";
 export default {
   components: {
     ConfirmLogin,
     CaptchaDialog,
+    ShowModel,
   },
   data() {
     return {
@@ -81,6 +91,10 @@ export default {
       confirmDialog: false,
       openmask: false,
       reCaptcha: false,
+      visible: false,
+      modelTitle: null,
+      modelText: null,
+      confirmText: null,
     };
   },
   computed: {
@@ -88,7 +102,33 @@ export default {
   },
   mounted() {},
   methods: {
-    ...mapMutations(["submitLogin"]),
+    ...mapMutations(["submitLogin", "logout"]),
+    cancelModel() {
+      this.logout();
+      this.visible = false;
+      this.$router.push({
+        name: "Index",
+      });
+    },
+    confirmModel() {
+      if (this.modelTitle === "实名认证") {
+        this.goFaceVerify();
+      }
+    },
+    goFaceVerify() {
+      let redirect = this.$utils.getHost() + "/auth/faceSuccess";
+      this.$api.Member.TecentFaceVerify({
+        s_url: redirect,
+      })
+        .then((res) => {
+          this.$utils.saveBizToken(res.data.biz_token);
+          this.$utils.saveRuleId(res.data.rule_id);
+          window.location.href = res.data.url;
+        })
+        .catch((e) => {
+          this.$message.error(e.message || "无法发起实名认证");
+        });
+    },
     clearMobile() {
       this.form.mobile = null;
     },
@@ -160,11 +200,21 @@ export default {
           this.$utils.saveToken(res.data.token);
           this.$api.User.Detail().then((res) => {
             this.submitLogin(res.data);
-            setTimeout(() => {
-              this.$router.push({
-                name: "Index",
-              });
-            }, 500);
+            if (
+              res.data.is_face_verify === false && //未完成实名认证
+              this.config.member.enabled_face_verify === true //已开启强制实名认证
+            ) {
+              this.modelTitle = "实名认证";
+              this.modelText = "登录前请完成实名认证";
+              this.confirmText = "立即认证";
+              this.visible = true;
+            } else {
+              setTimeout(() => {
+                this.$router.push({
+                  name: "Index",
+                });
+              }, 500);
+            }
           });
         })
         .catch((e) => {

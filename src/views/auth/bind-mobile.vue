@@ -114,6 +114,20 @@ export default {
         this.goFaceVerify();
       }
     },
+    goFaceVerify() {
+      let redirect = this.$utils.getHost() + "/auth/faceSuccess";
+      this.$api.Member.TecentFaceVerify({
+        s_url: redirect,
+      })
+        .then((res) => {
+          this.$utils.saveBizToken(res.data.biz_token);
+          this.$utils.saveRuleId(res.data.rule_id);
+          window.location.href = res.data.url;
+        })
+        .catch((e) => {
+          this.$message.error(e.message || "无法发起实名认证");
+        });
+    },
     clearMobile() {
       this.form.mobile = null;
     },
