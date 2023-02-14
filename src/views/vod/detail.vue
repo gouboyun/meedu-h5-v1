@@ -767,6 +767,11 @@ export default {
       font-weight: 400;
       color: #666666;
       text-align: center;
+      -ms-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
     }
 
     &.active {
@@ -794,24 +799,44 @@ export default {
     border-radius: 0px 4px 4px 0px;
     background-color: #ff5068;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .see-button {
     border-radius: 3px;
     background-color: #3ca7fa;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .role-button2 {
     border-radius: 3px;
     background-color: #e2a500;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .role-button {
     border-radius: 3px 0px 0px 3px;
     background-color: #e2a500;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .input {
@@ -842,7 +867,11 @@ export default {
     font-weight: 400;
     color: #666;
     line-height: 33px;
-
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     padding-left: 15px;
     padding-top: 10px;
 
