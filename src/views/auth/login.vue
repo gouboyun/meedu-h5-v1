@@ -163,6 +163,7 @@ export default {
       });
     },
     confirmModel() {
+      this.visible = false;
       if (this.modelTitle === "实名认证") {
         this.goFaceVerify();
       } else if (this.modelTitle === "绑定手机号") {

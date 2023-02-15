@@ -111,6 +111,7 @@ export default {
       });
     },
     confirmModel() {
+      this.visible = false;
       if (this.modelTitle === "实名认证") {
         this.goFaceVerify();
       }
