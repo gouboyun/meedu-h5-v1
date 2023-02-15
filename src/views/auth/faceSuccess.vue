@@ -146,7 +146,7 @@ export default {
     display: flex;
     flex-direction: row;
     justify-content: center;
-    margin-top: 56px;
+    margin-top: 50px;
     .button {
       padding: 12px 20px;
       border-radius: 4px;
