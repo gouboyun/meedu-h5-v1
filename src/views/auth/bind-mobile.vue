@@ -178,10 +178,6 @@ export default {
     cancel() {
       this.confirmDialog = false;
     },
-    logout() {
-      this.$utils.clearToken();
-      window.location.href = "/";
-    },
     submit(val) {
       if (this.loading) {
         return;
