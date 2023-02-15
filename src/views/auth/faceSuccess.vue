@@ -157,6 +157,11 @@ export default {
       font-size: 16px;
       font-weight: 400;
       color: #fff;
+      -ms-user-select: none;
+      -khtml-user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      user-select: none;
     }
   }
 }
