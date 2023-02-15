@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style lang='less' scoped>
+<style lang="less" scoped>
 .btn-block-box {
   width: 100%;
   height: auto;
@@ -34,6 +34,11 @@ export default {
     color: white;
     background-color: #3ca7fa;
     font-size: 15px;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
 
     &:active {
       background-color: rgba(#3ca7fa, 0.9);

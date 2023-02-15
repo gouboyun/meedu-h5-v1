@@ -54,13 +54,25 @@
         登录
       </div>
     </div>
+    <show-model
+      v-if="visible"
+      :title="modelTitle"
+      :text="modelText"
+      :confirmText="confirmText"
+      @change="confirmModel"
+      @cancel="cancelModel"
+    ></show-model>
   </div>
 </template>
 
 <script>
 import { mapState, mapMutations } from "vuex";
+import ShowModel from "@/components/show-model.vue";
 
 export default {
+  components: {
+    ShowModel,
+  },
   data() {
     return {
       url: this.$route.query.url || null,
@@ -68,13 +80,34 @@ export default {
         mobile: "",
         password: "",
       },
+      visible: false,
+      modelTitle: null,
+      modelText: null,
+      confirmText: null,
     };
   },
   computed: {
     ...mapState(["config"]),
   },
   methods: {
-    ...mapMutations(["submitLogin"]),
+    ...mapMutations(["submitLogin", "logout"]),
+    cancelModel() {
+      this.logout();
+      this.visible = false;
+      this.$router.replace({
+        name: "Me",
+      });
+    },
+    confirmModel() {
+      this.visible = false;
+      if (this.modelTitle === "实名认证") {
+        this.goFaceVerify();
+      } else if (this.modelTitle === "绑定手机号") {
+        this.$router.push({
+          name: "BindMobile",
+        });
+      }
+    },
     clearMobile() {
       this.passwordForm.mobile = null;
     },
@@ -106,9 +139,18 @@ export default {
               this.config.member.enabled_mobile_bind_alert === 1 &&
               res.data.is_bind_mobile !== 1
             ) {
-              this.$router.push({
-                name: "BindMobile",
-              });
+              this.modelTitle = "绑定手机号";
+              this.modelText = "登录前请绑定手机号";
+              this.confirmText = "立即绑定";
+              this.visible = true;
+            } else if (
+              res.data.is_face_verify === false &&
+              this.config.member.enabled_face_verify === true
+            ) {
+              this.modelTitle = "实名认证";
+              this.modelText = "登录前请完成实名认证";
+              this.confirmText = "立即认证";
+              this.visible = true;
             } else {
               this.$router.go(-2);
             }
@@ -116,6 +158,20 @@ export default {
         })
         .catch((e) => {
           this.$message.error(e.message);
+        });
+    },
+    goFaceVerify() {
+      let redirect = this.$utils.getHost() + "/auth/faceSuccess";
+      this.$api.Member.TecentFaceVerify({
+        s_url: redirect,
+      })
+        .then((res) => {
+          this.$utils.saveBizToken(res.data.biz_token);
+          this.$utils.saveRuleId(res.data.rule_id);
+          window.location.href = res.data.url;
+        })
+        .catch((e) => {
+          this.$message.error(e.message || "无法发起实名认证");
         });
     },
   },

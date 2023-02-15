@@ -199,6 +199,14 @@ const routes = [
     },
     component: () => import("../views/member/mobileVerify.vue"),
   },
+  {
+    path: "/auth/faceSuccess",
+    name: "FaceSuccesss",
+    meta: {
+      title: "实名认证",
+    },
+    component: () => import("../views/auth/faceSuccess.vue"),
+  },
 ];
 
 const router = new VueRouter({

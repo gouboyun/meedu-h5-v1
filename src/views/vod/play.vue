@@ -213,6 +213,8 @@
         </template>
         <none type="white" v-else></none>
       </div>
+      <attach-box :status="course.id && currentTab === 3" :cid="course.id">
+      </attach-box>
     </div>
 
     <template v-if="currentTab === 0 && !isWatch">
@@ -266,11 +268,13 @@
 import { mapState } from "vuex";
 import Duration from "../../components/duration";
 import None from "../../components/none";
+import AttachBox from "./components/attach-box.vue";
 
 export default {
   components: {
     Duration,
     None,
+    AttachBox,
   },
   data() {
     return {
@@ -296,6 +300,11 @@ export default {
           name: "评论",
           key: "comment",
           id: 1,
+        },
+        {
+          name: "课件",
+          key: "attach",
+          id: 3,
         },
       ],
       comment: {
@@ -712,7 +721,7 @@ export default {
   flex-direction: row;
   position: relative;
   justify-content: space-between;
-  padding: 20px 100px;
+  padding: 20px 80px;
   .item-tab {
     display: inline-block;
     width: auto;
@@ -924,6 +933,11 @@ export default {
   border-radius: 4px;
   background-color: #ff5068;
   color: white;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
 .subscribe-button2 {
@@ -932,6 +946,11 @@ export default {
   font-weight: 400;
   color: #ff5068;
   line-height: 15px;
+  -ms-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 
 .subscribe-info {
@@ -994,30 +1013,55 @@ export default {
     border-radius: 0px 4px 4px 0px;
     background-color: #ff5068;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .buy-button2 {
     border-radius: 4px;
     background-color: #ff5068;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .see-button {
     border-radius: 4px;
     background-color: #3ca7fa;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .role-button2 {
     border-radius: 3px;
     background-color: #e2a500;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .role-button {
     border-radius: 3px 0px 0px 3px;
     background-color: #e2a500;
     color: white;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
   }
 
   .input {
@@ -1048,7 +1092,11 @@ export default {
     font-weight: 400;
     color: #666;
     line-height: 33px;
-
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
     padding-left: 15px;
     padding-top: 10px;
 

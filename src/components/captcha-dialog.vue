@@ -141,24 +141,24 @@ export default {
         }
         .input {
           width: 100%;
+          height: auto;
           display: flex;
           flex-direction: row;
           justify-content: space-between;
           box-sizing: border-box;
           align-items: center;
-          justify-content: center;
           border-bottom: 1px solid #dcdfe6;
           .input-text {
-            max-width: 200px;
-            height: 16px;
-            float: left;
-            box-sizing: border-box;
+            display: inline-block;
+            width: 100%;
+            height: 20px;
             outline: none;
             color: #333333;
             font-size: 16px;
+            line-height: 20px;
             border: none;
             text-align: center;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
           }
         }
         .captcha {
@@ -198,6 +198,11 @@ export default {
         color: #ffffff;
         line-height: 15px;
         cursor: pointer;
+        -ms-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
         &.active {
           background: #3ca7fa;
         }
