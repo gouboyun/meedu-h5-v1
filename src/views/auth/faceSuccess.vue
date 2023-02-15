@@ -145,17 +145,20 @@ export default {
     width: 100%;
     display: flex;
     flex-direction: row;
+    box-sizing: border-box;
     justify-content: center;
     margin-top: 50px;
+    padding: 0px 30px;
     .button {
-      padding: 12px 20px;
+      width: 100%;
+      height: 48px;
       border-radius: 4px;
       background: #3ca7fa;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 16px;
-      font-weight: 400;
+      font-weight: 500;
       color: #fff;
       -ms-user-select: none;
       -khtml-user-select: none;
