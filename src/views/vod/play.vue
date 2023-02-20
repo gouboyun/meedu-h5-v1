@@ -331,7 +331,7 @@ export default {
       return this.isWatch === false && this.video.free_seconds > 0;
     },
     isBanDrag() {
-      return parseInt(this.video.ban_drag) === 1;
+      return false;
     },
   },
   mounted() {
