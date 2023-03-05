@@ -559,6 +559,7 @@ export default {
       });
     },
     goVideo(video) {
+      this.last_see_value = null;
       this.$router.replace({
         name: "VodVideo",
         query: {
@@ -567,6 +568,7 @@ export default {
       });
     },
     goNextVideo(id) {
+      this.last_see_value = null;
       this.$router.replace({
         name: "VodVideo",
         query: {
