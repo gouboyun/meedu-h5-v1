@@ -7,7 +7,7 @@ on:
 #     branches: [ "master" ]
 
 env:
-  DOCKER_IMAGE: morya/meedu-pc-v1
+  DOCKER_IMAGE: morya/meedu-h5-v1
 
 jobs:
   build:
